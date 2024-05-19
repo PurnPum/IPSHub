@@ -1,0 +1,17 @@
+:root {
+  --custom-888-gray: rgb(88, 88, 88);
+  --custom-666-gray: rgb(66, 66, 66);
+  --custom-444-gray: rbg(44, 44, 44);
+}
+
+.custom-main-bg {
+    background-color: var(--custom-888-gray);
+}
+
+.custom-title-bg {
+    background-color: var(--custom-666-gray);
+}
+
+.custom-main-darker-bg{
+    background-color: var(--custom-444-gray);
+}
