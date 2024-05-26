@@ -74,9 +74,12 @@
     display: block;
 }
 
-.hover-scale-105:hover {
-    transform: scale(1.05);
+.hover-scale-105 {
     transition: transform 0.3s ease;
+}
+
+.hover-scale-105:hover {
+    transform: scale(1.10);
 }
 
 
