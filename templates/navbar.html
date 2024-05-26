@@ -1,67 +1,73 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar-blue-bg">
   <div class="container-fluid">
     <a class="navbar-brand d-none d-xl-block fw-bold text-light" href="#">
-      <i class="bi bi-bandaid-fill" style="font-size: 40px;"></i>
+      <i class="bi bi-bandaid-fill custom-2-5-rem-icon"></i>
     </a>
     <a class="navbar-brand d-xl-none fw-bold text-light" href="#">
-      <i class="bi bi-bandaid-fill" style="font-size: 35px;"></i>
+      <i class="bi bi-bandaid-fill custom-1-75-rem-icon bs-gray-300"></i>
     </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation" data-bs-placement="end">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="offcanvas-lg offcanvas-end flex-grow-1" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">IPSHub.org</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#offcanvasNavbar"></button>
-        </div>
-        <hr class="d-lg-none text-white-50">
-        <div class="offcanvas-body">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-grow-1 d-flex justify-content-evenly">
-            <li class="nav-item">
-              <a class="nav-link d-none d-xl-block fw-bold text-light enabled fs-3" href="#">Categories</a>
-              <a class="nav-link d-xl-none fw-bold text-light enabled fs-4" href="#">Categories</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-none d-xl-block fw-bold text-info enabled fs-3" href="#">Patches</a>
-              <a class="nav-link d-xl-none fw-bold text-info enabled fs-4" href="#">Patches</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-none d-xl-block fw-bold text-light fs-3" href="#">Patch Generator</a>
-              <a class="nav-link d-xl-none fw-bold text-light fs-4" href="#">Patch Generator</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-none d-xl-block fw-bold text-light fs-3" href="#">Games</a>
-              <a class="nav-link d-xl-none fw-bold text-light fs-4" href="#">Games</a>
-            </li>
-          </ul>
-          <hr class="d-lg-none text-white-50">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link d-none d-xl-block" href="#" target="_blank">
-                <i class="bi bi-twitter" style="color: white; font-size: 50px;"></i>
-              </a>
-              <a class="nav-link d-xl-none" href="#" target="_blank">
-                <i class="bi bi-twitter" style="color: white; font-size: 40px;"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link d-none d-xl-block" href="https://github.com/PurnPum/IPSHub" target="_blank">
-                <i class="bi bi-github" style="color: white; font-size: 50px;"></i>
-              </a>
-              <a class="nav-link d-xl-none" href="https://github.com/PurnPum/IPSHub" target="_blank">
-                <i class="bi bi-github" style="color: white; font-size: 40px;"></i>
-              </a>
-            </li>
-          </ul>
-            <button class="btn btn-outline-dark fw-bold btn-sm my-1 fs-5" type="search">
-              <span>Search...</span>
-            </button>
-            <div class="ps-3"></div>
-            <button class="btn btn-outline-dark fw-bold btn-sm my-1 fs-5" type="login">
-              <span>Login</span>
-            </button>
-          </div>
-        </div>
+    <div class="col-lg-9 col-md-6 offcanvas-lg offcanvas-end flex-grow-1" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">IPSHub.org</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#offcanvasNavbar"></button>
       </div>
+      <hr class="d-lg-none text-white-50">
+      <div class="offcanvas-body">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-grow-1 d-flex justify-content-evenly align-items-center">
+          <li class="nav-item">
+            <a class="nav-link d-none d-xl-block fw-bold text-light enabled fs-4" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Categories</a>
+            <a class="nav-link d-xl-none fw-bold text-light enabled fs-6" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Categories</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-none d-xl-block fw-bold text-info enabled fs-4" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Patches</a>
+            <a class="nav-link d-xl-none fw-bold text-info enabled fs-6" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Patches</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-none d-xl-block fw-bold text-light fs-4" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Patch Generator</a>
+            <a class="nav-link d-xl-none fw-bold text-light fs-6" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Patch Generator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-none d-xl-block fw-bold text-light fs-4" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Games</a>
+            <a class="nav-link d-xl-none fw-bold text-light fs-6" href="#" _="on mouseenter toggle .bg-primary .border .rounded until mouseleave">Games</a>
+          </li>
+        </ul>
+        <hr class="d-lg-none text-white-50">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link d-none d-xl-block" href="#" target="_blank">
+              <i class="bi bi-twitter custom-2-5-rem-icon"></i>
+            </a>
+            <a class="nav-link d-xl-none" href="#" target="_blank">
+              <i class="bi bi-twitter custom-1-75-rem-icon"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-none d-xl-block" href="https://github.com/PurnPum/IPSHub" target="_blank">
+              <i class="bi bi-github custom-2-5-rem-icon"></i>
+            </a>
+            <a class="nav-link d-xl-none" href="https://github.com/PurnPum/IPSHub" target="_blank">
+              <i class="bi bi-github custom-1-75-rem-icon"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button class="col-lg-1 col-md-2 btn btn-outline-dark fw-bold btn-sm my-1 mx-1 border-4 rounded" type="search">
+      <span class="d-none d-sm-block d-lg-none fs-5">Search...</span>
+      <span class="d-none d-lg-block d-xl-none fs-6">Search</span>
+      <span class="d-none d-xl-block d-xxl-none fs-5">Search</span>
+      <span class="d-none d-xxl-block fs-5">Search...</span>
+      <i class="bi bi-search d-sm-none custom-2-25-rem-icon"></i>
+    </button>
+    <button class="col-lg-1 col-md-2 btn btn-outline-dark fw-bold btn-sm my-1 mx-1 border-4 rounded" type="login">
+      <span class="d-none d-sm-block d-lg-none fs-5">Log in</span>
+      <span class="d-none d-lg-block d-xl-none fs-6">Login</span>
+      <span class="d-none d-xl-block d-xxl-none fs-5">Login</span>
+      <span class="d-none d-xxl-block fs-5">Log in</span>
+      <i class="bi bi-person-circle d-sm-none custom-2-25-rem-icon"></i>
+    </button>
+    <button class="col-lg-1 col-md-2 navbar-toggler mx-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation" data-bs-placement="end">
+      <span class="navbar-toggler-icon"></span>
+    </button>
   </div>
 </nav>

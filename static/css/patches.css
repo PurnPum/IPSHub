@@ -1,17 +1,80 @@
 :root {
   --custom-888-gray: rgb(88, 88, 88);
   --custom-666-gray: rgb(66, 66, 66);
-  --custom-444-gray: rbg(44, 44, 44);
+  --custom-444-gray: rgb(44, 44, 44);
+  --custom-nav-blue: rgb(8, 85, 148);
+  --custom-nav-darker-blue: rgb(6, 75, 118);
+  --custom-nav-lighter-blue: rgb(20, 150, 225);
 }
 
 .custom-main-bg {
-    background-color: var(--custom-888-gray);
-}
-
-.custom-title-bg {
     background-color: var(--custom-666-gray);
 }
 
+.custom-title-bg {
+    background-color: var(--custom-444-gray);
+    background-clip: padding-box;
+}
+
+.custom-navbar-blue-bg{
+    background-color: var(--custom-nav-blue);
+}
+
+.custom-navbar-darker-blue-bg{
+    background-color: var(--custom-nav-darker-blue);
+}
+
+
 .custom-main-darker-bg{
     background-color: var(--custom-444-gray);
+}
+
+.custom-2-5-rem-icon{
+    font-size: 2.5rem;
+}
+
+.custom-2-25-rem-icon{
+    font-size: 2.25rem;
+}
+
+.custom-1-75-rem-icon{
+    font-size: 1.75rem;
+}
+
+.custom-top-border{
+    border-top: 3px solid var(--custom-nav-darker-blue);
+    border-top-left-radius: 10px; 
+    border-top-right-radius: 10px;
+}
+
+.custom-element-top-border{
+    border-top: 10px solid var(--custom-666-gray);
+}
+
+.custom-darker-blue-font{
+    color: var(--custom-nav-darker-blue);
+}
+
+.custom-blue-font{
+    color: var(--custom-nav-blue);
+}
+
+.custom-lighter-blue-font{
+    color: var(--custom-nav-lighter-blue);
+}
+
+.custom-mw-85{
+    max-width: 85vw;
+}
+
+.custom-truncate{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.hover-scale-105:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
 }

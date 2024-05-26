@@ -1,11 +1,40 @@
-<div class="container-fluid custom-main-bg">
-    <div class="row custom-title-bg">
-        <h1 class="text-center fw-bold">Patches</h1>
+{% if display_mode == 'double' %}
+
+    <div class="col-6 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-6 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-6 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-6 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-6 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-6 p-0">
+      {% include 'patches/patch_main_element.html' %}
     </div>
 
-  {% include 'patches/patch_main_element.html' %}
-  {% include 'patches/patch_main_element.html' %}
-  {% include 'patches/patch_main_element.html' %}
-  {% include 'patches/patch_main_element.html' %}
+{% elif display_mode == 'single' %}
 
-</div>
+    <div class="col-12 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-12 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-12 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-12 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+    <div class="col-12 p-0">
+      {% include 'patches/patch_main_element.html' %}
+    </div>
+
+{% endif %}
