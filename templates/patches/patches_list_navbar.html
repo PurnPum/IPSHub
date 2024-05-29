@@ -36,7 +36,22 @@
         </select>
     </div>
     <div class="col">
-        <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Sort By</h6>
+        <div class="row d-flex">
+            <div class="align-items-center mb-0 pb-1 pt-2">
+                <h6 class="text-center fw-bold text-light mb-0">Sort By
+                    <button class="btn p-0 align-items-center" _="on click 
+                    if my.firstChild.classList.contains('bi-arrow-down-square-fill')
+                        remove .bi-arrow-down-square-fill from my.firstChild
+                        add .bi-arrow-up-square-fill to my.firstChild
+                        set my.firstChild.title to 'Ascending order'
+                    else
+                        remove .bi-arrow-up-square-fill from my.firstChild
+                        add .bi-arrow-down-square-fill to my.firstChild
+                        set my.firstChild.title to 'Descending order'"><i class="bi bi-arrow-down-square-fill" title="Descending order"></i>
+                    </button>
+                </h6>
+            </div>
+        </div>
         <select class="form-select custom-select-border" aria-label="Release Date">
             <option value="1">Downloads</option>
             <option value="2">Favorites</option>
