@@ -77,11 +77,11 @@
     display: block;
 }
 
-.hover-scale-110 {
+.custom-hover-scale-110 {
     transition: transform 0.3s ease;
 }
 
-.hover-scale-110:hover {
+.custom-hover-scale-110:hover {
     transform: scale(1.10);
 }
 
