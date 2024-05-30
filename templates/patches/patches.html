@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <header>
-        {% include 'navbar.html' %}
-    </header>
+
+    {% include 'navbar.html' %}
+
     <div class="container-fluid bg-dark pt-3 ps-0 pe-0 custom-mw-85">
         <div class="row justify-content-around">
             <div class="col-12 col-lg-8 p-0 flex grow-0 shrink-0 mx-auto">
                 <div class="container-fluid bg-dark">
                     {% include 'patches/patches_list_navbar.html' %}
-                    <div class="row d-none d-xxl-flex">
+                    <div class="row d-none d-xxl-flex custom-bottom-border pb-2">
                         {% include 'patches/patches_main_layout.html' with display_mode="double" %}
                     </div>
-                    <div class="row d-flex d-xxl-none">
+                    <div class="row d-flex d-xxl-none custom-bottom-border pb-2">
                         {% include 'patches/patches_main_layout.html' with display_mode="single" %}
                     </div>
                 </div>
@@ -27,4 +27,7 @@
             </div>
         </div>    
     </div>
+
+    {% include 'footer.html' %}
+
 {% endblock %}
