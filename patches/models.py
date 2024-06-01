@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Patch(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
-    parent_patch = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='sub-patches')
+    parent_patch = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subpatches')
     name = models.CharField(max_length=100)
     downloads = models.IntegerField(default=0)
     favorites = models.IntegerField(default=0)
@@ -16,7 +16,8 @@ class Patch(models.Model):
     
 class PatchOption(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
-    category = models.ForeignKey('categories.Category', on_delete=models.SET_NULL)
+    category = models.ForeignKey('categories.Category', on_delete=models.CASCADE) 
+    # In the case of a category getting removed, before doing so make sure all the patch options linked to this category or any of its sub-categories have been moved to a different category, or they will also get erased.
     code_file = models.URLField(max_length=200)
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
