@@ -1,40 +1,16 @@
 {% if display_mode == 'double' %}
-
+  {% for data in patches %}
     <div class="col-6 p-0">
       {% include 'patches/patch_main_element.html' %}
     </div>
-    <div class="col-6 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-6 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-6 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-6 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-6 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
+  {% endfor %}
 
 {% elif display_mode == 'single' %}
 
+  {% for data in patches %}
     <div class="col-12 p-0">
       {% include 'patches/patch_main_element.html' %}
     </div>
-    <div class="col-12 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-12 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-12 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
-    <div class="col-12 p-0">
-      {% include 'patches/patch_main_element.html' %}
-    </div>
+  {% endfor %}
 
 {% endif %}

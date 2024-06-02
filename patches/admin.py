@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Patch, PatchOption
 
-# Register your models here.
+admin.site.register(Patch)
+admin.site.register(PatchOption)

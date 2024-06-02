@@ -2,8 +2,7 @@
     <nav class="row bg-dark">
         <h5 class="mb-0 fw-bold custom-truncate text-center" title="Most popular Patches">Most popular Patches</h5>
     </nav>
-      {% include 'patches/patch_sidebar_element.html' %}
-      {% include 'patches/patch_sidebar_element.html' %}
-      {% include 'patches/patch_sidebar_element.html' %}
-      {% include 'patches/patch_sidebar_element.html' %}
+        {% for data in patches %}
+            {% include 'patches/patch_sidebar_element.html' %}
+        {% endfor %}
 </div>

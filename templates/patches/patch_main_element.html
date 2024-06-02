@@ -1,14 +1,12 @@
 {% extends "generic/main_element.html" %}
 
-{% block title %}Patches{% endblock %}
-
-{% block image_src %}/static/images/pokemon_yellow_front.webp{% endblock %}
-{% block image_alt %}Pokemon Yellow{% endblock %}
-{% block image_title %}Pokemon Yellow{% endblock %}
-{% block image_aria %}Pokemon Yellow{% endblock %}
-{% block main_title %}Faster Game Yellow{% endblock %}
-{% block shown_title %}Faster Game Yellow{% endblock %}
-{% block downloads %}412{% endblock %}
-{% block user %}Pum{% endblock %}
-{% block favorites %}58{% endblock %}
-{% block category %}Enhancements{% endblock %}
+{% block image_src %}{{ data.game.image_ref }}{% endblock %}
+{% block image_alt %}{{ data.game.title }}{% endblock %}
+{% block image_title %}{{ data.game.title }}{% endblock %}
+{% block image_aria %}{{ data.game.title }}{% endblock %}
+{% block main_title %}{{ data.patch.name }}{% endblock %}
+{% block shown_title %}{{ data.patch.name }}{% endblock %}
+{% block downloads %}{{ data.patch.downloads }}{% endblock %}
+{% block user %}{{ data.patch.creator }}{% endblock %}
+{% block favorites %}{{ data.patch.favorites }}{% endblock %}
+{% block categories %}{{ data.categories }}{% endblock %}
