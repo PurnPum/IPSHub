@@ -1,7 +1,16 @@
 from django.shortcuts import render
 from .models import Patch, PatchOption
+from categories.models import Category
+from . import add_junk_to_db, add_real_data_to_db
 
 def patches_list(request):
+    
+    add_junk_to_db.clean_db()
+    add_real_data_to_db.add_real_games_to_db()
+    add_real_data_to_db.add_real_categories_to_db()
+    add_real_data_to_db.add_real_patch_options_to_db()
+    add_real_data_to_db.add_real_patches_to_db()
+    
     patches = Patch.objects.all()
     patch_list = []
     for patch in patches:
@@ -14,7 +23,9 @@ def patches_list(request):
         else:
             game = None  # TODO
         
-        categories = [c.name for c in categories if c.parent_category is None]
+        func_get_parent = lambda c: c.name if (c.parent_category is None) else func_get_parent(c.parent_category)
+    
+        categories = set([func_get_parent(c) for c in categories])
         
         categories_string = ", ".join(categories)
         
@@ -23,5 +34,5 @@ def patches_list(request):
             'game': game,
             'categories': categories_string
         })
-    
+   
     return render(request, 'patches/patches.html', {'patches': patch_list})

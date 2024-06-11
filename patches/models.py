@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
+from django.forms import ValidationError
 
 class Patch(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
@@ -11,11 +12,25 @@ class Patch(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     creation_date = models.DateField(auto_now_add=True)
     patch_options = models.ManyToManyField('PatchOption', related_name='patches', blank=False)
+    field_data = models.JSONField()
     
     def __str__(self):
         return self.name
     
-    
+    def clean(self):
+        if self.parent_patch is not None and self.parent_patch in self.get_all_subpatches():
+            raise ValidationError('The parent patch cannot be a subpatch of itself.')
+        if self.parent_patch == self:
+            raise ValidationError('The parent patch cannot be itself.')
+        if len(self.get_game_titles()) > 1:
+            raise ValidationError('The patch options assigned to this patch must all be for the same game.')
+        
+        
+    def get_game_titles(self):
+        base_game_titles = []
+        for patch_option in self.patch_options.all():
+            base_game_titles.append(patch_option.category.base_game.title)
+        return list(set(base_game_titles))
     
 class PatchOption(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
@@ -24,6 +39,7 @@ class PatchOption(models.Model):
     code_file = models.CharField(max_length=200)
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
+    fields = models.JSONField()
     #github_issue = models.URLField(max_length=200) TODO
 
     def __str__(self):
