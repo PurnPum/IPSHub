@@ -1,61 +1,6 @@
-<nav class="row custom-title-bg custom-top-border d-flex align-items-center">
-    <div class="d-flex justify-content-between custom-list-header">
-        <h3 class="fw-bold mb-0 flex-grow-1 d-flex align-items-center">
-            Patches
-        </h3>
-        <button type="button" class="btn btn-success mt-1 mb-1 d-none d-sm-block">
-            <i class="bi bi-plus-lg"></i>
-            <span class="ms-2 text-truncate" title="Create Patch">Create Patch</span>
-        </button>
-        <button type="button" class="btn btn-success mt-1 mb-1 ms-1 d-sm-none">
-            <span title="Create Patch">Create Patch</span>
-        </button>
-    </div>
-</nav>
-<div class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2">
-    <div class="col">
-        <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Base Game</h6>
-        <select class="form-select custom-select-border" aria-label="Category">
-            <option value="1">Any Game</option>
-            <option value="2">Pokemon Yellow</option>
-            <option value="3">Pokemon Crystal</option>
-        </select>
-    </div>
-    <div class="col">
-        <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Category</h6>
-        <select class="form-select custom-select-border" aria-label="Type">
-            <option value="1">Any Category</option>
-            <option value="2">Enhancements</option>
-            <option value="3">Randomizers</option>
-        </select>
-    </div>
-    <div class="col">
-        <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Base Patch</h6>
-        <select class="form-select custom-select-border" aria-label="Rank">
-            <option value="1">Any patch</option>
-        </select>
-    </div>
-    <div class="col">
-        <div class="row d-flex">
-            <div class="align-items-center mb-0 pb-1 pt-2">
-                <h6 class="text-center fw-bold text-light mb-0">Sort By
-                    <button class="btn p-0 align-items-center" _="on click 
-                    if my.firstChild.classList.contains('bi-arrow-down-square-fill')
-                        remove .bi-arrow-down-square-fill from my.firstChild
-                        add .bi-arrow-up-square-fill to my.firstChild
-                        set my.firstChild.title to 'Ascending order'
-                    else
-                        remove .bi-arrow-up-square-fill from my.firstChild
-                        add .bi-arrow-down-square-fill to my.firstChild
-                        set my.firstChild.title to 'Descending order'"><i class="bi bi-arrow-down-square-fill" title="Descending order"></i>
-                    </button>
-                </h6>
-            </div>
-        </div>
-        <select class="form-select custom-select-border" aria-label="Release Date">
-            <option value="1">Downloads</option>
-            <option value="2">Favorites</option>
-            <option value="3">Sub-Patches</option>
-        </select>
-    </div>
-</div>
+{% extends "generic/list_navbar.html" %}
+
+{% block title %}Patches{% endblock %}
+{% block first_filter %}Base Game{% endblock %}
+{% block second_filter %}Category{% endblock %}
+{% block third_filter %}Base Patch{% endblock %}
