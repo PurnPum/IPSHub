@@ -1,0 +1,14 @@
+<select name="selectedPatch" id="patch-select" class="form-select custom-select-border" aria-label="Base Patch"
+    _="on change 
+        remove .selected from <option/>
+        then add .selected to my.options[my.selectedIndex]">
+    {% if amountPat > 0 %}
+        <option class="selected" value="any">Any Patch</option>
+    {% else %}
+        <option class="selected" value="none">No matching patches</option>
+    {% endif %}
+    
+    {% for patch in top8parentpatches %}
+        <option value="{{ patch.id }}">{{ patch.name }}</option>
+    {% endfor %}
+</select>

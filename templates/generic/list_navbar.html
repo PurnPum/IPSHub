@@ -12,34 +12,23 @@
         </button>
     </div>
 </nav>
-<div class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2">
-    <div class="col">
+<div id="patch-list-filters" class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2">
+    <div class="col" id="game-select" hx-swap-oob="false">
         <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">{% block first_filter %}{% endblock %}</h6>
-        <select class="form-select custom-select-border" aria-label="Category">
-            <option value="any">Any Game</option>
+        <select name="selectedGame" class="form-select custom-select-border" aria-label="{% block first_filter_aria %}{% endblock %}"
+            hx-get="{% url 'filter_categories_and_patches' %}"
+            hx-trigger="change"
+            hx-swap="none"
+            _="on change 
+            remove .selected from <option/>
+            then add .selected to my.options[my.selectedIndex]">
+            <option value="any" class="selected">Any Game</option>
             {% for topgame in top8games %}
                 <option value="{{ topgame.id }}">{{ topgame.title }}</option>
             {% endfor %}
         </select>
     </div>
-    <div class="col">
-        <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">{% block second_filter %}{% endblock %}</h6>
-        <select class="form-select custom-select-border" aria-label="Type">
-            <option value="any">Any Category</option>
-            {% for topcat in top8categories %}
-                <option value="{{ topcat.id }}">{{ topcat.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col">
-        <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">{% block third_filter %}{% endblock %}</h6>
-        <select class="form-select custom-select-border" aria-label="Rank">
-            <option value="1">Any patch</option>
-            {% for toppatch in top8parentpatches %}
-                <option value="{{ toppatch.id }}">{{ toppatch.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
+    {% include 'filters/filter_categories_and_patches.html' %}
     <div class="col">
         <div class="row d-flex">
             <div class="align-items-center mb-0 pb-1 pt-2">
@@ -57,7 +46,7 @@
                 </h6>
             </div>
         </div>
-        <select class="form-select custom-select-border" aria-label="Release Date">
+        <select id="sorting-criteria-select" class="form-select custom-select-border" aria-label="Release Date">
             <option value="1">Downloads</option>
             <option value="2">Alphabetically</option>
             <option value="3">Favorites</option>
