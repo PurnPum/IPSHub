@@ -1,18 +1,20 @@
-<select name="selectedCategory" id="category-select" class="form-select custom-select-border" aria-label="Category"
-    hx-get="{% url 'filter_patches' %}"
-    hx-target="#patch-select"
+<div class="col" hx-swap-oob="true" id="category-select">
+    <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Category</h6>
+    <select name="selectedCategory" class="form-select custom-select-border" aria-label="Category"
+    hx-get="{% url 'filter_patches_and_main' %}"
     hx-trigger="change"
-    hx-swap="outerHTML"
+    hx-swap="none"
     _="on change 
-        remove .selected from <option/>
-        then add .selected to my.options[my.selectedIndex]">
-    {% if amountCat > 0 %}
-        <option class="selected" value="any">Any Category</option>
-    {% else %}
-        <option class="selected" value="none">No matching categories</option>
-    {% endif %}
-    
-    {% for category in top8categories %}
-        <option value="{{ category.id }}">{{ category.name }}</option>
-    {% endfor %}
-</select>
+    remove .selected from <option/>
+    then add .selected to my.options[my.selectedIndex]">
+        {% if amountCat > 0 %}
+            <option class="selected" value="any">Any Category</option>
+        {% else %}
+            <option class="selected" value="none">No matching categories</option>
+        {% endif %}
+        
+        {% for category in top8categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select>
+</div>

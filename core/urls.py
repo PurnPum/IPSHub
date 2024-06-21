@@ -25,7 +25,6 @@ urlpatterns = [
     path('patches/', p_views.patches_list),
     path('games/', g_views.games_list),
     path('categories/', c_views.categories_list),
-    path('filter_categories/', p_views.filter_categories, name='filter_categories'),
-    path('filter_patches/', p_views.filter_patches, name='filter_patches'),
-    path('filter_categories_and_patches/', p_views.filter_categories_and_patches, name='filter_categories_and_patches')
+    path('filter_categories_patches_and_main/', p_views.filter_categories_patches_and_main, name='filter_categories_patches_and_main'),
+    path('filter_patches_and_main/', p_views.filter_patches_and_main, name='filter_patches_and_main')
 ]

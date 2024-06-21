@@ -9,10 +9,10 @@
             <div class="col-12 col-lg-8 p-0 flex grow-0 shrink-0 mx-auto">
                 <div class="container-fluid bg-dark">
                     {% include 'patches/patches_list_navbar.html' %}
-                    <div class="row d-none d-xxl-flex custom-bottom-border pb-2">
+                    <div id="patches-main-layout-double" class="row d-none d-xxl-flex custom-bottom-border pb-2">
                         {% include 'patches/patches_main_layout.html' with display_mode="double" %}
                     </div>
-                    <div class="row d-flex d-xxl-none custom-bottom-border pb-2">
+                    <div id="patches-main-layout-single" class="row d-flex d-xxl-none custom-bottom-border pb-2">
                         {% include 'patches/patches_main_layout.html' with display_mode="single" %}
                     </div>
                 </div>
