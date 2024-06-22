@@ -32,6 +32,12 @@ class Patch(models.Model):
             base_game_titles.append(patch_option.category.base_game.title)
         return list(set(base_game_titles))
     
+    def get_all_subpatches(self):
+        subpatches = [self]
+        for subpatch in self.subpatches.all():
+            subpatches.extend(subpatch.get_all_subpatches())
+        return subpatches
+    
 class PatchOption(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
     category = models.ForeignKey('categories.Category', on_delete=models.CASCADE) 
