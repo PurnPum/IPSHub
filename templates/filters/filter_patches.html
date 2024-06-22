@@ -1,9 +1,14 @@
 <div class="col" hx-swap-oob="true" id="patch-select">
     <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Base Patch</h6>
-    <select name="selectedPatch" class="form-select custom-select-border" aria-label="Base Patch"
+    <select id="patch-select-hx" name="selectedPatch" class="form-select custom-select-border" aria-label="Base Patch"
+    hx-get="{% url 'filter_main' %}"
+    hx-trigger="change"
+    hx-swap="none"
     _="on change 
     remove .selected from <option/>
-    then add .selected to my.options[my.selectedIndex]">
+    then add .selected to my.options[my.selectedIndex]
+    if my.value == 'any' then
+    send any_patch to #category-select-hx">
         {% if amountPat > 0 %}
             <option class="selected" value="any">Any Patch</option>
         {% else %}

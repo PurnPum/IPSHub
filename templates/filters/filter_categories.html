@@ -1,12 +1,14 @@
 <div class="col" hx-swap-oob="true" id="category-select">
     <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Category</h6>
-    <select name="selectedCategory" class="form-select custom-select-border" aria-label="Category"
+    <select id="category-select-hx" name="selectedCategory" class="form-select custom-select-border" aria-label="Category"
     hx-get="{% url 'filter_patches_and_main' %}"
-    hx-trigger="change"
+    hx-trigger="change, any_patch"
     hx-swap="none"
     _="on change 
     remove .selected from <option/>
-    then add .selected to my.options[my.selectedIndex]">
+    then add .selected to my.options[my.selectedIndex]
+    if my.value == 'any' then
+    send any_category to #game-select-hx">
         {% if amountCat > 0 %}
             <option class="selected" value="any">Any Category</option>
         {% else %}
