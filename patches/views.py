@@ -20,6 +20,7 @@ def main_filter(request,html,game_id=None,category_id=None,patch_id=None):
     categories = Category.objects.all()
     patches = Patch.objects.all()
     patch_list = Patch.objects.all()
+
     if game_id and game_id != 'any' and game_id != 'none':
         patch_list = patch_list.filter(patch_options__category__base_game_id=game_id)
         patches = patches.filter(patch_options__category__base_game_id=game_id)
@@ -31,13 +32,15 @@ def main_filter(request,html,game_id=None,category_id=None,patch_id=None):
     if category_id and category_id != 'none':
         patch_list = patch_list.filter(patch_options__category_id=category_id)
         patches = patches.filter(patch_options__category_id=category_id)
-
+        
     if patch_id == 'any':
         return HttpResponse() # The hx-trigger will execute the filter for categories instead
 
-    if patch_id and patch_id != 'any' and patch_id != 'none':
+    if patch_id and patch_id != 'none':
         patch_list = patch_list.filter(parent_patch__id=patch_id)
-    
+        
+    patch_list = patch_list.distinct()
+        
     final_patch_list = []
     for patch in patch_list:
         patch_options = patch.patch_options.all()
