@@ -16,7 +16,6 @@ def patches_list(request):
     
     return main_filter(request, 'patches/patches.html')
 
-'filters/filter_categories_patches_and_main.html'
 def main_filter(request,html,game_id=None,category_id=None,patch_id=None):
     categories = Category.objects.all()
     patches = Patch.objects.all()
