@@ -1,15 +1,40 @@
 {% if display_mode == 'double' %}
   {% for data in patches %}
-    <div class="col-6 p-0">
-      {% include 'patches/patch_main_element.html' %}
+    {% if forloop.last %}
+      {% if paginated_patches.has_next %}
+        <div class="col-6 p-0"
+          hx-get="{% url 'patch_list' %}?page={{ paginated_patches.next_page_number }}&display_mode={{ display_mode }}"
+          hx-trigger="revealed"
+          hx-swap="afterend"
+          hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination"
+          _="on revealed set the display of #patch-pagination to none">
+      {% else %}
+        <div class="col-6 p-0">
+      {% endif %}
+    {% else %}
+      <div class="col-6 p-0">
+    {% endif %}
+    {% include 'patches/patch_main_element.html' %}
     </div>
   {% endfor %}
 
 {% elif display_mode == 'single' %}
 
   {% for data in patches %}
-    <div class="col-12 p-0">
-      {% include 'patches/patch_main_element.html' %}
+    {% if forloop.last %}
+      {% if paginated_patches.has_next %}
+        <div class="col-12 p-0"
+        hx-get="{% url 'patch_list' %}?page={{ paginated_patches.next_page_number }}&display_mode={{ display_mode }}"
+        hx-trigger="revealed"
+        hx-swap="afterend"
+        hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination">
+      {% else %}
+        <div class="col-12 p-0">
+      {% endif %}
+    {% else %}
+      <div class="col-12 p-0">
+    {% endif %}
+    {% include 'patches/patch_main_element.html' %}
     </div>
   {% endfor %}
 
