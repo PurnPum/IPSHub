@@ -1,10 +1,16 @@
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Count
-from .models import Patch, PatchOption
+from .models import Patch
 from categories.models import Category
 from games.models import Game
 from . import add_real_data_to_db
+from django.core.paginator import Paginator
+
+def paginate(request, qs, limit=4):
+    paginated_qs = Paginator(qs, limit)
+    page_no = request.GET.get("page")
+    return paginated_qs.get_page(page_no)
 
 def patches_list(request):
     
@@ -17,6 +23,9 @@ def patches_list(request):
     return main_filter(request, 'patches/patches.html')
 
 def main_filter(request,html,game_id=None,category_id=None,patch_id=None):
+    
+    htmls = {'all': 'filters/filter.html', 'patches_patch_list': 'filters/filter_patches_and_main.html', 'patch_list': 'filters/filter_main.html'}
+    
     categories = Category.objects.all()
     patches = Patch.objects.all()
     patch_list = Patch.objects.all()
@@ -26,23 +35,21 @@ def main_filter(request,html,game_id=None,category_id=None,patch_id=None):
         patches = patches.filter(patch_options__category__base_game_id=game_id)
         categories = categories.filter(base_game_id=game_id)
     
-    if category_id == 'any':
-        return HttpResponse() # The hx-trigger will execute the filter for games instead
-    
-    if category_id and category_id != 'none':
+    if category_id and category_id != 'none' and category_id != 'any':
         patch_list = patch_list.filter(patch_options__category_id=category_id)
         patches = patches.filter(patch_options__category_id=category_id)
-        
-    if patch_id == 'any':
-        return HttpResponse() # The hx-trigger will execute the filter for categories instead
+        html = htmls['patches_patch_list']
 
-    if patch_id and patch_id != 'none':
+    if patch_id and patch_id != 'none' and patch_id != 'any':
         patch_list = patch_list.filter(parent_patch__id=patch_id)
+        html = htmls['patch_list']
         
     patch_list = patch_list.distinct()
-        
+    
+    paginated_patches = paginate(request, patch_list)
+    
     final_patch_list = []
-    for patch in patch_list:
+    for patch in paginated_patches:
         patch_options = patch.patch_options.all()
         loop_categories = [p.category for p in patch_options]
         games = set(category.base_game for category in loop_categories)
@@ -70,27 +77,21 @@ def main_filter(request,html,game_id=None,category_id=None,patch_id=None):
     
     top_8_parent_patches = patches.annotate(subpatch_count=Count('subpatches')).filter(subpatch_count__gt=0).order_by('-subpatch_count')[:8]
     
-    return render(request, html, {
+    context = {
         'patches' : final_patch_list,
+        'paginated_patches': paginated_patches,
         'top8categories': top_8_categories,
         'top8parentpatches': top_8_parent_patches,
         'top8games': top_8_games,
         'amountCat': len(top_8_categories),
         'amountPat': len(top_8_parent_patches)
-    })
+    }
     
+    return render(request, html, context)
 
-def filter_categories_patches_and_main(request):
+def filter(request):
     game_id = request.GET.get('selectedGame','any')
-    
-    return main_filter(request, 'filters/filter_categories_patches_and_main.html', game_id=game_id)
-    
-def filter_patches_and_main(request):
     category_id = request.GET.get('selectedCategory','any')
-    
-    return main_filter(request, 'filters/filter_patches_and_main.html', category_id=category_id)
-
-def filter_main(request):
     patch_id = request.GET.get('selectedPatch','any')
-    
-    return main_filter(request, 'filters/filter_main.html', patch_id=patch_id)
+    print(game_id, category_id, patch_id)
+    return main_filter(request, 'filters/filter.html', game_id=game_id, category_id=category_id, patch_id=patch_id)

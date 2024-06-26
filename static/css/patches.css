@@ -116,6 +116,10 @@
     height: 100%;
 }
 
+.custom-hidden{
+    display: none;
+}
+
 @media (max-width: 1200px) {
     .custom-2-5-rem-icon {
         font-size: 1.90rem;

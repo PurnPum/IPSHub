@@ -1,4 +1,10 @@
-<div class="col">
+<div class="col"
+    _="on intersection(intersecting)
+    if intersecting set opacity to 0
+    then set my *height to 'auto'
+    then add .custom-seen to me
+    then transition opacity to 1
+    else set my *height to '0px' unless I match .custom-seen">
     <div class="container-fluid custom-element-top-border">
         <div class="row p-0 custom-title-bg custom-hover-scale-110">
             <div class="col-4 d-none d-sm-flex ps-1 pe-0 align-items-center">
