@@ -1,10 +1,14 @@
 <div class="col" hx-swap-oob="true" id="category-select">
     <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">Category</h6>
-    <select id="category-select-hx" name="selectedCategory" class="form-select custom-select-border" aria-label="Category"
+    <select disabled id="category-select-hx" name="selectedCategory" class="form-select custom-select-border" aria-label="Category"
     _="on change 
-    remove .selected from <option/>
-    then add .selected to my.options[my.selectedIndex]
-    then send changed_category to #patch-list-filters">
+            remove .selected from <option/>
+            then add .selected to my.options[my.selectedIndex]
+            then send changed_category to #patch-list-filters
+        on htmx:afterOnLoad from #patch-list-filters
+            if my.options[my.selectedIndex].value == 'any' or my.options[my.selectedIndex].value == 'none'
+                then set #patch-select-hx.disabled to true
+            else set #patch-select-hx.disabled to false">
         {% if amountCat > 0 %}
             <option class="selected" value="any">Any Category</option>
         {% else %}

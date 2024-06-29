@@ -22,34 +22,48 @@ def patches_list(request):
     
     return main_filter(request, 'all')
 
-def main_filter(request,htmlkey,extravars={},game_id=None,category_id=None,patch_id=None):
+def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=None,category_id=None,patch_id=None,sorting_by=None):
     
     htmls = {'all': 'patches/patches.html', 'base_game': 'filters/filter.html' , 'category': 'filters/filter_patches_and_main.html', 'base_patch': 'filters/filter_main.html', 'patch_list_page': 'filters/filter_patch_list_no_oob.html'}
     html = htmls['all']
     
+    sorting_criteria = {'Downloads': 'downloads', 'Favorites': 'favorites', 'Creation Date': 'creation_date', 'Name': 'name', 'Sub-patches': 'subpatches'}
+    
     categories = Category.objects.all()
     patches = Patch.objects.all()
     patch_list = Patch.objects.all()
-
+    
     if game_id and game_id != 'any' and game_id != 'none':
         patch_list = patch_list.filter(patch_options__category__base_game_id=game_id)
         patches = patches.filter(patch_options__category__base_game_id=game_id)
         categories = categories.filter(base_game_id=game_id)
     
-    if category_id and category_id != 'none' and category_id != 'any':
-        patch_list = patch_list.filter(patch_options__category_id=category_id)
-        patches = patches.filter(patch_options__category_id=category_id)
+        if category_id and category_id != 'none' and category_id != 'any':
+            patch_list = patch_list.filter(patch_options__category_id=category_id)
+            patches = patches.filter(patch_options__category_id=category_id)
 
-    if patch_id and patch_id != 'none' and patch_id != 'any':
-        patch_list = patch_list.filter(parent_patch__id=patch_id)
-        html = htmls['patch_list']
-        
+            if patch_id and patch_id != 'none' and patch_id != 'any':
+                patch_list = patch_list.filter(parent_patch__id=patch_id)
+    
     try:
         html = htmls[htmlkey]
     except:
         print("Error in htmlkey: " + htmlkey)
         
     patch_list = patch_list.distinct()
+    
+    if sorting_by is None or sorting_by not in sorting_criteria.keys():
+        sorting_by = list(sorting_criteria.keys())[0]
+    
+    if sorting_order == 'descending':
+        sorting_char = '-'
+    else:
+        sorting_char = ''
+    
+    if sorting_by == 'Sub-patches':
+        patch_list = patch_list.annotate(subpatch_count=Count('subpatches')).order_by(sorting_char+'subpatch_count')
+    else:
+        patch_list = patch_list.order_by(sorting_char+sorting_criteria[sorting_by])
     
     paginated_patches = paginate(request, patch_list)
     
@@ -81,7 +95,7 @@ def main_filter(request,htmlkey,extravars={},game_id=None,category_id=None,patch
     top_8_categories = categories.annotate(num_categories=Count('patchoption__patches')).order_by('-num_categories')[:8]
     
     top_8_parent_patches = patches.annotate(subpatch_count=Count('subpatches')).filter(subpatch_count__gt=0).order_by('-subpatch_count')[:8]
-    
+        
     context = {
         'patches' : final_patch_list,
         'paginated_patches': paginated_patches,
@@ -90,6 +104,7 @@ def main_filter(request,htmlkey,extravars={},game_id=None,category_id=None,patch
         'top8games': top_8_games,
         'amountCat': len(top_8_categories),
         'amountPat': len(top_8_parent_patches),
+        'sorting_criteria': sorting_criteria,
         'extravars': extravars
     }
     
@@ -99,15 +114,21 @@ def filter(request, htmlkey=None, extravars={}):
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
     patch_id = request.GET.get('selectedPatch','any')
-    print(game_id, category_id, patch_id)
+    sorting_by = request.GET.get('selectedSorting','Downloads')
+    sorting_order = request.GET.get('sorting_order','descending')
+    
+    print(game_id, category_id, patch_id, sorting_by, sorting_order)
     if htmlkey is None:
-        if game_id == 'any' or category_id == 'any':
+        if game_id in ['none', 'any']:
+            htmlkey = 'all'
+        elif category_id in ['none', 'any']:
             htmlkey = 'base_game'
-        elif patch_id == 'any':
+        elif patch_id in ['none', 'any']:
             htmlkey = 'category'
         else:
             htmlkey = 'base_patch'
-    return main_filter(request, htmlkey, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id)
+    
+    return main_filter(request, htmlkey, sorting_order, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
 def get_patch_list_only(request):
     display_mode = request.GET.get('display_mode')
