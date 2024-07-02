@@ -46,18 +46,18 @@
                 if #sorting-order matches .bi-arrow-down-square-fill
                     remove .bi-arrow-down-square-fill from #sorting-order
                     add .bi-arrow-up-square-fill to #sorting-order
-                    set #sorting-order.title to 'Ascending order'
+                    set #sorting-order.title to 'Change to descending order'
                     set #sorting-order.value to 'ascending'
                     set #sorting-order-hidden's value to 'ascending'
                     send changed_sorting to #patch-list-filters
                 else
                     remove .bi-arrow-up-square-fill from #sorting-order
                     add .bi-arrow-down-square-fill to #sorting-order
-                    set #sorting-order.title to 'Descending order'
+                    set #sorting-order.title to 'Change to ascending order'
                     set #sorting-order.value to 'descending'
                     set #sorting-order-hidden's value to 'descending'
-                    send changed_sorting to #patch-list-filters">
-                    <i id="sorting-order" class="bi bi-arrow-down-square-fill" value="descending" title="Descending order"></i>
+                    send changed_sorting to #patch-list-filters end">
+                    <i id="sorting-order" class="bi bi-arrow-down-square-fill custom-sorting-icon" value="descending" title="Change to ascending order"></i>
                 </button>
             </h6>
         </div>

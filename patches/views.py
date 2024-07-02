@@ -55,10 +55,10 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
     if sorting_by is None or sorting_by not in sorting_criteria.keys():
         sorting_by = list(sorting_criteria.keys())[0]
     
+    sorting_char = ''
+    
     if sorting_order == 'descending':
         sorting_char = '-'
-    else:
-        sorting_char = ''
     
     if sorting_by == 'Sub-patches':
         patch_list = patch_list.annotate(subpatch_count=Count('subpatches')).order_by(sorting_char+'subpatch_count')

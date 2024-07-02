@@ -120,6 +120,14 @@
     display: none;
 }
 
+.custom-sorting-icon{
+    color: cyan;
+}
+
+.custom-sorting-icon:hover{
+    color: #007Fff;
+}
+
 @media (max-width: 1200px) {
     .custom-2-5-rem-icon {
         font-size: 1.90rem;
