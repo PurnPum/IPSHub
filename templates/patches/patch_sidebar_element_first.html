@@ -1,0 +1,13 @@
+{% extends "generic/sidebar_element.html" %}
+
+{% block title %}{{ data.game.title }}{% endblock %}
+{% block shown_title %}{{ data.game.title }}{% endblock %}
+
+{% block data_list %}
+    <li class="col d-flex justify-content-center align-items-center">
+        <img src="{{ data.game.image_mini_ref }}" aria-label="{{ data.game.title }}" alt="{{ data.game.title }}" class="img-fluid bd-placeholder-img" title="{{ data.game.title }}" style="width: auto; height: 2rem;"/>
+    </li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i><span class="text-truncate custom-truncate ms-2" title="{{ data.patches_amount }}">Patches: {{ data.patches_amount }}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-calendar3"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.latest_patch }}">Last patch: {{ data.latest_patch}}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.categories_amount }}">Categories: {{ data.categories_amount }}</span></li>
+{% endblock %}

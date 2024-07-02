@@ -55,10 +55,10 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
     if sorting_by is None or sorting_by not in sorting_criteria.keys():
         sorting_by = list(sorting_criteria.keys())[0]
     
-    sorting_char = ''
+    sorting_char = '-'
     
-    if sorting_order == 'descending':
-        sorting_char = '-'
+    if sorting_order == 'ascending':
+        sorting_char = ''
     
     if sorting_by == 'Sub-patches':
         patch_list = patch_list.annotate(subpatch_count=Count('subpatches')).order_by(sorting_char+'subpatch_count')
@@ -95,6 +95,41 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
     top_8_categories = categories.annotate(num_categories=Count('patchoption__patches')).order_by('-num_categories')[:8]
     
     top_8_parent_patches = patches.annotate(subpatch_count=Count('subpatches')).filter(subpatch_count__gt=0).order_by('-subpatch_count')[:8]
+    
+    top_5_games = Game.objects.annotate(num_patches=Count('categories__patchoption__patches')).order_by('-num_patches')[:5]
+    
+    sidebar_games = []
+    
+    for game in top_5_games:
+        game_patches = Patch.objects.filter(patch_options__category__base_game=game)
+        game_patches_amount = game_patches.count()
+        game_categories_amount = game.categories.count()
+        latest_patch = game_patches.order_by('-creation_date').first().creation_date
+        sidebar_games.append({
+            'game': game,
+            'patches_amount': game_patches_amount,
+            'latest_patch': latest_patch,
+            'categories_amount': game_categories_amount
+        })
+    
+    top_5_categories = categories.annotate(num_categories=Count('patchoption__patches')).order_by('-num_categories')[:5]
+    
+    sidebar_categories = []
+    
+    for category in top_5_categories:
+        category_patches = Patch.objects.filter(patch_options__category=category)
+        category_patches_amount = category_patches.count()
+        base_game = category.base_game
+        latest_patch = category_patches.order_by('-creation_date').first().creation_date
+        patch_options_amount = category.patchoption_set.count()
+        sidebar_categories.append({
+            'category': category,
+            'patches_amount': category_patches_amount,
+            'latest_patch': latest_patch,
+            'base_game': base_game,
+            'patch_options_amount': patch_options_amount
+        })
+    
         
     context = {
         'patches' : final_patch_list,
@@ -102,6 +137,8 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         'top8categories': top_8_categories,
         'top8parentpatches': top_8_parent_patches,
         'top8games': top_8_games,
+        'sidebar_categories': sidebar_categories,
+        'sidebar_games': sidebar_games,
         'amountCat': len(top_8_categories),
         'amountPat': len(top_8_parent_patches),
         'sorting_criteria': sorting_criteria,
@@ -117,7 +154,6 @@ def filter(request, htmlkey=None, extravars={}):
     sorting_by = request.GET.get('selectedSorting','Downloads')
     sorting_order = request.GET.get('sorting_order','descending')
     
-    print(game_id, category_id, patch_id, sorting_by, sorting_order)
     if htmlkey is None:
         if game_id in ['none', 'any']:
             htmlkey = 'all'

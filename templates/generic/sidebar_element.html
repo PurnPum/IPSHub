@@ -4,13 +4,7 @@
             <div class="text-truncate custom-truncate w-100 text-center custom-lighter-blue-font" title="{% block title %}{% endblock %}">{% block shown_title %}{% endblock %}</div>
         </div>
         <ul class="row row-cols-1 justify-content-center list-unstyled">
-            <li class="col d-flex justify-content-center align-items-center">
-                <img src="{% block image_src %}{% endblock %}" aria-label="{% block image_aria %}{% endblock %}" alt="{% block image_alt %}{% endblock %}" class="img-fluid bd-placeholder-img" title="{% block image_title %}{% endblock %}" style="width: auto; height: 2rem;"/>
-                <span class="ms-2 fw-bold h6 text-truncate" title="{% block span_title %}{% endblock %}">{% block span_shown_title %}{% endblock %}</span>
-            </li>
-            <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i><span class="ms-2">{% block downloads %}{% endblock %}</span></li>
-            <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{% block user %}{% endblock %}</span></li>
-            <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2 fw-bold text-decoration-underline">{% block category %}{% endblock %}</span></li>
+            {% block data_list %}{% endblock %}
         </ul>
     </div>
 </div>
