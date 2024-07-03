@@ -16,14 +16,16 @@
     hx-get="{% url 'filter' %}"
     hx-trigger="changed_base_game, changed_category, changed_base_patch, changed_sorting"
     hx-swap="none"
-    hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #sorting-criteria-hx, #sorting-order-hidden">
+    hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #sorting-criteria-hx, #sorting-order-hidden, #selected-filter">
     <input type="hidden" id="sorting-order-hidden" name="sorting_order">
+    <input type="hidden" id="selected-filter" name="selected_filter">
     <div class="col" id="game-select">
         <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">{% block first_filter %}{% endblock %}</h6>
         <select id="game-select-hx" name="selectedGame" class="form-select custom-select-border" aria-label="{% block first_filter_aria %}{% endblock %}"
             _="on change 
                     remove .selected from <option/>
                     then add .selected to my.options[my.selectedIndex]
+                    then set #selected-filter's value to 'base_game'
                     then send changed_base_game to #patch-list-filters
                 on htmx:afterOnLoad from #patch-list-filters
                     if my.options[my.selectedIndex].value == 'any' or my.options[my.selectedIndex].value == 'none'

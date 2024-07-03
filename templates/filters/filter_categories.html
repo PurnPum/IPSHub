@@ -4,6 +4,7 @@
     _="on change 
             remove .selected from <option/>
             then add .selected to my.options[my.selectedIndex]
+            then set #selected-filter's value to 'category'
             then send changed_category to #patch-list-filters
         on htmx:afterOnLoad from #patch-list-filters
             if my.options[my.selectedIndex].value == 'any' or my.options[my.selectedIndex].value == 'none'

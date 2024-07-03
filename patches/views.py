@@ -104,7 +104,11 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         game_patches = Patch.objects.filter(patch_options__category__base_game=game)
         game_patches_amount = game_patches.count()
         game_categories_amount = game.categories.count()
-        latest_patch = game_patches.order_by('-creation_date').first().creation_date
+        latest_patch = game_patches.order_by('-creation_date').first()
+        try:
+            latest_patch = latest_patch.creation_date
+        except:
+            latest_patch = "No patches"
         sidebar_games.append({
             'game': game,
             'patches_amount': game_patches_amount,
@@ -120,7 +124,11 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         category_patches = Patch.objects.filter(patch_options__category=category)
         category_patches_amount = category_patches.count()
         base_game = category.base_game
-        latest_patch = category_patches.order_by('-creation_date').first().creation_date
+        latest_patch = category_patches.order_by('-creation_date').first()
+        try:
+            latest_patch = latest_patch.creation_date
+        except:
+            latest_patch = "No patches"
         patch_options_amount = category.patchoption_set.count()
         sidebar_categories.append({
             'category': category,
@@ -153,9 +161,12 @@ def filter(request, htmlkey=None, extravars={}):
     patch_id = request.GET.get('selectedPatch','any')
     sorting_by = request.GET.get('selectedSorting','Downloads')
     sorting_order = request.GET.get('sorting_order','descending')
+    selected_filter = request.GET.get('selected_filter','none')
     
     if htmlkey is None:
-        if game_id in ['none', 'any']:
+        if selected_filter and selected_filter != 'none':
+            htmlkey = selected_filter
+        elif game_id in ['none', 'any']:
             htmlkey = 'all'
         elif category_id in ['none', 'any']:
             htmlkey = 'base_game'
@@ -163,6 +174,15 @@ def filter(request, htmlkey=None, extravars={}):
             htmlkey = 'category'
         else:
             htmlkey = 'base_patch'
+    
+    if selected_filter == 'base_game':
+        category_id = 'any'
+        patch_id = 'any'
+    
+    if selected_filter == 'category':
+        patch_id = 'any'
+    
+    print('game_id:',game_id, 'category_id:', category_id, 'patch_id:', patch_id, 'sorting_by:', sorting_by, 'sorting_order:', sorting_order, 'selected_filter:', selected_filter, 'htmlkey:', htmlkey)
     
     return main_filter(request, htmlkey, sorting_order, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 

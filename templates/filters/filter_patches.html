@@ -4,6 +4,7 @@
     _="on change 
         remove .selected from <option/>
         then add .selected to my.options[my.selectedIndex]
+        then set #selected-filter's value to 'base_patch'
         then send changed_base_patch to #patch-list-filters">
         {% if amountPat > 0 %}
             <option class="selected" value="any">Any Patch</option>
