@@ -3,6 +3,15 @@
 {% block title %}{{ data.game.title }}{% endblock %}
 {% block shown_title %}{{ data.game.title }}{% endblock %}
 
+{% block hs_code %}
+    on click
+    set #game-select-hx's value to '{{ data.game.id }}'
+    then set #selected-filter's value to 'base_game'
+    then send changed_base_game to #patch-list-filters
+{% endblock %}
+
+{% block button_title %}Load Game into filter{% endblock %}
+
 {% block data_list %}
     <li class="col d-flex justify-content-center align-items-center">
         <img src="{{ data.game.image_mini_ref }}" aria-label="{{ data.game.title }}" alt="{{ data.game.title }}" class="img-fluid bd-placeholder-img" title="{{ data.game.title }}" style="width: auto; height: 2rem;"/>
