@@ -1,30 +1,14 @@
-<div class="col" id="sorting-criteria">
+<div class="col" id="{% block sorting_id %}{% endblock %}">
     <div class="row d-flex align-items-center mb-0 pb-1 pt-2">
-        <h6 class="text-center fw-bold text-light mb-0">Sort By
+        <h6 class="text-center fw-bold text-light mb-0">{% block h6_text %}{% endblock %}
             <button class="btn p-0 align-items-center"
-            _="on click 
-            if #sorting-order matches .bi-arrow-down-square-fill
-                remove .bi-arrow-down-square-fill from #sorting-order
-                add .bi-arrow-up-square-fill to #sorting-order
-                set #sorting-order.title to 'Change to descending order'
-                set #sorting-order.value to 'ascending'
-                set #sorting-order-hidden's value to 'ascending'
-                send changed_sorting to #patch-list-filters
-            else
-                remove .bi-arrow-up-square-fill from #sorting-order
-                add .bi-arrow-down-square-fill to #sorting-order
-                set #sorting-order.title to 'Change to ascending order'
-                set #sorting-order.value to 'descending'
-                set #sorting-order-hidden's value to 'descending'
-                send changed_sorting to #patch-list-filters end">
-                <i id="sorting-order" class="bi bi-arrow-down-square-fill custom-sorting-icon" value="descending" title="Change to ascending order"></i>
+            _="{% block hs_code %}{% endblock %}">
+                <i id="{% block sorting_icon_id %}{% endblock %}" class="bi bi-arrow-down-square-fill custom-sorting-icon" value="descending" title="Change to ascending order"></i>
             </button>
         </h6>
     </div>
-    <select id="sorting-criteria-hx" name="selectedSorting" class="form-select custom-select-border" aria-label="Sorting"
-    _="on change send changed_sorting to #patch-list-filters">
-        {% for s in sorting_criteria %}
-            <option value="{{ s }}">{{ s }}</option>
-        {% endfor %}
+    <select id="{% block sorting_id_select %}{% endblock %}" name="{% block sorting_name_select %}{% endblock %}" class="form-select custom-select-border" aria-label="Sorting"
+    _="{% block hs_code_select %}{% endblock %}">
+        {% block sorting_list %}{% endblock %}
     </select>
 </div>
