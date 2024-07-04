@@ -72,6 +72,7 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         patch_options = patch.patch_options.all()
         loop_categories = [p.category for p in patch_options]
         games = set(category.base_game for category in loop_categories)
+        subpatch_count = patch.subpatches.count()
         
         if len(games) == 1:
             game = games.pop()
@@ -87,7 +88,8 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         final_patch_list.append({
             'patch': patch,
             'game': game,
-            'categories': categories_string         
+            'categories': categories_string,
+            'subpatches_amount': subpatch_count
         })
     
     top_8_games = Game.objects.annotate(num_patches=Count('categories__patchoption__patches')).order_by('-num_patches')[:8]
@@ -150,6 +152,7 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         'amountCat': len(top_8_categories),
         'amountPat': len(top_8_parent_patches),
         'sorting_criteria': sorting_criteria,
+        'sorting_by': sorting_by,
         'extravars': extravars
     }
     
