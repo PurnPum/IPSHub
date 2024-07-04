@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, OuterRef, Subquery
 from .models import Patch
 from categories.models import Category
 from games.models import Game
@@ -38,12 +38,11 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         patches = patches.filter(patch_options__category__base_game_id=game_id)
         categories = categories.filter(base_game_id=game_id)
     
-        if category_id and category_id != 'none' and category_id != 'any':
-            patch_list = patch_list.filter(patch_options__category_id=category_id)
-            patches = patches.filter(patch_options__category_id=category_id)
+    if category_id and category_id != 'none' and category_id != 'any':
+        patch_list = patch_list.filter(patch_options__category_id=category_id)
 
-            if patch_id and patch_id != 'none' and patch_id != 'any':
-                patch_list = patch_list.filter(parent_patch__id=patch_id)
+    if patch_id and patch_id != 'none' and patch_id != 'any':
+        patch_list = patch_list.filter(parent_patch__id=patch_id)
     
     try:
         html = htmls[htmlkey]
@@ -96,7 +95,13 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
     
     top_8_categories = categories.annotate(num_categories=Count('patchoption__patches')).order_by('-num_categories')[:8]
     
-    top_8_parent_patches = patches.annotate(subpatch_count=Count('subpatches')).filter(subpatch_count__gt=0).order_by('-subpatch_count')[:8]
+    subpatches_in_patch_list = patches.filter(parent_patch=OuterRef('pk'), id__in=patch_list).values('id')
+
+    top_8_parent_patches = patches.annotate(
+        subpatch_count=Count(Subquery(subpatches_in_patch_list))
+    ).filter(
+        subpatch_count__gt=0
+    ).order_by('-subpatch_count')[:8]
     
     top_5_games = Game.objects.annotate(num_patches=Count('categories__patchoption__patches')).order_by('-num_patches')[:5]
     

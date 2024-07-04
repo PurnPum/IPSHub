@@ -32,7 +32,8 @@
                         then set #category-select-hx.disabled to true
                         then set #patch-select-hx.disabled to true
                     else
-                        set #category-select-hx.disabled to false">
+                        set #category-select-hx.disabled to false
+                        set #patch-select-hx.disabled to false">
             <option value="any" class="selected">Any Game</option>
             {% for topgame in top8games %}
                 <option value="{{ topgame.id }}">{{ topgame.title }}</option>

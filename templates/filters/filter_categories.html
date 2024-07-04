@@ -5,11 +5,7 @@
             remove .selected from <option/>
             then add .selected to my.options[my.selectedIndex]
             then set #selected-filter's value to 'category'
-            then send changed_category to #patch-list-filters
-        on htmx:afterOnLoad from #patch-list-filters
-            if my.options[my.selectedIndex].value == 'any' or my.options[my.selectedIndex].value == 'none'
-                then set #patch-select-hx.disabled to true
-            else set #patch-select-hx.disabled to false">
+            then send changed_category to #patch-list-filters">
         {% if amountCat > 0 %}
             <option class="selected" value="any">Any Category</option>
         {% else %}
