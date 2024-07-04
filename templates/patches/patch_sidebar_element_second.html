@@ -5,8 +5,11 @@
 
 {% block hs_code %}
     on click
-    set #category-select-hx's value to '{{ data.category.id }}'
-    then set #game-select-hx's value to '{{ data.base_game.id }}'
+    set #game-select-hx's value to '{{ data.base_game.id }}'
+    then set #selected-filter's value to 'base_game'
+    then send changed_base_game to #patch-list-filters
+    then wait for a htmx:afterSettle from #patch-list-filters or 1s
+    then set #category-select-hx's value to '{{ data.category.id }}'
     then set #selected-filter's value to 'category'
     then send changed_category to #patch-list-filters
 {% endblock %}
