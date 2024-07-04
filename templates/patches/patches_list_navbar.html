@@ -1,6 +1,9 @@
-{% extends "generic/list_navbar.html" %}
+{% extends "generic/main/list_navbar.html" %}
 
 {% block title %}Patches{% endblock %}
+
+{% block list_filters_id %}patch-list-filters{% endblock %}
+
 {% block first_filter %}Base Game{% endblock %}
 {% block second_filter %}Category{% endblock %}
 {% block third_filter %}Base Patch{% endblock %}

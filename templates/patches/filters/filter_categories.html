@@ -1,0 +1,31 @@
+{% extends "generic/filter/filter_element.html" %}
+
+{% block swap_oob %}hx-swap-oob="true"{% endblock %}
+{% block element_id %}category-select{% endblock %}
+{% block h6_text %}Category{% endblock %}
+{% block is_disabled %}disabled{% endblock %}
+{% block element_id_select %}category-select-hx{% endblock %}
+{% block element_name_select %}selectedCategory{% endblock %}
+{% block element_id_aria_label %}Category{% endblock %}
+
+{% block hs_code %}
+on change 
+    remove .selected from <option/>
+    then add .selected to my.options[my.selectedIndex]
+    then set #selected-filter's value to 'category'
+    then send changed_category to #patch-list-filters
+{% endblock %}
+
+{% block any_none %}
+    {% if amountCat > 0 %}
+        <option class="selected" value="any">Any Category</option>
+    {% else %}
+        <option class="selected" value="none">No matching categories</option>
+    {% endif %}
+{% endblock %}
+
+{% block top8 %}
+    {% for category in top8categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+    {% endfor %}
+{% endblock %}

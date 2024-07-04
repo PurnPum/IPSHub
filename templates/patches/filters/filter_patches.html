@@ -1,0 +1,31 @@
+{% extends "generic/filter/filter_element.html" %}
+
+{% block swap_oob %}hx-swap-oob="true"{% endblock %}
+{% block element_id %}patch-select{% endblock %}
+{% block h6_text %}Base Patch{% endblock %}
+{% block is_disabled %}disabled{% endblock %}
+{% block element_id_select %}patch-select-hx{% endblock %}
+{% block element_name_select %}selectedPatch{% endblock %}
+{% block element_id_aria_label %}Base Patch{% endblock %}
+
+{% block hs_code %}
+on change 
+    remove .selected from <option/>
+    then add .selected to my.options[my.selectedIndex]
+    then set #selected-filter's value to 'base_patch'
+    then send changed_base_patch to #patch-list-filters
+{% endblock %}
+
+{% block any_none %}
+    {% if amountPat > 0 %}
+        <option class="selected" value="any">Any Patch</option>
+    {% else %}
+        <option class="selected" value="none">No matching patches</option>
+    {% endif %}
+{% endblock %}
+
+{% block top8 %}
+    {% for patch in top8parentpatches %}
+        <option value="{{ patch.id }}">{{ patch.name }}</option>
+    {% endfor %}
+{% endblock %}

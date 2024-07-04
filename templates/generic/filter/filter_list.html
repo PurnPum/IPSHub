@@ -1,0 +1,8 @@
+<div style="display: none;" aria-hidden="true">
+    <div hx-swap-oob="true" id="{% block main_layout_double_id %}{% endblock %}" class="row d-none d-xxl-flex custom-bottom-border pb-2">
+        {% block main_layout_double %}{% endblock %}
+    </div>
+    <div hx-swap-oob="true" id="{% block main_layout_single_id %}{% endblock %}" class="row d-flex d-xxl-none custom-bottom-border pb-2">
+        {% block main_layout_single %}{% endblock %}
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{% extends "generic/filter/filter_element.html" %}
+
+{% block swap_oob %}{% endblock %}
+{% block element_id %}game-select{% endblock %}
+{% block h6_text %}Base Game{% endblock %}
+{% block is_disabled %}{% endblock %}
+{% block element_id_select %}game-select-hx{% endblock %}
+{% block element_name_select %}selectedGame{% endblock %}
+{% block element_id_aria_label %}Base Game{% endblock %}
+
+{% block hs_code %}
+on change 
+    remove .selected from <option/>
+    then add .selected to my.options[my.selectedIndex]
+    then set #selected-filter's value to 'base_game'
+    then send changed_base_game to #patch-list-filters
+on htmx:afterOnLoad from #patch-list-filters
+    if my.options[my.selectedIndex].value == 'any' or my.options[my.selectedIndex].value == 'none'
+        then set #category-select-hx.disabled to true
+        then set #patch-select-hx.disabled to true
+    else
+        set #category-select-hx.disabled to false
+        set #patch-select-hx.disabled to false
+{% endblock %}
+
+{% block any_none %}<option value="any" class="selected">Any Game</option>{% endblock %}
+
+{% block top8 %}
+    {% for topgame in top8games %}
+        <option value="{{ topgame.id }}">{{ topgame.title }}</option>
+    {% endfor %}
+{% endblock %}

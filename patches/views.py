@@ -24,7 +24,7 @@ def patches_list(request):
 
 def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=None,category_id=None,patch_id=None,sorting_by=None):
     
-    htmls = {'all': 'patches/patches.html', 'base_game': 'filters/filter.html' , 'category': 'filters/filter_patches_and_main.html', 'base_patch': 'filters/filter_main.html', 'patch_list_page': 'filters/filter_patch_list_no_oob.html'}
+    htmls = {'all': 'patches/patches.html', 'base_game': 'patches/filters/filter.html' , 'category': 'patches/filters/filter_patches_and_main.html', 'base_patch': 'patches/filters/filter_main.html', 'patch_list_page': 'patches/filters/filter_patch_list_no_oob.html'}
     html = htmls['all']
     
     sorting_criteria = {'Downloads': 'downloads', 'Favorites': 'favorites', 'Creation Date': 'creation_date', 'Name': 'name', 'Sub-patches': 'subpatches'}

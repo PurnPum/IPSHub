@@ -1,0 +1,9 @@
+<div class="col" {% block swap_oob %}{% endblock %} id="{% block element_id %}{% endblock %}">
+    <h6 class="text-center fw-bold mb-0 text-light pb-1 pt-2">{% block h6_text %}{% endblock %}</h6>
+    <select {% block is_disabled %}{% endblock %} id="{% block element_id_select %}{% endblock %}" name="{% block element_name_select %}{% endblock %}" class="form-select custom-select-border" aria-label="{% block element_id_aria_label %}{% endblock %}"
+    _="{% block hs_code %}{% endblock %}">
+        {% block any_none %}{% endblock %}
+        
+        {% block top8 %}{% endblock %}
+    </select>
+</div>

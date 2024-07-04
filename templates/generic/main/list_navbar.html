@@ -1,0 +1,23 @@
+<nav class="row custom-title-bg custom-top-border d-flex align-items-center">
+    <div class="d-flex justify-content-between custom-list-header">
+        <h3 class="fw-bold mb-0 flex-grow-1 d-flex align-items-center">
+            {% block title %}{% endblock %}
+        </h3>
+        <button type="button" class="btn btn-success mt-1 mb-1 d-none d-sm-block">
+            <i class="bi bi-plus-lg"></i>
+            <span class="ms-2 text-truncate" title="Create Patch">Create Patch</span>
+        </button>
+        <button type="button" class="btn btn-success mt-1 mb-1 ms-1 d-sm-none">
+            <span title="Create Patch">Create Patch</span>
+        </button>
+    </div>
+</nav>
+<div id="{% block list_filters_id %}{% endblock %}" class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2"
+    hx-get="{% url 'filter' %}"
+    hx-trigger="changed_base_game, changed_category, changed_base_patch, changed_sorting"
+    hx-swap="none"
+    hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #sorting-criteria-hx, #sorting-order-hidden, #selected-filter">
+    <input type="hidden" id="sorting-order-hidden" name="sorting_order">
+    <input type="hidden" id="selected-filter" name="selected_filter">
+    {% include 'patches/filters/filter.html' %}
+</div>
