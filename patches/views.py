@@ -147,8 +147,8 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
     
         
     context = {
-        'patches' : final_patch_list,
-        'paginated_patches': paginated_patches,
+        'final_list' : final_patch_list,
+        'paginated_list': paginated_patches,
         'top8categories': top_8_categories,
         'top8parentpatches': top_8_parent_patches,
         'top8games': top_8_games,

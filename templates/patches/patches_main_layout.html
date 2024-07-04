@@ -1,40 +1,9 @@
-{% if display_mode == 'double' %}
-  {% for data in patches %}
-    {% if forloop.last %}
-      {% if paginated_patches.has_next %}
-        <div class="col-6 p-0"
-          hx-get="{% url 'patch_list' %}?page={{ paginated_patches.next_page_number }}&display_mode={{ display_mode }}"
-          hx-trigger="intersect once"
-          hx-swap="afterend"
-          hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx">
-      {% else %}
-        <div class="col-6 p-0">
-      {% endif %}
-    {% else %}
-      <div class="col-6 p-0">
-    {% endif %}
-    {% include 'patches/patch_main_element.html' %}
-    </div>
-  {% endfor %}
+{% extends "generic/main_layout.html" %}
 
-{% elif display_mode == 'single' %}
+{% block list_url_double %}{% url 'patch_list' %}{% endblock %}
+{% block includes_double %}#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
+{% block main_element_double %}{% include 'patches/patch_main_element.html' %}{% endblock %}
 
-  {% for data in patches %}
-    {% if forloop.last %}
-      {% if paginated_patches.has_next %}
-        <div class="col-12 p-0"
-        hx-get="{% url 'patch_list' %}?page={{ paginated_patches.next_page_number }}&display_mode={{ display_mode }}"
-        hx-trigger="intersect once"
-        hx-swap="afterend"
-        hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx">
-      {% else %}
-        <div class="col-12 p-0">
-      {% endif %}
-    {% else %}
-      <div class="col-12 p-0">
-    {% endif %}
-    {% include 'patches/patch_main_element.html' %}
-    </div>
-  {% endfor %}
-
-{% endif %}
+{% block list_url_single %}{% url 'patch_list' %}{% endblock %}
+{% block includes_single %}#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
+{% block main_element_single %}{% include 'patches/patch_main_element.html' %}{% endblock %}

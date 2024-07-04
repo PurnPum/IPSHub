@@ -1,29 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'generic/main.html' %}
 
-{% block content %}
-
-    {% include 'navbar.html' %}
-
-    <div class="container-fluid bg-dark pt-3 ps-0 pe-0 custom-mw-85">
-        <div class="row justify-content-around">
-            <div class="col-12 col-lg-8 p-0 flex grow-0 shrink-0 mx-auto">
-                <div class="container-fluid bg-dark">
-                    {% include 'patches/patches_list_navbar.html' %}
-                    <div id="patches-main-layout-double" class="row d-none d-xxl-flex custom-bottom-border pb-2">
-                        {% include 'patches/patches_main_layout.html' with display_mode="double" %}
-                    </div>
-                    <div id="patches-main-layout-single" class="row d-flex d-xxl-none custom-bottom-border pb-2">
-                        {% include 'patches/patches_main_layout.html' with display_mode="single" %}
-                    </div>
-                    {% include 'patches/patch_pagination.html' %}
-                </div>
-            </div>
-            <div class="row d-none d-lg-flex col-3 p-0 flex grow-0 shrink-0 mx-auto">
-                {% include 'patches/patches_sidebar_layout.html' %}
-            </div>
-        </div>
-    </div>
-
-    {% include 'footer.html' %}
-
-{% endblock %}
+{% block list_navbar %}{% include 'patches/patches_list_navbar.html' %}{% endblock %}
+{% block main_layout_double %}{% include 'patches/patches_main_layout.html' with display_mode="double" %}{% endblock %}
+{% block main_layout_single %}{% include 'patches/patches_main_layout.html' with display_mode="single" %}{% endblock %}
+{% block pagination %}{% include 'patches/patch_pagination.html' %}{% endblock %}
+{% block sidebar_layout %}{% include 'patches/patches_sidebar_layout.html' %}{% endblock %}
