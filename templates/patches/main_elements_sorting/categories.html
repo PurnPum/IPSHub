@@ -1,0 +1,5 @@
+{% if strong == 'true' %}
+    <li class="col d-flex justify-content-center align-items-center" title="{{ data.categories }}" ><i class="bi bi-bookmark-fill"></i> <strong class="text-truncate custom-truncate ms-2 fw-bold text-decoration-underline">{{ data.categories }}</strong></li>
+{% else %}
+    <li class="col d-flex justify-content-center align-items-center" title="{{ data.categories }}" ><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2 fw-bold text-decoration-underline">{{ data.categories }}</span></li>
+{% endif %}

@@ -1,0 +1,13 @@
+{% if strong == 'true' %}
+    <li class="col d-flex justify-content-center align-items-center"
+        _="on load
+        set sw to the scrollWidth of the first <strong/> in me
+        set cw to the clientWidth of the first <strong/> in me
+        if sw > cw then hide the first <strong/> in me"><i class="bi bi-calendar3" title="Release Date"></i> <strong class="ms-2 text-truncate custom-truncate">Release Date:</strong><strong class="ms-2">{{ data.game.release_date }}</strong></li>
+{% else %}
+    <li class="col d-flex justify-content-center align-items-center"
+        _="on load
+        set sw to the scrollWidth of the first <span/> in me
+        set cw to the clientWidth of the first <span/> in me
+        if sw > cw then hide the first <span/> in me"><i class="bi bi-calendar3" title="Release Date"></i> <span class="ms-2 text-truncate custom-truncate">Release Date:</span><span class="ms-2">{{ data.game.release_date }}</span></li>
+{% endif %}

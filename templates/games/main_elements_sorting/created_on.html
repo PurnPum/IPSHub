@@ -1,0 +1,13 @@
+{% if strong == 'true' %}
+    <li class="col d-flex justify-content-center align-items-center"
+        _="on load
+        set sw to the scrollWidth of the first <strong/> in me
+        set cw to the clientWidth of the first <strong/> in me
+        if sw > cw then hide the first <strong/> in me"><i class="bi bi-calendar3" title="Patch Creation Date"></i> <strong class="ms-2 text-truncate custom-truncate">Created on:</strong><strong class="ms-2">{{ data.last_patch.creation_date }}</strong></li>
+{% else %}
+    <li class="col d-flex justify-content-center align-items-center"
+        _="on load
+        set sw to the scrollWidth of the first <span/> in me
+        set cw to the clientWidth of the first <span/> in me
+        if sw > cw then hide the first <span/> in me"><i class="bi bi-calendar3" title="Patch Creation Date"></i> <span class="ms-2 text-truncate custom-truncate">Created on:</span><span class="ms-2">{{ data.last_patch.creation_date }}</span></li>
+{% endif %}

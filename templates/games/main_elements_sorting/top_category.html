@@ -1,0 +1,13 @@
+{% if strong == 'true' %}
+    <li class="col d-flex justify-content-center align-items-center"
+        _="on load
+        set sw to the scrollWidth of the first <strong/> in me
+        set cw to the clientWidth of the first <strong/> in me
+        if sw > cw then hide the first <strong/> in me"><i class="bi bi-bookmark-fill" title="Most popular Category"></i> <strong class="text-truncate custom-truncate ms-2">Top Category:</strong><strong class="text-truncate custom-truncate ms-2">{{ data.popular_category }}</strong></li>
+{% else %}
+    <li class="col d-flex justify-content-center align-items-center"
+        _="on load
+        set sw to the scrollWidth of the first <span/> in me
+        set cw to the clientWidth of the first <span/> in me
+        if sw > cw then hide the first <span/> in me"><i class="bi bi-bookmark-fill" title="Most popular Category"></i> <span class="text-truncate custom-truncate ms-2">Top Category:</span><span class="text-truncate custom-truncate ms-2">{{ data.popular_category }}</span></li>
+{% endif %}

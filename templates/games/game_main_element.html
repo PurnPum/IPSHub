@@ -10,59 +10,27 @@
 {% block data_list %}
 
 {% if sorting_by == 'Patches' %}   
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <strong class="ms-2">Total Patches:</strong><strong class="ms-2">{{ data.patches_amount }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="ms-2">Total Categories:</span><span class="ms-2">{{ data.categories_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <span/> in me
-    set cw to the clientWidth of the first <span/> in me
-    if sw > cw then hide the first <span/> in me"><i class="bi bi-alarm-fill" title="Last Patch"></i> <span class="ms-2 text-truncate custom-truncate">Last patch: </span><span class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{{ data.last_patch }}</span></li>
+    {% include 'games/main_elements_sorting/total_patches.html' with strong='true' %}
+    {% include 'games/main_elements_sorting/total_categories.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/last_patch.html' with strong='false' %}
 {% elif sorting_by == 'Categories' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <strong class="ms-2">Total Categories:</strong><strong class="ms-2">{{ data.categories_amount }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <span class="ms-2">Total Patches:</span><span class="ms-2">{{ data.patches_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <span/> in me
-    set cw to the clientWidth of the first <span/> in me
-    if sw > cw then hide the first <span/> in me"><i class="bi bi-alarm-fill" title="Last Patch"></i> <span class="ms-2 text-truncate custom-truncate">Last patch: </span><span class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{{ data.last_patch }}</span></li>
+    {% include 'games/main_elements_sorting/total_categories.html' with strong='true' %}
+    {% include 'games/main_elements_sorting/total_patches.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/last_patch.html' with strong='false' %}
 {% elif sorting_by == 'Name' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="ms-2">Total Categories:</span><span class="ms-2">{{ data.categories_amount }}</spa></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <span class="ms-2">Total Patches:</span><span class="ms-2">{{ data.patches_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <span/> in me
-    set cw to the clientWidth of the first <span/> in me
-    if sw > cw then hide the first <span/> in me"><i class="bi bi-alarm-fill" title="Last Patch"></i> <span class="ms-2 text-truncate custom-truncate">Last patch: </span><span class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{{ data.last_patch }}</span></li>
+    {% include 'games/main_elements_sorting/total_categories.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/total_patches.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/last_patch.html' with strong='false' %}
 {% elif sorting_by == 'Release Date' %}
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <strong/> in me
-    set cw to the clientWidth of the first <strong/> in me
-    if sw > cw then hide the first <strong/> in me"><i class="bi bi-calendar3-fill" title="Release Date"></i> <strong class="ms-2 text-truncate custom-truncate">Release Date:</strong><strong class="ms-2">{{ data.game.release_date }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="ms-2">Total Categories:</span><span class="ms-2">{{ data.categories_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <span class="ms-2">Total Patches:</span><span class="ms-2">{{ data.patches_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <span/> in me
-    set cw to the clientWidth of the first <span/> in me
-    if sw > cw then hide the first <span/> in me"><i class="bi bi-alarm-fill" title="Last Patch"></i> <span class="ms-2 text-truncate custom-truncate">Last patch: </span><span class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{{ data.last_patch }}</span></li>
+    {% include 'games/main_elements_sorting/release_date.html' with strong='true' %}
+    {% include 'games/main_elements_sorting/total_categories.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/total_patches.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/last_patch.html' with strong='false' %}
 {% elif sorting_by == 'Latest Patch' %}
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <strong/> in me
-    set cw to the clientWidth of the first <strong/> in me
-    if sw > cw then hide the first <strong/> in me"><i class="bi bi-alarm-fill" title="Last Patch"></i> <strong class="ms-2 text-truncate custom-truncate">Last patch: </strong><strong class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{{ data.last_patch }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <span/> in me
-    set cw to the clientWidth of the first <span/> in me
-    if sw > cw then hide the first <span/> in me"><i class="bi bi-calendar3-fill" title="Patch Creation Date"></i> <span class="ms-2 text-truncate custom-truncate">Created on:</span><span class="ms-2">{{ data.last_patch.creation_date }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="ms-2">Total Categories:</span><span class="ms-2">{{ data.categories_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <span class="ms-2">Total Patches:</span><span class="ms-2">{{ data.patches_amount }}</span></li>
+    {% include 'games/main_elements_sorting/last_patch.html' with strong='true' %}
+    {% include 'games/main_elements_sorting/created_on.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/total_categories.html' with strong='false' %}
+    {% include 'games/main_elements_sorting/total_patches.html' with strong='false' %}
 {% endif %}
-    <li class="col d-flex justify-content-center align-items-center"
-    _="on load
-    set sw to the scrollWidth of the first <span/> in me
-    set cw to the clientWidth of the first <span/> in me
-    if sw > cw then hide the first <span/> in me"><i class="bi bi-bookmark-fill" title="Most popular Category"></i> <span class="text-truncate custom-truncate ms-2">Top Category:</span><span class="text-truncate custom-truncate ms-2">{{ data.popular_category }}</span></li>
+    {% include 'games/main_elements_sorting/top_category.html' with strong='false' %}
 {% endblock %}

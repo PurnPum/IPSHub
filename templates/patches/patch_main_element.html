@@ -10,28 +10,27 @@
 {% block data_list %}
 
 {% if sorting_by == 'Favorites' %}   
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <strong class="ms-2">Favorites:</strong><strong class="ms-2">{{ data.patch.favorites }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <span class="ms-2">Downloads:</span><span class="ms-2">{{ data.patch.downloads }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{{ data.patch.creator }}</span></li>
+    {% include 'patches/main_elements_sorting/favorites.html' with strong="true" %}
+    {% include 'patches/main_elements_sorting/downloads.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/creator.html' with strong="false" %}
 {% elif sorting_by == 'Downloads' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <strong class="ms-2">Downloads:</strong><strong class="ms-2">{{ data.patch.downloads }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{{ data.patch.creator }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <span class="ms-2">Favorites:</span><span class="ms-2">{{ data.patch.favorites }}</span></li>
+    {% include 'patches/main_elements_sorting/downloads.html' with strong="true" %}
+    {% include 'patches/main_elements_sorting/creator.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/favorites.html' with strong="false" %}
 {% elif sorting_by == 'Name' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <span class="ms-2">Downloads:</span><span class="ms-2">{{ data.patch.downloads }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{{ data.patch.creator }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <span class="ms-2">Favorites:</span><span class="ms-2">{{ data.patch.favorites }}</span></li>
+    {% include 'patches/main_elements_sorting/downloads.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/creator.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/favorites.html' with strong="false" %}
 {% elif sorting_by == 'Creation Date' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-calendar3"></i> <strong class="ms-2">Created on:</strong><strong class="ms-2">{{ data.patch.creation_date }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <span class="ms-2">Downloads:</span><span class="ms-2">{{ data.patch.downloads }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{{ data.patch.creator }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <span class="ms-2">Favorites:</spa><span class="ms-2">{{ data.patch.favorites }}</span></li>
+    {% include 'patches/main_elements_sorting/created_on.html' with strong="true" %}
+    {% include 'patches/main_elements_sorting/downloads.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/creator.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/favorites.html' with strong="false" %}
 {% elif sorting_by == 'Sub-patches' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <strong class="ms-2">Sub-Patches:</strong><strong class="ms-2">{{ data.subpatches_amount }}</strong></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <span class="ms-2">Downloads:</span><span class="ms-2">{{ data.patch.downloads }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{{ data.patch.creator }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <span class="ms-2">Favorites:</span><span class="ms-2">{{ data.patch.favorites }}</span></li>
+    {% include 'patches/main_elements_sorting/sub_patches.html' with strong="true" %}
+    {% include 'patches/main_elements_sorting/downloads.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/creator.html' with strong="false" %}
+    {% include 'patches/main_elements_sorting/favorites.html' with strong="false" %}
 {% endif %}
-    <li class="col d-flex justify-content-center align-items-center" title="{{ data.categories }}" ><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2 fw-bold text-decoration-underline">{{ data.categories }}</span></li>
-
+    {% include 'patches/main_elements_sorting/categories.html' with strong="false" %}
 {% endblock %}

@@ -1,0 +1,5 @@
+{% if strong == 'true' %}
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-calendar3"></i> <strong class="ms-2">Created on:</strong><strong class="ms-2">{{ data.patch.creation_date }}</strong></li>
+{% else %}
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-calendar3"></i> <span class="ms-2">Created on:</span><span class="ms-2">{{ data.patch.creation_date }}</span></li>
+{% endif %}
