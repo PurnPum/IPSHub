@@ -101,9 +101,12 @@ def main_filter(request,extravars={}):
         
         categories_string = ", ".join(loop_categories)
         
+        game = patch.patch_options.first().category.base_game
+        
         sidebar_patches.append({
             'patch': patch,
-            'categories': categories_string,
+            'base_game': game,
+            'categories': categories_string
         })
     
     top_5_games_with_the_most_categories = Game.objects.all().annotate(num_categories=Count('categories')).order_by('-num_categories')[:5]
@@ -121,7 +124,7 @@ def main_filter(request,extravars={}):
     
     for category in top_5_categories_with_the_most_patches:
 
-        base_game = Category.objects.filter(id=category.id)
+        base_game = category.base_game
         
         amount_of_patches_in_category = Patch.objects.filter(patch_options__category=category).count()
         

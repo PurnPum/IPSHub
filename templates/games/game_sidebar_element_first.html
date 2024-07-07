@@ -10,9 +10,14 @@
 
 {% block data_list %}
     <li class="col d-flex justify-content-center align-items-center">
-        <img src="{{ data.game.image_mini_ref }}" aria-label="{{ data.patch.name }}" alt="{{ data.patch.name }}" class="img-fluid bd-placeholder-img" title="{{ data.patch.name }}" style="width: auto; height: 2rem;"/>
+        <img src="{{ data.base_game.image_mini_ref }}" aria-label="{{ data.base_game.title }}" alt="{{ data.base_game.title }}" class="img-fluid bd-placeholder-img" title="{{ data.base_game.title }}" style="width: auto; height: 2rem;"/>
+        <span class="ms-2 fw-bold h6 text-truncate" title="{{ data.base_game.title }}">{{ data.base_game.title }}</span>
     </li>
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i><span class="text-truncate custom-truncate ms-2" title="{{ data.patch.downloads }}">Downloads: {{ data.patch.downloads }}</span></li>
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.patch.favorites }}">Favorites: {{ data.patch.favorites }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.categories }}">Categories: {{ data.categories }}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"
+    _="on load
+    set sw to the scrollWidth of the first <span/> in me
+    set cw to the clientWidth of the first <span/> in me
+    if sw > cw then hide the first <span/> in me"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2" title="Main categories for this patch">Categories:</span><span class="text-truncate custom-truncate ms-2" title="{{ data.categories }}">{{ data.categories }}</span></li>
 {% endblock %}
