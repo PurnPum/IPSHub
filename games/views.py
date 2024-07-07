@@ -6,7 +6,7 @@ from categories.models import Category
 from patches import add_real_data_to_db
 from django.core.paginator import Paginator
 
-def paginate(request, qs, limit=4):
+def paginate(request, qs, limit=3):
     paginated_qs = Paginator(qs, limit)
     page_no = request.GET.get("page")
     return paginated_qs.get_page(page_no)
@@ -21,9 +21,7 @@ def games_list(request):
     
     return main_filter(request)
 
-def main_filter(request,extravars={}):
-    
-    html = 'games/games.html'
+def main_filter(request,extravars={},html='games/games.html'):
     
     developer = request.GET.get('selectedDeveloper','any')
     emulator = request.GET.get('selectedEmulator','any')
@@ -161,4 +159,4 @@ def main_filter(request,extravars={}):
 
 def get_game_list_only(request):
     display_mode = request.GET.get('display_mode')
-    return main_filter(request, {'display_mode': display_mode})
+    return main_filter(request, extravars={'display_mode': display_mode},html='games/filters/filter_game_list_no_oob.html')
