@@ -3,6 +3,10 @@
 {% block title %}Patches{% endblock %}
 
 {% block list_filters_id %}patch-list-filters{% endblock %}
+{% block list_filters_url %}{% url 'patch_filter' %}{% endblock %}
+{% block list_filters_trigger %}changed_base_game, changed_category, changed_base_patch, changed_sorting{% endblock %}
+{% block list_filters_include %}#game-select-hx, #category-select-hx, #patch-select-hx, #sorting-criteria-hx, #sorting-order-hidden, #selected-filter{% endblock %}
+{% block list_filters %}{% include 'patches/filters/filter.html' %}{% endblock %}
 
 {% block first_filter %}Base Game{% endblock %}
 {% block second_filter %}Category{% endblock %}

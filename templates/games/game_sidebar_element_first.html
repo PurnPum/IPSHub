@@ -1,0 +1,18 @@
+{% extends "generic/sidebar/sidebar_element.html" %}
+
+{% block title %}{{ data.patch.name }}{% endblock %}
+{% block shown_title %}{{ data.patch.name }}{% endblock %}
+
+{% block hs_code %}
+{% endblock %}
+
+{% block button_title %}Open Patch{% endblock %}
+
+{% block data_list %}
+    <li class="col d-flex justify-content-center align-items-center">
+        <img src="{{ data.game.image_mini_ref }}" aria-label="{{ data.patch.name }}" alt="{{ data.patch.name }}" class="img-fluid bd-placeholder-img" title="{{ data.patch.name }}" style="width: auto; height: 2rem;"/>
+    </li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i><span class="text-truncate custom-truncate ms-2" title="{{ data.patch.downloads }}">Downloads: {{ data.patch.downloads }}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-heart-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.patch.favorites }}">Favorites: {{ data.patch.favorites }}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.categories }}">Categories: {{ data.categories }}</span></li>
+{% endblock %}

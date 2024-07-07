@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery
 from .models import Patch
@@ -158,6 +157,7 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         'amountPat': len(top_8_parent_patches),
         'sorting_criteria': sorting_criteria,
         'sorting_by': sorting_by,
+        'title': 'Patches',
         'extravars': extravars
     }
     
@@ -189,8 +189,6 @@ def filter(request, htmlkey=None, extravars={}):
     
     if selected_filter == 'category':
         patch_id = 'any'
-    
-    print('game_id:',game_id, 'category_id:', category_id, 'patch_id:', patch_id, 'sorting_by:', sorting_by, 'sorting_order:', sorting_order, 'selected_filter:', selected_filter, 'htmlkey:', htmlkey)
     
     return main_filter(request, htmlkey, sorting_order, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 

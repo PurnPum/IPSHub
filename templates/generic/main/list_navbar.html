@@ -13,11 +13,11 @@
     </div>
 </nav>
 <div id="{% block list_filters_id %}{% endblock %}" class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2"
-    hx-get="{% url 'filter' %}"
-    hx-trigger="changed_base_game, changed_category, changed_base_patch, changed_sorting"
+    hx-get="{% block list_filters_url %}{% endblock %}"
+    hx-trigger="{% block list_filters_trigger %}{% endblock %}"
     hx-swap="none"
-    hx-include="#game-select-hx, #category-select-hx, #patch-select-hx, #sorting-criteria-hx, #sorting-order-hidden, #selected-filter">
+    hx-include="{% block list_filters_include %}{% endblock %}">
     <input type="hidden" id="sorting-order-hidden" name="sorting_order">
     <input type="hidden" id="selected-filter" name="selected_filter">
-    {% include 'patches/filters/filter.html' %}
+    {% block list_filters %}{% endblock %}
 </div>

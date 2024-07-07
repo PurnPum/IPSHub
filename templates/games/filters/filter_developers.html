@@ -1,0 +1,30 @@
+{% extends "generic/filter/filter_element.html" %}
+
+{% block swap_oob %}{% endblock %}
+{% block element_id %}developer-select{% endblock %}
+{% block h6_text %}Developer{% endblock %}
+{% block is_disabled %}{% endblock %}
+{% block element_id_select %}developer-select-hx{% endblock %}
+{% block element_name_select %}selectedDeveloper{% endblock %}
+{% block element_id_aria_label %}Developer{% endblock %}
+
+{% block hs_code %}
+on change 
+    remove .selected from <option/>
+    then add .selected to my.options[my.selectedIndex]
+    then send changed_developer to #game-list-filters
+{% endblock %}
+
+{% block any_none %}
+    {% if amountDev > 0 %}
+        <option class="selected" value="any">Any Developer</option>
+    {% else %}
+        <option class="selected" value="none">No matching Developers</option>
+    {% endif %}
+{% endblock %}
+
+{% block top8 %}
+    {% for developer in top8developers %}
+        <option value="{{ developer }}">{{ developer }}</option>
+    {% endfor %}
+{% endblock %}

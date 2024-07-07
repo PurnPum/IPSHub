@@ -1,0 +1,9 @@
+{% extends "generic/main/main_layout.html" %}
+
+{% block list_url_double %}{% url 'game_list' %}{% endblock %}
+{% block includes_double %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #game-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
+{% block main_element_double %}{% include 'games/game_main_element.html' %}{% endblock %}
+
+{% block list_url_single %}{% url 'game_list' %}{% endblock %}
+{% block includes_single %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #game-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
+{% block main_element_single %}{% include 'games/game_main_element.html' %}{% endblock %}

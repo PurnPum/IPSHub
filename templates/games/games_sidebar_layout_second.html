@@ -1,0 +1,10 @@
+{% extends "generic/sidebar/sidebar_layout.html" %}
+
+{% block title %}Popular Categories{% endblock %}
+{% block shown_title %}Popular Categories{% endblock %}
+
+{% block element_list %}
+    {% for data in sidebar_categories %}
+        {% include 'games/game_sidebar_element_second.html' %}
+    {% endfor %}
+{% endblock %}

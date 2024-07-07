@@ -20,7 +20,9 @@ def add_real_games_to_db():
             'image_ref': '/static/images/pokemon_crystal_front.png',
             'title': 'Pokémon Crystal',
             'developer': 'Game Freak',
-            'best_emulator': 'https://bgb.bircd.org/',
+            'best_emulator': 'BGB',
+            'best_emulator_url': 'https://bgb.bircd.org/',
+            'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
             'release_date': datetime.date(2000,9,28)
         },
@@ -29,7 +31,9 @@ def add_real_games_to_db():
             'image_ref': '/static/images/pokemon_yellow_front.webp',
             'title': 'Pokémon Yellow',
             'developer': 'Game Freak',
-            'best_emulator': 'https://bgb.bircd.org/',
+            'best_emulator': 'BGB',
+            'best_emulator_url': 'https://bgb.bircd.org/',
+            'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
             'release_date': datetime.date(1995,9,28)
         },
@@ -37,8 +41,10 @@ def add_real_games_to_db():
             'image_mini_ref': '/static/images/pokemon_crystal_mini.png',
             'image_ref': '/static/images/pokemon_crystal_front.png',
             'title': 'Pokémon Crystal Clear',
-            'developer': 'Game Freak',
-            'best_emulator': 'https://bgb.bircd.org/',
+            'developer': 'ShockSlayer',
+            'best_emulator': 'Gambatte',
+            'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
+            'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
             'release_date': datetime.date(2022,3,16)
         },
@@ -47,7 +53,9 @@ def add_real_games_to_db():
             'image_ref': '/static/images/pokemon_yellow_front.webp',
             'title': 'Pokémon NO-BS Yellow',
             'developer': 'Game Freak',
-            'best_emulator': 'https://bgb.bircd.org/',
+            'best_emulator': 'Gambatte',
+            'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
+            'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
             'release_date': datetime.date(2021,6,21)
         }

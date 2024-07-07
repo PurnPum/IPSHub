@@ -1,0 +1,10 @@
+{% extends "generic/sidebar/sidebar_layout.html" %}
+
+{% block title %}Popular Patches{% endblock %}
+{% block shown_title %}Popular Patches{% endblock %}
+
+{% block element_list %}
+    {% for data in sidebar_patches %}
+        {% include 'games/game_sidebar_element_first.html' %}
+    {% endfor %}
+{% endblock %}

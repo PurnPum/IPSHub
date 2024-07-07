@@ -1,0 +1,31 @@
+{% extends "generic/filter/filter_sorting.html" %}
+
+{% block sorting_id %}sorting-criteria{% endblock %}
+{% block sorting_id_select %}sorting-criteria-hx{% endblock %}
+{% block sorting_name_select %}selectedSorting{% endblock %}
+{% block sorting_list %}
+    {% for s in sorting_criteria %}
+        <option value="{{ s }}">{{ s }}</option>
+    {% endfor %}
+{% endblock %}
+{% block h6_text %}Sort By{% endblock %}
+{% block sorting_icon_id %}sorting-order{% endblock %}
+{% block hs_code %}
+    on click 
+    if #sorting-order matches .bi-arrow-down-square-fill
+        remove .bi-arrow-down-square-fill from #sorting-order
+        add .bi-arrow-up-square-fill to #sorting-order
+        set #sorting-order.title to 'Change to descending order'
+        set #sorting-order.value to 'ascending'
+        set #sorting-order-hidden's value to 'ascending'
+        send changed_sorting to #game-list-filters
+    else
+        remove .bi-arrow-up-square-fill from #sorting-order
+        add .bi-arrow-down-square-fill to #sorting-order
+        set #sorting-order.title to 'Change to ascending order'
+        set #sorting-order.value to 'descending'
+        set #sorting-order-hidden's value to 'descending'
+        send changed_sorting to #game-list-filters end
+{% endblock %}
+
+{% block hs_code_select %}on change send changed_sorting to #game-list-filters{% endblock %}

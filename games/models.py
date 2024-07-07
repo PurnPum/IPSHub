@@ -8,7 +8,9 @@ class Game(models.Model):
     title = models.CharField(max_length=100, unique=True)
     release_date = models.DateField()
     developer = models.CharField(max_length=100)
-    best_emulator = models.URLField(max_length=200)
+    best_emulator_url = models.URLField(max_length=200, blank=True, null=True)
+    best_emulator = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
     extra_info = models.URLField(max_length=200)
 
     def __str__(self):

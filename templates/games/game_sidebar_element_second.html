@@ -1,0 +1,19 @@
+{% extends "generic/sidebar/sidebar_element.html" %}
+
+{% block title %}{{ data.category.name }}{% endblock %}
+{% block shown_title %}{{ data.category.name }}{% endblock %}
+
+{% block hs_code %}
+{% endblock %}
+
+{% block button_title %}Show Category data{% endblock %}
+
+{% block data_list %}
+    <li class="col d-flex justify-content-center align-items-center">
+        <img src="{{ data.base_game.image_mini_ref }}" aria-label="{{ data.category.name }}" alt="{{ data.category.name }}" class="img-fluid bd-placeholder-img" title="{{ data.category.name }}" style="width: auto; height: 2rem;"/>
+        <span class="ms-2 fw-bold h6 text-truncate" title="{{ data.category.name }}">{{ data.category.name }}</span>
+    </li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i><span class="ms-2">Patches: {{ data.patches_amount }}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-calendar3"></i> <span class="ms-2">Last Patch: {{ data.latest_patch}}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-gear-fill"></i> <span class="ms-2">Patch Options: {{ data.patch_options_amount }}</span></li>
+{% endblock %}

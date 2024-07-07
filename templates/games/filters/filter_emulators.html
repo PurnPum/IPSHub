@@ -1,0 +1,30 @@
+{% extends "generic/filter/filter_element.html" %}
+
+{% block swap_oob %}{% endblock %}
+{% block element_id %}emulator-select{% endblock %}
+{% block h6_text %}Emulator{% endblock %}
+{% block is_disabled %}{% endblock %}
+{% block element_id_select %}emulator-select-hx{% endblock %}
+{% block element_name_select %}selectedEmulator{% endblock %}
+{% block element_id_aria_label %}Emulator{% endblock %}
+
+{% block hs_code %}
+on change 
+    remove .selected from <option/>
+    then add .selected to my.options[my.selectedIndex]
+    then send changed_emulator to #game-list-filters
+{% endblock %}
+
+{% block any_none %}
+    {% if amountEmu > 0 %}
+        <option class="selected" value="any">Any Emulator</option>
+    {% else %}
+        <option class="selected" value="none">No matching Emulators</option>
+    {% endif %}
+{% endblock %}
+
+{% block top8 %}
+    {% for emulator in top8emulators %}
+        <option value="{{ emulator }}">{{ emulator }}</option>
+    {% endfor %}
+{% endblock %}

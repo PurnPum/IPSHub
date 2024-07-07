@@ -23,8 +23,10 @@ from patches import views as p_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('patches/', p_views.patches_list),
+    path('patches/filter/', p_views.filter, name='patch_filter'),
+    path('patches/list/', p_views.get_patch_list_only, name='patch_list'),
     path('games/', g_views.games_list),
-    path('categories/', c_views.categories_list),
-    path('patches/filter/', p_views.filter, name='filter'),
-    path('patches/list/', p_views.get_patch_list_only, name='patch_list')
+    path('games/filter/', g_views.main_filter, name='game_filter'),
+    path('games/list/', g_views.get_game_list_only, name='game_list'),
+    path('categories/', c_views.categories_list)
 ]
