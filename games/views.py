@@ -83,11 +83,17 @@ def main_filter(request,extravars={},html='games/games.html'):
     
     top_5_games_with_the_most_patches = Game.objects.all().annotate(num_patches=Count('categories__patchoption__patches')).order_by('-num_patches')[:5]
     
-    most_downloaded_patches = Patch.objects.filter(
-    patch_options__category__base_game__in=top_5_games_with_the_most_patches,
-    downloads=Subquery(
-        Patch.objects.filter(patch_options__category__base_game=OuterRef('patch_options__category__base_game')).order_by('-downloads').values('downloads')[:1]
-    )).order_by('patch_options__category__base_game', '-downloads')
+    most_downloaded_patches = []
+
+    for game in top_5_games_with_the_most_patches:
+        most_downloaded_patch = Patch.objects.filter(
+            patch_options__category__base_game=game
+        ).order_by('-downloads').first()
+        
+        if most_downloaded_patch:
+            most_downloaded_patches.append(most_downloaded_patch)
+    
+    most_downloaded_patches = sorted(most_downloaded_patches, key=lambda p: p.downloads, reverse=True)
     
     sidebar_patches = []
     
@@ -109,14 +115,19 @@ def main_filter(request,extravars={},html='games/games.html'):
     
     top_5_games_with_the_most_categories = Game.objects.all().annotate(num_categories=Count('categories')).order_by('-num_categories')[:5]
     
-    top_5_categories_with_the_most_patches = []
+    categories_with_the_most_patches = []
     
     for game in top_5_games_with_the_most_categories:
         top_category = game.categories.annotate(
             patch_count=Count('patchoption__patches', distinct=True)
         ).order_by('-patch_count').first()
         
-        top_5_categories_with_the_most_patches.append(top_category)
+        if top_category:
+            categories_with_the_most_patches.append((top_category,top_category.patch_count))
+            
+    top_5_categories_with_the_most_patches = sorted(categories_with_the_most_patches, key=lambda x: x[1], reverse=True)[:5]
+
+    top_5_categories_with_the_most_patches = [category for category, _ in top_5_categories_with_the_most_patches]
     
     sidebar_categories = []
     

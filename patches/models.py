@@ -43,7 +43,7 @@ class PatchOption(models.Model):
     category = models.ForeignKey('categories.Category', on_delete=models.CASCADE) 
     # In the case of a category getting removed, before doing so make sure all the patch options linked to this category or any of its sub-categories have been moved to a different category, or they will also get erased.
     code_file = models.CharField(max_length=200)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     fields = models.JSONField()
     #github_issue = models.URLField(max_length=200) TODO
