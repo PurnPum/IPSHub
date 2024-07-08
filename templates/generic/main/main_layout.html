@@ -36,5 +36,10 @@
     {% block main_element_single %}{% endblock %}
     </div>
   {% endfor %}
+{% endif %}
 
+{% if not final_list %}
+  <div class="col-12 text-center custom-element-top-border">
+      <h3 class="my-2">No elements found with the given filters.</h3>
+  </div>
 {% endif %}
