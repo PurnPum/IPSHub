@@ -1,16 +1,16 @@
 {% block nav_item %}
 <li class="nav-item">
   <a class="nav-link d-none d-xl-block fw-bold enabled fs-4" href="#"
-     _="on mouseenter toggle .bg-primary .border .rounded until mouseleave
+     _="on mouseenter toggle {{ nav_main_color }} .border .rounded until mouseleave
         on load
         set pageURL to window.location.href
         set mytext to '{{ item_text|lower }}'
-        if pageURL includes mytext then add .text-info to me else add .text-light to me">{{ item_text }}</a>
+        if pageURL includes mytext then add {{ nav_text_color }} to me else add .text-light to me">{{ item_text }}</a>
   <a class="nav-link d-xl-none fw-bold enabled fs-6" href="#"
-     _="on mouseenter toggle .bg-primary .border .rounded until mouseleave
+     _="on mouseenter toggle {{ nav_main_color }} .border .rounded until mouseleave
         on load
         set pageURL to window.location.href
         set mytext to '{{ item_text|lower }}'
-        if pageURL includes mytext then add .text-info to me else add .text-light to me">{{ item_text }}</a>
+        if pageURL includes mytext then add {{ nav_text_color }} to me else add .text-light to me">{{ item_text }}</a>
 </li>
 {% endblock %}

@@ -1,11 +1,11 @@
 :root {
-    --custom-light-gray: rgb(88, 88, 88);
-    --custom-gray: rgb(66, 66, 66);
-    --custom-darker-gray: rgb(44, 44, 44);
-    --custom-nav-main-color: rgb(8, 85, 148);
-    --custom-nav-darker-color: rgb(6, 75, 118);
-    --custom-nav-lighter-color: rgb(20, 150, 225);
-    --custom-sorting-color: cyan;
-    --custom-sorting-hover-color: rgb(0, 127, 255);
+    --custom-light-gray: rgb(100, 100, 100);
+    --custom-gray: rgb(75, 75, 75);
+    --custom-darker-gray: rgb(60, 60, 60);
+    --custom-nav-main-color: rgb(8, 112, 64);
+    --custom-nav-darker-color: rgb(6, 84, 58);
+    --custom-nav-lighter-color: rgb(20, 190, 120);
+    --custom-sorting-color: rgb(0, 255, 156);
+    --custom-sorting-hover-color: rgb(0, 127, 64);
     --custom-disabled-color: grey;
   }

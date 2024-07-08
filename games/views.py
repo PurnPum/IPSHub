@@ -164,6 +164,8 @@ def main_filter(request,extravars={},html='games/games.html'):
         'sorting_by': sorting_by,
         'title': 'Games',
         'CSS': 'games',
+        'nav_text_color': '.text-warning-emphasis',
+        'nav_main_color': '.bg-success',
         'extravars': extravars
     }
     
