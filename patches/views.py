@@ -158,6 +158,7 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         'sorting_criteria': sorting_criteria,
         'sorting_by': sorting_by,
         'title': 'Patches',
+        'CSS': 'patches',
         'extravars': extravars
     }
     

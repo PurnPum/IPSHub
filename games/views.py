@@ -163,6 +163,7 @@ def main_filter(request,extravars={},html='games/games.html'):
         'sorting_criteria': ['Patches','Categories','Name','Release Date','Latest Patch'],
         'sorting_by': sorting_by,
         'title': 'Games',
+        'CSS': 'games',
         'extravars': extravars
     }
     
