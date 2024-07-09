@@ -2,16 +2,16 @@
   {% for data in final_list %}
     {% if forloop.last %}
       {% if paginated_list.has_next %}
-        <div class="col-6 p-0"
+        <div class="col-6 p-0 accordion-item"
           hx-get="{% block list_url_double %}{% endblock %}?page={{ paginated_list.next_page_number }}&display_mode={{ display_mode }}"
           hx-trigger="intersect once"
           hx-swap="afterend"
           hx-include="{% block includes_double %}{% endblock %}">
       {% else %}
-        <div class="col-6 p-0">
+        <div class="col-6 p-0 accordion-item">
       {% endif %}
     {% else %}
-      <div class="col-6 p-0">
+      <div class="col-6 p-0 accordion-item">
     {% endif %}
     {% block main_element_double %}{% endblock %}
     </div>
@@ -22,16 +22,16 @@
   {% for data in final_list %}
     {% if forloop.last %}
       {% if paginated_list.has_next %}
-        <div class="col-12 p-0"
+        <div class="col-12 p-0 accordion-item"
         hx-get="{% block list_url_single %}{% endblock %}?page={{ paginated_list.next_page_number }}&display_mode={{ display_mode }}"
         hx-trigger="intersect once"
         hx-swap="afterend"
         hx-include="{% block includes_single %}{% endblock %}">
       {% else %}
-        <div class="col-12 p-0">
+        <div class="col-12 p-0 accordion-item">
       {% endif %}
     {% else %}
-      <div class="col-12 p-0">
+      <div class="col-12 p-0 accordion-item">
     {% endif %}
     {% block main_element_single %}{% endblock %}
     </div>

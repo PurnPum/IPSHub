@@ -118,6 +118,18 @@
   .custom-sorting-icon:hover{
       color: var(--custom-sorting-hover-color);
   }
+
+  .accordion {
+    --bs-accordion-active-color: var(--custom-accordion-active-color) !important;
+  }
+
+  .accordion-button::after {
+    display:none;
+  }
+  
+  .accordion-button:not(.collapsed)::after {
+    display:none;
+  }
   
   @media (max-width: 1200px) {
       .custom-2-5-rem-icon {

@@ -1,5 +1,9 @@
 {% extends "generic/main/main_element.html" %}
 
+{% block accordion_button_bs_target %}collapse-{{ data.game.id }}{% endblock %}
+{% block accordion_button_bs_target_aria %}collapse-{{ data.game.id }}{% endblock %}
+{% block accordion_body_id %}collapse-{{ data.game.id }}{% endblock %}
+
 {% block image_src %}{{ data.game.image_ref }}{% endblock %}
 {% block image_alt %}{{ data.game.title }}{% endblock %}
 {% block image_title %}{{ data.game.title }}{% endblock %}
@@ -34,3 +38,5 @@
 {% endif %}
     {% include 'games/main_elements_sorting/top_category.html' with strong='false' %}
 {% endblock %}
+
+{% block data_bs_parent %}{% if display_mode == 'double' %}games-main-layout-double{% elif display_mode == 'single' %}games-main-layout-single{% endif %}{% endblock %}
