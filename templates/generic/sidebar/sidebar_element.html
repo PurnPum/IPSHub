@@ -1,6 +1,6 @@
 <div class="row d-flex container-fluid custom-element-top-border-sidebar p-0 ms-3">
-    <div class="container-fluid custom-hover-scale-110 p-0 custom-main-bg custom-blue-border">
-        <button type="button" class="container-fluid border-0 bg-transparent text-decoration-none p-0" title="{% block button_title %}{% endblock %}"
+    <div class="accordion-header container-fluid custom-hover-scale-110 p-0 custom-main-bg custom-blue-border">
+        <button type="button" class="d-flex accordion-button collapsed container-fluid border-0 bg-transparent text-decoration-none p-0" title="{% block button_title %}{% endblock %}" data-bs-toggle="collapse" data-bs-target="#{% block accordion_button_bs_target %}{% endblock %}" aria-expanded="true" aria-controls="{% block accordion_button_bs_target_aria %}{% endblock %}"
             {% block htmx %}{% endblock %}
             _="{% block hs_code %}{% endblock %}">
             <div class="fw-bold h5 d-flex justify-content-center align-items-center">
@@ -10,5 +10,10 @@
                 {% block data_list %}{% endblock %}
             </ul>
         </button>
+    </div>
+    <div id="{% block accordion_body_id %}{% endblock %}" class="accordion-collapse collapse" data-bs-parent="#main-sidebar">
+        <div class="accordion-body">
+            {% block accordion_body %}{% endblock %}
+        </div>
     </div>
 </div>

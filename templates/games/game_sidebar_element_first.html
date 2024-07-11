@@ -3,6 +3,13 @@
 {% block title %}{{ data.patch.name }}{% endblock %}
 {% block shown_title %}{{ data.patch.name }}{% endblock %}
 
+{% block accordion_button_bs_target %}collapse-{{ data.patch.id }}{% endblock %}
+{% block accordion_button_bs_target_aria %}collapse-{{ data.patch.id }}{% endblock %}
+{% block accordion_body_id %}collapse-{{ data.patch.id }}{% endblock %}
+
+{% block htmx %}
+{% endblock %}
+
 {% block hs_code %}
 {% endblock %}
 

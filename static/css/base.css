@@ -123,6 +123,11 @@
     --bs-accordion-active-color: var(--custom-accordion-active-color) !important;
   }
 
+  .accordion-button {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
   .accordion-button::after {
     display:none;
   }

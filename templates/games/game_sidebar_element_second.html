@@ -3,6 +3,10 @@
 {% block title %}{{ data.category.name }}{% endblock %}
 {% block shown_title %}{{ data.category.name }}{% endblock %}
 
+{% block accordion_button_bs_target %}collapse-{{ data.category.id }}{% endblock %}
+{% block accordion_button_bs_target_aria %}collapse-{{ data.category.id }}{% endblock %}
+{% block accordion_body_id %}collapse-{{ data.category.id }}{% endblock %}
+
 {% block htmx %}
 {% endblock %}
 
