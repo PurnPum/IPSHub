@@ -11,7 +11,7 @@
             </ul>
         </button>
     </div>
-    <div id="{% block accordion_body_id %}{% endblock %}" class="accordion-collapse collapse" data-bs-parent="#main-sidebar">
+    <div id="{% block accordion_body_id %}{% endblock %}" class="accordion-collapse collapse" data-bs-parent="#{% block sidebar_layout_id %}{% endblock %}">
         <div class="accordion-body">
             {% block accordion_body %}{% endblock %}
         </div>
