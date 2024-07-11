@@ -13,13 +13,21 @@ def paginate(request, qs, limit=4):
 
 def patches_list(request):
     
-    add_real_data_to_db.clean_db()
+    """add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
-    add_real_data_to_db.add_real_patches_to_db()
+    add_real_data_to_db.add_real_patches_to_db()"""
     
-    return main_filter(request, 'all')
+    game_id = request.GET.get('selectedGame','any')
+    category_id = request.GET.get('selectedCategory','any')
+    patch_id = request.GET.get('selectedPatch','any')
+    sorting_by = request.GET.get('selectedSorting','Downloads')
+    sorting_order = request.GET.get('sorting_order','descending')
+    
+    print(game_id, category_id, patch_id, sorting_by, sorting_order)
+    
+    return main_filter(request, 'all', sorting_order=sorting_order, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
 def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=None,category_id=None,patch_id=None,sorting_by=None):
     

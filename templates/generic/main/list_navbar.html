@@ -16,7 +16,16 @@
     hx-get="{% block list_filters_url %}{% endblock %}"
     hx-trigger="{% block list_filters_trigger %}{% endblock %}"
     hx-swap="none"
-    hx-include="{% block list_filters_include %}{% endblock %}">
+    hx-include="{% block list_filters_include %}{% endblock %}"
+    _="on load
+    if localStorage['external_filtering'] is 'run'
+        set #category-select-hx.disabled to false
+        set #patch-select-hx.disabled to false
+        set #game-select-hx's value to localStorage['game_id']
+        set #category-select-hx's value to localStorage['category_id']
+        set #patch-select-hx's value to localStorage['patch_id']
+        set localStorage['external_filtering'] to ''
+    end">
     <input type="hidden" id="sorting-order-hidden" name="sorting_order">
     <input type="hidden" id="selected-filter" name="selected_filter">
     {% block list_filters %}{% endblock %}
