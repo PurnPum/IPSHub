@@ -31,7 +31,7 @@ def patches_list(request):
 
 def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=None,category_id=None,patch_id=None,sorting_by=None):
     
-    htmls = {'all': 'patches/patches.html', 'base_game': 'patches/filters/filter_categories_patches_and_main.html' , 'category': 'patches/filters/filter_patches_and_main.html', 'base_patch': 'patches/filters/filter_patch_list.html', 'patch_list_page': 'patches/filters/filter_patch_list_scroll.html'}
+    htmls = {'all': 'patches/patches.html', 'base_game': 'patches/filters/filter_categories_patches_and_main.html' , 'category': 'patches/filters/filter_patches_and_main.html', 'base_patch': 'patches/filters/element/filter_main.html', 'patch_list_page': 'patches/filters/element/filter_main_scroll.html'}
     html = htmls['all']
     
     sorting_criteria = {'Downloads': 'downloads', 'Favorites': 'favorites', 'Creation Date': 'creation_date', 'Name': 'name', 'Sub-patches': 'subpatches'}
@@ -130,7 +130,7 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
             'categories_amount': game_categories_amount
         })
     
-    top_5_categories = categories.annotate(num_categories=Count('patchoption__patches')).order_by('-num_categories')[:5]
+    top_5_categories = Category.objects.annotate(num_categories=Count('patchoption__patches')).order_by('-num_categories')[:5]
     
     sidebar_categories = []
     
