@@ -1,7 +1,15 @@
 <div class="col accordion-header">
     <button class="accordion-button p-0 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{% block accordion_button_bs_target %}{% endblock %}" aria-expanded="true" aria-controls="{% block accordion_button_bs_target_aria %}{% endblock %}"
     _="on click
+    set enlarged_divs to #{% block hs_layout %}{% endblock %}.querySelectorAll('.custom-accord-temporal-enlargement')
+    log enlarged_divs
+    repeat for div in enlarged_divs
+        remove .col-12 from div
+        remove .custom-accord-temporal-enlargement from div
+        add .col-6 to div
+    end
     set accord_div to the closest parent <div.accordion-item/>
+    log accord_div
     if accord_div matches .col-6
         then remove .col-6 from accord_div
         then add .col-12 to accord_div

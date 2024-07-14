@@ -4,6 +4,8 @@
 {% block accordion_button_bs_target_aria %}collapse-{{ data.patch.id }}{% endblock %}
 {% block accordion_body_id %}collapse-{{ data.patch.id }}{% endblock %}
 
+{% block hs_layout %}{% if display_mode == 'double' %}patches-main-layout-double{% elif display_mode == 'single' %}patches-main-layout-single{% endif %}{% endblock %}
+
 {% block image_src %}{{ data.game.image_ref }}{% endblock %}
 {% block image_alt %}{{ data.game.title }}{% endblock %}
 {% block image_title %}{{ data.game.title }}{% endblock %}
