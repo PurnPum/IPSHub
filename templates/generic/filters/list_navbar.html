@@ -13,7 +13,7 @@
     hx-get="{% block list_filters_url %}{% endblock %}"
     hx-trigger="{% block list_filters_trigger %}{% endblock %}"
     hx-swap="innerHTML"
-    hx-target="#patches-main-layout-single"
+    hx-target="{% block list_filters_target %}{% endblock %}"
     hx-include="{% block list_filters_include %}{% endblock %}"
     _="{% block hs_code %}{% endblock %}">
     <input type="hidden" id="sorting-order-hidden" name="sorting_order">
