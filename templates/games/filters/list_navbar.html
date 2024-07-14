@@ -8,7 +8,7 @@
 {% block list_filters_url %}{% url 'game_filter' %}{% endblock %}
 {% block list_filters_trigger %}changed_developer, changed_emulator, changed_type, changed_sorting{% endblock %}
 {% block list_filters_include %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #sorting-criteria-hx, #sorting-order-hidden, #selected-filter{% endblock %}
-{% block list_filters %}{% include 'games/filters/filter_all.html' %}{% endblock %}
+{% block list_filters %}{% include 'games/filters/filter_all_no_main.html' %}{% endblock %}
 {% block list_filters_target %}#games-main-layout-single{% endblock %}
 
 {% block first_filter %}Developer{% endblock %}
