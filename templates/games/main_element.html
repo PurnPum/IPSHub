@@ -41,4 +41,6 @@
 
 {% block data_bs_parent %}{% if display_mode == 'double' %}games-main-layout-double{% elif display_mode == 'single' %}games-main-layout-single{% endif %}{% endblock %}
 
-{% block accordion_body %}{% include 'games/game_main_accordion_content.html' %}{% endblock %}
+{% block accordion_body %}
+    {% include 'games/main_accordion_buttons.html' with game_id=data.game.id %}
+{% endblock %}

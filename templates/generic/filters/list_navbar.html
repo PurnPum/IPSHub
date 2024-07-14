@@ -3,12 +3,9 @@
         <h3 id="nav-title" class="fw-bold mb-0 flex-grow-1 d-flex align-items-center">
             {% block title %}{% endblock %}
         </h3>
-        <button type="button" class="btn btn-success mt-1 mb-1 d-none d-sm-block">
-            <i class="bi bi-plus-lg"></i>
+        <button type="button" class="btn btn-{% block create_patch_button_color %}{% endblock %} mt-1 mb-1">
+            <i class="bi bi-plus-lg d-none d-sm-inline"></i>
             <span class="ms-2 text-truncate" title="Create Patch">Create Patch</span>
-        </button>
-        <button type="button" class="btn btn-success mt-1 mb-1 ms-1 d-sm-none">
-            <span title="Create Patch">Create Patch</span>
         </button>
     </div>
 </nav>
@@ -17,15 +14,7 @@
     hx-trigger="{% block list_filters_trigger %}{% endblock %}"
     hx-swap="none"
     hx-include="{% block list_filters_include %}{% endblock %}"
-    _="on load
-    if localStorage['external_filtering'] is 'run'
-        set #category-select-hx.disabled to false
-        set #patch-select-hx.disabled to false
-        set #game-select-hx's value to localStorage['game_id']
-        set #category-select-hx's value to localStorage['category_id']
-        set #patch-select-hx's value to localStorage['patch_id']
-        set localStorage['external_filtering'] to ''
-    end">
+    _="{% block hs_code %}{% endblock %}">
     <input type="hidden" id="sorting-order-hidden" name="sorting_order">
     <input type="hidden" id="selected-filter" name="selected_filter">
     {% block list_filters %}{% endblock %}

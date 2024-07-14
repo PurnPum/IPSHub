@@ -2,6 +2,8 @@
 
 {% block title %}Patches{% endblock %}
 
+{% block create_patch_button_color %}primary{% endblock %}
+
 {% block list_filters_id %}patch-list-filters{% endblock %}
 {% block list_filters_url %}{% url 'patch_filter' %}{% endblock %}
 {% block list_filters_trigger %}changed_base_game, changed_category, changed_base_patch, changed_sorting{% endblock %}
@@ -14,3 +16,15 @@
 {% block first_filter_aria %}Base Game{% endblock %}
 {% block second_filter_aria %}Category{% endblock %}
 {% block third_filter_aria %}Base Patch{% endblock %}
+
+{% block hs_code %}
+on load
+    if localStorage['external_filtering'] is 'run'
+        set #category-select-hx.disabled to false
+        set #patch-select-hx.disabled to false
+        set #game-select-hx's value to localStorage['game_id']
+        set #category-select-hx's value to localStorage['category_id']
+        set #patch-select-hx's value to localStorage['patch_id']
+        set localStorage['external_filtering'] to ''
+    end
+{% endblock %}

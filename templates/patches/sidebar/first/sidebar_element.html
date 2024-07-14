@@ -3,11 +3,15 @@
 {% block title %}{{ data.game.title }}{% endblock %}
 {% block shown_title %}{{ data.game.title }}{% endblock %}
 
+{% block accordion_button_bs_target %}collapse-{{ data.game.id }}{% endblock %}
+{% block accordion_button_bs_target_aria %}collapse-{{ data.game.id }}{% endblock %}
+{% block accordion_body_id %}collapse-{{ data.game.id }}{% endblock %}
+{% block sidebar_layout_id %}main-sidebar-first{% endblock %}
+
+{% block htmx %}
+{% endblock %}
+
 {% block hs_code %}
-    on click
-    set #game-select-hx's value to '{{ data.game.id }}'
-    then set #selected-filter's value to 'base_game'
-    then send changed_base_game to #patch-list-filters
 {% endblock %}
 
 {% block button_title %}Load Game into filter{% endblock %}
@@ -24,3 +28,5 @@
     if sw > cw then hide the first <span/> in me"><i class="bi bi-calendar3" title="Last patch"></i> <span class="text-truncate custom-truncate ms-2">Last patch:</span><span class="ms-2" title="{{ data.latest_patch }}">{{ data.latest_patch}}</span></li>
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.categories_amount }}">Categories: {{ data.categories_amount }}</span></li>
 {% endblock %}
+
+{% block accordion_body %}{% include 'patches/sidebar/first/sidebar_accordion_buttons.html' with game_id=data.game.id %}{% endblock %}

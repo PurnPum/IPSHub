@@ -6,7 +6,7 @@
 {% block accordion_button_bs_target %}collapse-{{ data.category.id }}{% endblock %}
 {% block accordion_button_bs_target_aria %}collapse-{{ data.category.id }}{% endblock %}
 {% block accordion_body_id %}collapse-{{ data.category.id }}{% endblock %}
-{% block sidebar_layout_id %}main-sidebar-second{% endblock %}
+{% block sidebar_layout_id %}main-sidebar-first{% endblock %}
 
 {% block htmx %}
 {% endblock %}
@@ -14,7 +14,7 @@
 {% block hs_code %}
 {% endblock %}
 
-{% block button_title %}Show Category data{% endblock %}
+{% block button_title %}Load Category into filter{% endblock %}
 
 {% block data_list %}
     <li class="col d-flex justify-content-center align-items-center">
@@ -22,10 +22,8 @@
         <span class="ms-2 fw-bold h6 text-truncate" title="{{ data.base_game.title }}">{{ data.base_game.title }}</span>
     </li>
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i><span class="ms-2">Patches: {{ data.patches_amount }}</span></li>
-    <li class="col d-flex justify-content-center align-items-center" title="{{ data.latest_patch.creation_date }}"
-    _="on load
-        set sw to the scrollWidth of the first <span/> in me
-        set cw to the clientWidth of the first <span/> in me
-        if sw > cw then hide the first <span/> in me"><i class="bi bi-calendar3" title="Latest patch's creation date"></i> <span class="ms-2 text-truncate custom-truncate">Last Patch:</span><span class="ms-2 text-truncate custom-truncate">{{ data.latest_patch.name }}</span></li>
+    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-calendar3"></i> <span class="ms-2">Last Patch: {{ data.latest_patch}}</span></li>
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-gear-fill"></i> <span class="ms-2">Patch Options: {{ data.patch_options_amount }}</span></li>
 {% endblock %}
+
+{% block accordion_body %}{% include 'patches/sidebar/second/sidebar_accordion_buttons.html' with game_id=data.base_game.id category_id=data.category.id %}{% endblock %}

@@ -2,6 +2,8 @@
 
 {% block title %}Games{% endblock %}
 
+{% block create_patch_button_color %}success{% endblock %}
+
 {% block list_filters_id %}game-list-filters{% endblock %}
 {% block list_filters_url %}{% url 'game_filter' %}{% endblock %}
 {% block list_filters_trigger %}changed_developer, changed_emulator, changed_type, changed_sorting{% endblock %}
@@ -14,3 +16,5 @@
 {% block first_filter_aria %}Developer{% endblock %}
 {% block second_filter_aria %}Best Emulator{% endblock %}
 {% block third_filter_aria %}Type{% endblock %}
+
+{% block hs_code %}{% endblock %}
