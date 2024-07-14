@@ -12,7 +12,8 @@
 <div id="{% block list_filters_id %}{% endblock %}" class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2"
     hx-get="{% block list_filters_url %}{% endblock %}"
     hx-trigger="{% block list_filters_trigger %}{% endblock %}"
-    hx-swap="none"
+    hx-swap="innerHTML"
+    hx-target="#patches-main-layout-single"
     hx-include="{% block list_filters_include %}{% endblock %}"
     _="{% block hs_code %}{% endblock %}">
     <input type="hidden" id="sorting-order-hidden" name="sorting_order">

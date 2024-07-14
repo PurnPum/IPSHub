@@ -31,7 +31,7 @@ def patches_list(request):
 
 def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=None,category_id=None,patch_id=None,sorting_by=None):
     
-    htmls = {'all': 'patches/patches.html', 'base_game': 'patches/filters/filter.html' , 'category': 'patches/filters/filter_patches_and_main.html', 'base_patch': 'patches/filters/filter_main.html', 'patch_list_page': 'patches/filters/filter_patch_list_no_oob.html'}
+    htmls = {'all': 'patches/patches.html', 'base_game': 'patches/filters/filter_categories_patches_and_main.html' , 'category': 'patches/filters/filter_patches_and_main.html', 'base_patch': 'patches/filters/filter_patch_list.html', 'patch_list_page': 'patches/filters/filter_patch_list_scroll.html'}
     html = htmls['all']
     
     sorting_criteria = {'Downloads': 'downloads', 'Favorites': 'favorites', 'Creation Date': 'creation_date', 'Name': 'name', 'Sub-patches': 'subpatches'}
@@ -200,9 +200,17 @@ def filter(request, htmlkey=None, extravars={}):
     
     if selected_filter == 'category':
         patch_id = 'any'
+        
+    print(game_id, category_id, patch_id, sorting_by, sorting_order, htmlkey)
     
     return main_filter(request, htmlkey, sorting_order, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
 def get_patch_list_only(request):
     display_mode = request.GET.get('display_mode')
-    return filter(request, 'patch_list_page', {'display_mode': display_mode})
+    game_id = request.GET.get('selectedGame','any')
+    htmlkey='patch_list_page'
+    #if game_id and game_id != 'none' and game_id != 'any':
+        
+    
+        
+    return filter(request, htmlkey, {'display_mode': display_mode})
