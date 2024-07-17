@@ -4,7 +4,7 @@
 {% block accordion_button_bs_target_aria %}collapse-{{ data.game.id }}{% endblock %}
 {% block accordion_body_id %}collapse-{{ data.game.id }}{% endblock %}
 
-{% block hs_layout %}{% if display_mode == 'double' %}games-main-layout-double{% elif display_mode == 'single' %}games-main-layout-single{% endif %}{% endblock %}
+{% block hs_layout %}games-main-layout-{{ display_mode }}{% endblock %}
 
 {% block image_src %}{{ data.game.image_ref }}{% endblock %}
 {% block image_alt %}{{ data.game.title }}{% endblock %}
@@ -41,8 +41,7 @@
     {% include 'games/main_elements_sorting/top_category.html' with strong='false' %}
 {% endblock %}
 
-{% block data_bs_parent %}{% if display_mode == 'double' %}games-main-layout-double{% elif display_mode == 'single' %}games-main-layout-single{% endif %}{% endblock %}
+{% block data_bs_parent %}games-main-layout-{{ display_mode }}{% endblock %}
 
-{% block accordion_body %}
-    {% include 'games/main_accordion_buttons.html' with game_id=data.game.id %}
-{% endblock %}
+{% block accordion_body %}{% include 'games/main_accordion_buttons.html' with game=data.game %}{% endblock %}
+

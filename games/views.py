@@ -174,3 +174,10 @@ def main_filter(request,extravars={},html='games/games.html'):
 def get_game_list_only(request):
     display_mode = request.GET.get('display_mode')
     return main_filter(request, extravars={'display_mode': display_mode},html='games/filters/filter_game_list_scroll.html')
+
+def load_modal(request):
+    html='games/main_modal.html'
+    game_id = request.GET.get('selectedGame')
+    game = Game.objects.get(id=game_id)
+    context={'game': game}
+    return render(request, html, context)

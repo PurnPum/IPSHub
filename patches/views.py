@@ -208,9 +208,12 @@ def filter(request, htmlkey=None, extravars={}):
 def get_patch_list_only(request):
     display_mode = request.GET.get('display_mode')
     game_id = request.GET.get('selectedGame','any')
-    htmlkey='patch_list_page'
-    #if game_id and game_id != 'none' and game_id != 'any':
-        
-    
-        
+    htmlkey='patch_list_page'     
     return filter(request, htmlkey, {'display_mode': display_mode})
+
+def load_modal(request):
+    html='patches/main_modal.html'
+    patch_id = request.GET.get('selectedPatch')
+    patch = Patch.objects.get(id=patch_id)
+    context={'patch': patch}
+    return render(request, html, context)

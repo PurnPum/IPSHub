@@ -1,6 +1,7 @@
 <a class="d-flex col-4 {{ extra_a_classes }}" href="{{ href }}" style="text-decoration: none;"
     _="{{ hs_code }}">
-    <button type="button" class="btn btn-outline-{{ button_color }} border-4 fw-bold flex-grow-1 {{ extra_btn_classes }}">
+    <button type="button" class="btn btn-outline-{{ button_color }} border-4 fw-bold flex-grow-1 {{ extra_btn_classes }}" {{ extra_btn_attributes }}
+        {% block hx_code %}{% endblock %}>
         <i class="bi {{ icon }}"></i>
         <span class="d-none d-{{ size_inline }}-inline">{{ text }}</span>
         <span class="d-{{ size_none }}-none">{{ text_short }}</span>

@@ -1,0 +1,9 @@
+{% extends "generic/accordion/accordion_generic_button.html" %}
+
+{% block hx_code %}
+    hx-get="/{{ content }}/modal/?{{ selectedElem }}={{ elem_id }}"
+    hx-target="#active_modal"
+    hx-trigger="click"
+    hx-swap="innerHTML"
+    hx-on::after-request:once="show.bs.modal"
+{% endblock %}
