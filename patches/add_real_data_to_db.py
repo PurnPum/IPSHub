@@ -69,7 +69,7 @@ def add_real_games_to_db():
     
 def add_real_categories_to_db():
     category = Category()
-    category.image_ref = '/static/images/nuzlocke.png'
+    category.image_ref = '/static/images/nuzlocke.jpg'
     category.name = 'Nuzlocke Yellow'
     category.description = """The nuzlocke consists on a series of self-imposed challenges designed to make the game more difficult. The two main rules are:
 
@@ -81,7 +81,7 @@ These rules and many other subsets of rules will be implemented within this cate
     category.save()
     
     category2 = Category()
-    category2.image_ref = '/static/images/nuzlocke.png'
+    category2.image_ref = '/static/images/nuzlocke.jpg'
     category2.name = 'Nuzlocke Crystal'
     category2.description = """The nuzlocke consists on a series of self-imposed challenges designed to make the game more difficult. The two main rules are:
 

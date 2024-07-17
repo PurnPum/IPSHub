@@ -1,3 +1,95 @@
 {% extends "generic/modal/modal.html" %}
 
-{% block label_title %}{{ game.title }}{% endblock %}
+{% load custom_functions %}
+
+{% block label_title %}<a href="{{ game.extra_info }}"><img src="{{ game.image_mini_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: auto; height: 2rem;"/>{{ game.title }}</a>{% endblock %}
+
+{% block modal_body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">Developer</h5>
+                        <p class="card-text">{{ game.developer }}</p>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">Best Emulator</h5>
+                        <a href="{{ game.best_emulator_url }}"><p class="card-text">{{ game.best_emulator }}</p></a>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">Type</h5>
+                        <p class="card-text">{{ game.type }}</p>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">Release Date</h5>
+                        <p class="card-text">{{ game.release_date }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Top 3 Categories by Patches</h5>
+                        {% with popular_categories=game|topXcategories:3 %}
+                            <table class="table m-0">
+                                <tbody>
+                                {% for category in popular_categories %}
+                                    <tr>
+                                        <td><img src="{{ category.image_ref }}" aria-label="{{ category.name }}" alt="{{ category.name }}" class="bd-placeholder-img" style="width: 2rem; height: 2rem;"/></td>
+                                        <td>{{ category.name }}</td>
+                                        <td>{{ category|amountpatches }} {% if category|amountpatches == 1 %} Patch {% else %} Patches {% endif %}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endwith %}
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">Latest Patch</h5>
+                        <table class="table m-0">
+                            <tbody>
+                                <tr>
+                                {% with latest_patch=game|latestpatch %}
+                                    <td>{% with patch_img=latest_patch|patchimgfromgame %}<img src="{{ patch_img }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: 2rem; height: 2rem;"/>{% endwith %}</td>
+                                    <td>{{ latest_patch.name }}</td>
+                                    <td>{{ latest_patch.creation_date }}</td>
+                                {% endwith %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">Top 3 Patches by Downloads</h5>
+                        {% with popular_patches=game|topXpatches:3 %}
+                            <table class="table m-0">
+                                <tbody>
+                                {% for patch in popular_patches %}
+                                    <tr>
+                                        <td>{% with patch_img=patch|patchimgfromgame %}<img src="{{ patch_img }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: 2rem; height: 2rem;"/>{% endwith %}</td>
+                                        <td>{{ patch.name }}</td>
+                                        <td>{{ patch.downloads }} Downloads</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modal_buttons %}{% include 'games/main_accordion_buttons.html' with game=game %}{% endblock %}
