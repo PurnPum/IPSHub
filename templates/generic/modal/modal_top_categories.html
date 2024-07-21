@@ -1,0 +1,17 @@
+<div class="card mb-1">
+    <div class="card-body">
+        <h5 class="card-title mb-3 d-none d-sm-inline">Top {{ amount }} Categories by Patches</h5>
+        <h6 class="card-title mb-3 d-sm-none fw-bold">Top {{ amount }} Categories by Patches</h6>
+        <table class="table m-0">
+            <tbody>
+            {% for category_data in popular_categories %}
+                <tr>
+                    <td class="d-none d-sm-table-cell"><img src="{{ category_data.element.image_ref }}" aria-label="{{ category_data.element.name }}" alt="{{ category_data.element.name }}" class="bd-placeholder-img custom-img-default-size"/></td>
+                    <td class="">{{ category_data.element.name }}</td>
+                    <td>{{ category_data.element.amount_patches }} {% if category_data.element.amount_patches == 1 %} <span class="d-none d-sm-inline">Patch</span> {% else %} <span class="d-none d-sm-inline">Patches</span> {% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

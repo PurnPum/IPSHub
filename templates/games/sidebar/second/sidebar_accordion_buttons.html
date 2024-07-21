@@ -1,10 +1,16 @@
-{% load custom_functions %}
+{% load custom_functions_games %}
 
 <div class="col d-flex justify-content-around">
     {% include "generic/accordion/accordion_generic_button.html" with href="#" button_color="success" extra_btn_classes="p-0" extra_a_classes="pe-1" size_inline="xl" size_none="xl" text="Create Patch" text_short="Add" icon="bi-plus-lg" hs_code="" %}
-    {% with href="/patches/?selectedGame="|concatstr:game_id|concatstr:"&selectedCategory="|concatstr:category_id hs_code="on click put 'run' into localStorage['external_filtering'] put '"|concatstr:game_id|concatstr:"' into localStorage['game_id'] put '"|concatstr:category_id|concatstr:"' into localStorage['category_id'] put 'any' into localStorage['patch_id']" %}
+    {% with href="/patches/?selectedGame="|concatstr:game.id|concatstr:"&selectedCategory="|concatstr:category.id hs_code="on click put 'run' into localStorage['external_filtering'] put '"|concatstr:game.id|concatstr:"' into localStorage['game_id'] put '"|concatstr:category.id|concatstr:"' into localStorage['category_id'] put 'any' into localStorage['patch_id']" %}
         {% include 'generic/accordion/accordion_generic_button.html' with href=href button_color="secondary" extra_btn_classes="p-0" extra_a_classes="" size_inline="xl" size_none="xl" text="View Patches" text_short="Filter" icon="bi-bandaid-fill" hs_code=hs_code %}
     {% endwith %}
-    {% include 'generic/accordion/accordion_generic_button.html' with href="#" button_color="warning" extra_btn_classes="p-0" extra_a_classes="ps-1" size_inline="xl" size_none="xl" text="View Details" text_short="View" icon="bi-card-text" hs_code="" %}
+    {% if in_modal %}
+        {% include 'generic/accordion/accordion_generic_button.html' with href="#" button_color="danger" extra_btn_classes="p-0" extra_btn_attributes="data-bs-dismiss='modal'" extra_a_classes="" size_inline="xl" size_none="xl" text="Close Window" text_short="Close" icon="bi-x-lg" hs_code="" %}
+    {% else %}
+        {% with extra_btn_attributes="data-bs-toggle=modal data-bs-target=#active_modal" %}
+            {% include 'generic/accordion/accordion_generic_button_modal.html' with href="#" button_color="warning" extra_btn_classes="p-0" extra_btn_attributes=extra_btn_attributes extra_a_classes="ps-1" size_inline="xl" size_none="xl" text="View Details" text_short="View" icon="bi-card-text" hs_code="" selectedElem="selectedCategory" elem_id=category.id content="games" %}
+        {% endwith %}
+    {% endif %}
 </div>
 

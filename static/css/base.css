@@ -136,9 +136,33 @@
         display:none;
     }
 
+    .pre-line {
+        white-space: pre-line;
+    }
+
+    .custom-img-default-size {
+        width: auto !important;
+        height: 2rem !important;
+    }
+
     @media (max-width: 1200px) {
         .custom-2-5-rem-icon {
             font-size: 1.90rem;
+        }
+    }
+
+    @media (max-width: 575.98px) { 
+        .custom-modal-width {
+            max-width: 95% !important;
+        }
+        .custom-smaller-font {
+            font-size: 0.75rem;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .custom-modal-width {
+            max-width: 90% !important;
         }
     }
 

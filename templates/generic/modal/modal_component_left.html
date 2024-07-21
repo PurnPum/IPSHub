@@ -1,0 +1,13 @@
+<div class="card mb-1">
+    <div class="card-body">
+        <h5 class="card-title d-none d-xl-inline text-truncate custom-truncate" title="{{ h5_title }}">{{ h5_title }}</h5>
+        <h6 class="card-title d-xl-none fw-bold text-truncate custom-truncate" title="{{ h6_title }}">{{ h6_title }}</h6>
+        {% if component_a %}    
+            <a href="{{ component_a }}">
+                <p class="card-text pre-line custom-smaller-font" title="{{ component_a }}">{{ component_text }}</p>
+            </a>
+        {% else %}
+            <p class="card-text pre-line custom-smaller-font" title="{{ component_a }}">{{ component_text }}</p>
+        {% endif %}
+    </div>
+</div>

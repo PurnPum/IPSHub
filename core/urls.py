@@ -29,6 +29,5 @@ urlpatterns = [
     path('games/', g_views.games_list),
     path('games/filter/', g_views.main_filter, name='game_filter'),
     path('games/list/', g_views.get_game_list_only, name='game_list'),
-    path('games/modal/', g_views.load_modal, name='load_modal_game'),
-    path('categories/', c_views.categories_list)
+    path('games/modal/', g_views.load_modal, name='load_modal_game')
 ]

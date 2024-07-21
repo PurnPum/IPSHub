@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery
 from patches.models import Patch, PatchOption
 from .models import Game
@@ -178,6 +178,38 @@ def get_game_list_only(request):
 def load_modal(request):
     html='games/main_modal.html'
     game_id = request.GET.get('selectedGame')
-    game = Game.objects.get(id=game_id)
-    context={'game': game}
+    category_id = request.GET.get('selectedCategory')
+    if game_id:
+        game = Game.objects.get(id=game_id)
+        context = {'element': game}
+    elif category_id:
+        html = 'games/sidebar/second/sidebar_modal.html'
+        category = Category.objects.get(id=category_id)
+        game = category.base_game
+        context={'element': category, 'hierarchy': get_category_hierarchy(category), 'game': game}
+    else:
+        context={'element': 'any'}
+    print(context)
     return render(request, html, context)
+
+def get_category_hierarchy(category):
+    category_hierarchy = {}
+    current_category = category
+    category_hierarchy['element'] = current_category
+    category_hierarchy['children'] = []
+    while current_category.parent_category is not None:
+        parent_category = current_category.parent_category
+        child_category = {}
+        child_category['element'] = parent_category
+        child_category['children'] = []
+        child_category['children'].append(category_hierarchy)
+        category_hierarchy = child_category
+        current_category = parent_category
+    return category_hierarchy
+
+def get_category_children(category):
+    children = Category.objects.filter(parent_category=category)
+    if len(children) > 0:
+        return children
+    else:
+        return None

@@ -1,0 +1,17 @@
+<div class="card mb-1">
+    <div class="card-body">
+        <h5 class="card-title mb-3 d-none d-sm-inline">Top {{ amount }} Patches by downloads</h5>
+        <h6 class="card-title mb-3 d-sm-none fw-bold">Top {{ amount }} Patches by downloads</h6>
+        <table class="table m-0">
+            <tbody>
+            {% for patch_data in popular_patches %}
+                <tr>
+                    <td class="d-none d-sm-table-cell"><img src="{{ patch_data.img }}" aria-label="{{ element.title }}" alt="{{ element.title }}" class="bd-placeholder-img custom-img-default-size"/></td>
+                    <td>{{ patch_data.element.name }}</td>
+                    <td>{{ patch_data.element.downloads }}<span class="d-none d-sm-inline"> Downloads</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,95 +1,34 @@
 {% extends "generic/modal/modal.html" %}
 
-{% load custom_functions %}
+{% load custom_functions_games %}
 
-{% block label_title %}<a href="{{ game.extra_info }}"><img src="{{ game.image_mini_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: auto; height: 2rem;"/>{{ game.title }}</a>{% endblock %}
+{% block label_title %}<a href="{{ element.extra_info }}"><img src="{{ element.image_mini_ref }}" aria-label="{{ element.title }}" alt="{{ element.title }}" class="bd-placeholder-img" style="width: auto; height: 2rem;"/>{{ element.title }}</a>{% endblock %}
 
 {% block modal_body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Developer</h5>
-                        <p class="card-text">{{ game.developer }}</p>
-                    </div>
-                </div>
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Best Emulator</h5>
-                        <a href="{{ game.best_emulator_url }}"><p class="card-text">{{ game.best_emulator }}</p></a>
-                    </div>
-                </div>
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Type</h5>
-                        <p class="card-text">{{ game.type }}</p>
-                    </div>
-                </div>
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Release Date</h5>
-                        <p class="card-text">{{ game.release_date }}</p>
-                    </div>
-                </div>
+            <div class="col-md-12 col-lg-3">
+                <img src="{{ element.image_ref }}" aria-label="{{ element.title }}" alt="{{ element.title }}" title="{{ element.title }}" class="bd-placeholder-img img-fluid mb-2" style="max-width: 300px ;width: 100%; height: auto;">
+                {% include 'generic/modal/modal_component_left.html' with h5_title="Developer" h6_title="Developer" component_text=element.developer %}
+                {% include 'generic/modal/modal_component_left.html' with h5_title="Best Emulator" h6_title="Best Emulator" component_a=element.best_emulator_url component_text=element.best_emulator %}
+                {% include 'generic/modal/modal_component_left.html' with h5_title="Type" h6_title="Type" component_text=element.type %}
+                {% include 'generic/modal/modal_component_left.html' with h5_title="Release Date" h6_title="Release Date" component_text=element.release_date %}
             </div>
-            <div class="col-sm-12 col-md-6">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Top 3 Categories by Patches</h5>
-                        {% with popular_categories=game|topXcategories:3 %}
-                            <table class="table m-0">
-                                <tbody>
-                                {% for category in popular_categories %}
-                                    <tr>
-                                        <td><img src="{{ category.image_ref }}" aria-label="{{ category.name }}" alt="{{ category.name }}" class="bd-placeholder-img" style="width: 2rem; height: 2rem;"/></td>
-                                        <td>{{ category.name }}</td>
-                                        <td>{{ category|amountpatches }} {% if category|amountpatches == 1 %} Patch {% else %} Patches {% endif %}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endwith %}
-                        <p class="card-text"></p>
-                    </div>
-                </div>
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Latest Patch</h5>
-                        <table class="table m-0">
-                            <tbody>
-                                <tr>
-                                {% with latest_patch=game|latestpatch %}
-                                    <td>{% with patch_img=latest_patch|patchimgfromgame %}<img src="{{ patch_img }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: 2rem; height: 2rem;"/>{% endwith %}</td>
-                                    <td>{{ latest_patch.name }}</td>
-                                    <td>{{ latest_patch.creation_date }}</td>
-                                {% endwith %}
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <h5 class="card-title">Top 3 Patches by Downloads</h5>
-                        {% with popular_patches=game|topXpatches:3 %}
-                            <table class="table m-0">
-                                <tbody>
-                                {% for patch in popular_patches %}
-                                    <tr>
-                                        <td>{% with patch_img=patch|patchimgfromgame %}<img src="{{ patch_img }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: 2rem; height: 2rem;"/>{% endwith %}</td>
-                                        <td>{{ patch.name }}</td>
-                                        <td>{{ patch.downloads }} Downloads</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endwith %}
-                    </div>
-                </div>
+            <div class="col-md-12 col-lg-9">
+                {% with latest_patch=element|latestpatch %}
+                    {% with patch_img=latest_patch|getpatchimg %}
+                        {% include 'generic/modal/modal_latest_patch.html' with element=element latest_patch=latest_patch %}
+                    {% endwith %}
+                {% endwith %}
+                {% with popular_patches=element|top3patches amount=3 %}
+                    {% include 'generic/modal/modal_top_patches.html' with popular_patches=popular_patches %}
+                {% endwith %}
+                {% with popular_categories=element|top3categories amount=3 %}
+                    {% include 'generic/modal/modal_top_categories.html' with popular_categories=popular_categories %}
+                {% endwith %}
             </div>
         </div>
     </div>
 {% endblock %}
 
-{% block modal_buttons %}{% include 'games/main_accordion_buttons.html' with game=game %}{% endblock %}
+{% block modal_buttons %}{% include 'games/main_accordion_buttons.html' with game=element in_modal="true" %}{% endblock %}

@@ -1,0 +1,10 @@
+<ul class="nested ps-3">
+    <li class="list-unstyled"><i class="bi bi-arrow-return-right pe-2"></i><span class="caret">{{ child.element.name }}</span>
+        <img src="{{ child.element.image_ref }}" class="d-none d-sm-inline custom-img-default-size" alt="{{ child.element..name }}" title="{{ child.element.name }}">
+        {% if child.children %}
+            {% for child in child.children %}
+                {% include "games/sidebar/second/sidebar_modal_category_tree.html" with child=child %}
+            {% endfor %}
+        {% endif %}
+    </li>
+</ul>

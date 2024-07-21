@@ -1,7 +1,7 @@
 from django import template
 
 from patches.models import Patch
-from categories.models import Category
+from ..models import Category
 from django.db.models import Count
 
 register = template.Library()
