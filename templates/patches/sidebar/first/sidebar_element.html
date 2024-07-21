@@ -29,4 +29,4 @@
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="text-truncate custom-truncate ms-2" title="{{ data.categories_amount }}">Categories: {{ data.categories_amount }}</span></li>
 {% endblock %}
 
-{% block accordion_body %}{% include 'patches/sidebar/first/sidebar_accordion_buttons.html' with game_id=data.game.id %}{% endblock %}
+{% block accordion_body %}{% include 'patches/sidebar/first/sidebar_accordion_buttons.html' with game=data.game category=data.category %}{% endblock %}

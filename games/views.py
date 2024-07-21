@@ -189,7 +189,6 @@ def load_modal(request):
         context={'element': category, 'hierarchy': get_category_hierarchy(category), 'game': game}
     else:
         context={'element': 'any'}
-    print(context)
     return render(request, html, context)
 
 def get_category_hierarchy(category):

@@ -1,0 +1,35 @@
+{% extends "generic/modal/components/modal.html" %}
+
+{% load custom_functions %}
+
+{% block label_title %}<img src="{{ element.image_ref }}" title="{{ element.name }}" aria-label="{{ element.name }}" alt="{{ element.name }}" class="bd-placeholder-img custom-img-default-size"/>{{ element.name}}{% endblock %}
+
+{% block modal_body %}
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'generic/modal/components/modal_component_left.html' with h5_title="Description" h6_title="Description" component_text=element.description %}
+            <div class="container mt-3">
+                <h4>Category Hierarchy</h4>
+                <ul id="category-hierarchy" class="ps-2">
+                    <li class="unstyled" style="list-style: none;"><span class="fw-bold">Base Game: {{ game.title }}</span>
+                        <img class="d-none d-sm-inline custom-img-default-size" src="{{ game.image_mini_ref }}" alt="{{ game.title }}" title="{{ game.title }}">
+                        {% include 'generic/modal/components/modal_category_tree.html' with child=hierarchy %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12">
+            {% with latest_patch=element|latestpatch %}
+                {% with patch_img=latest_patch|getpatchimg %}
+                    {% include 'generic/modal/components/modal_latest_patch.html' with element=element latest_patch=latest_patch %}
+                {% endwith %}
+            {% endwith %}
+            {% with popular_patches=element|top3patches amount=3 %}
+                {% include 'generic/modal/components/modal_top_patches.html' with popular_patches=popular_patches %}
+            {% endwith %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block modal_buttons %}{% include 'games/sidebar/second/sidebar_accordion_buttons.html' with category=element game=game in_modal="true" %}{% endblock %}

@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery
+
+from games.views import get_category_hierarchy
 from .models import Patch
 from categories.models import Category
 from games.models import Game
@@ -10,6 +12,9 @@ def paginate(request, qs, limit=4):
     paginated_qs = Paginator(qs, limit)
     page_no = request.GET.get("page")
     return paginated_qs.get_page(page_no)
+
+def patch_generator(request):
+    return render(request, 'patch_generator/patch_generator.html')
 
 def patches_list(request):
     
@@ -212,8 +217,23 @@ def get_patch_list_only(request):
     return filter(request, htmlkey, {'display_mode': display_mode})
 
 def load_modal(request):
-    html='patches/main_modal.html'
+    game_id = request.GET.get('selectedGame')
+    category_id = request.GET.get('selectedCategory')
     patch_id = request.GET.get('selectedPatch')
-    patch = Patch.objects.get(id=patch_id)
-    context={'patch': patch}
+    html='patches/main_modal.html'
+    if game_id:
+        html = 'patches/sidebar/first/sidebar_modal.html'
+        game = Game.objects.get(id=game_id)
+        context = {'element': game}
+    elif category_id:
+        html = 'patches/sidebar/second/sidebar_modal.html'
+        category = Category.objects.get(id=category_id)
+        game = category.base_game
+        context={'element': category, 'hierarchy': get_category_hierarchy(category), 'game': game}
+    elif patch_id:
+        patch = Patch.objects.get(id=patch_id)
+        context={'element': patch}
+    else:
+        context={'element': 'any'}
+
     return render(request, html, context)

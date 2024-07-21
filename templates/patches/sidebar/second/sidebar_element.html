@@ -26,4 +26,4 @@
     <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-gear-fill"></i> <span class="ms-2">Patch Options: {{ data.patch_options_amount }}</span></li>
 {% endblock %}
 
-{% block accordion_body %}{% include 'patches/sidebar/second/sidebar_accordion_buttons.html' with game_id=data.base_game.id category_id=data.category.id %}{% endblock %}
+{% block accordion_body %}{% include 'patches/sidebar/second/sidebar_accordion_buttons.html' with game=data.base_game category=data.category %}{% endblock %}
