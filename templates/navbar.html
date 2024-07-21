@@ -11,21 +11,22 @@
         </div>
         <hr class="d-lg-none text-white-50">
         <div class="offcanvas-body">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-grow-1 d-flex justify-content-evenly align-items-center">
-            {% include 'navbar_item.html' with item_text="Categories" %}
-            {% include 'navbar_item.html' with item_text="Patches" %}
-            {% include 'navbar_item.html' with item_text="Patch Generator" %}
-            {% include 'navbar_item.html' with item_text="Games" %}
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-grow-1 justify-content-evenly align-items-center d-none d-xl-flex">
+            {% include 'navbar_item.html' with item_text="Patches" extra_classes="d-none d-xl-block fs-4" href="/patches/" %}
+            {% include 'navbar_item.html' with item_text="Patch Generator" extra_classes="d-none d-xl-block fs-4" href="/patch_generator/" %}
+            {% include 'navbar_item.html' with item_text="Games" extra_classes="d-none d-xl-block fs-4" href="/games/" %}
+          </ul>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-grow-1 justify-content-evenly align-items-center d-flex d-xl-none">
+            {% include 'navbar_item.html' with item_text="Patches" extra_classes="d-xl-none fs-5" href="/patches/" %}
+            {% include 'navbar_item.html' with item_text="Patch Generator" extra_classes="d-xl-none fs-5" href="/patch_generator/" %}
+            {% include 'navbar_item.html' with item_text="Games" extra_classes="d-xl-none fs-5" href="/games/" %}
           </ul>
           <hr class="d-lg-none text-white-50">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link d-none d-xl-flex align-items-center" href="#" target="_blank">
-                <i class="bi bi-twitter custom-2-5-rem-icon"></i>
-                <strong class="d-lg-none ms-2">Twitter/X</strong>
-              </a>
-              <a class="nav-link d-xl-none d-flex align-items-center" href="#" target="_blank">
-                <i class="bi bi-twitter custom-1-75-rem-icon"></i>
+              <a class="nav-link align-items-center" href="#" target="_blank">
+                <i class="bi bi-twitter d-none d-xl-flex custom-2-5-rem-icon"></i>
+                <i class="bi bi-twitter d-xl-none d-flex custom-1-75-rem-icon"></i>
                 <strong class="d-lg-none ms-2">Twitter/X</strong>
               </a>
             </li>
