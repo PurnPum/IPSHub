@@ -14,7 +14,15 @@ def paginate(request, qs, limit=4):
     return paginated_qs.get_page(page_no)
 
 def patch_generator(request):
-    return render(request, 'patch_generator/patch_generator.html')
+    
+    context = {
+        'title': 'Patch Generator',
+        'CSS': 'patches',
+        'nav_text_color': '.text-info',
+        'nav_main_color': '.bg-primary',
+    }
+    
+    return render(request, 'patch_generator/patch_generator.html', context)
 
 def patches_list(request):
     
