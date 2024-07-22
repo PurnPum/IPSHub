@@ -1,0 +1,12 @@
+<div class="col-12 col-lg-8 p-0 flex">
+    <div class="container-fluid bg-dark">
+        {% block list_navbar %}{% endblock %}
+        <div hx-swap-oob="true" id="{% block main_layout_double_id %}{% endblock %}" data-display-mode="double" class="accordion accordion-flush row d-none d-xxl-flex custom-bottom-border pb-2">
+            {% block main_layout_double %}{% endblock %}
+        </div>
+        <div hx-swap-oob="true" id="{% block main_layout_single_id %}{% endblock %}" data-display-mode="single" class="accordion accordion-flush row d-flex d-xxl-none custom-bottom-border pb-2">
+            {% block main_layout_single %}{% endblock %}
+        </div>
+        {% block pagination %}{% endblock %}
+    </div>
+</div>

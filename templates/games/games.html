@@ -1,9 +1,4 @@
 {% extends 'generic/main/main.html' %}
 
-{% block list_navbar %}{% include 'games/filters/list_navbar.html' %}{% endblock %}
-{% block main_layout_double %}{% include 'games/main_layout.html' with display_mode="double" %}{% endblock %}
-{% block main_layout_single %}{% include 'games/main_layout.html' with display_mode="single" %}{% endblock %}
-{% block main_layout_double_id %}games-main-layout-double{% endblock %}
-{% block main_layout_single_id %}games-main-layout-single{% endblock %}
-{% block pagination %}{% include 'games/pagination.html' %}{% endblock %}
+{% block main_component %}{% include 'games/main_component.html' %}{% endblock %}
 {% block sidebar_layout %}{% include 'games/sidebar/all_sidebars_layout.html' %}{% endblock %}
