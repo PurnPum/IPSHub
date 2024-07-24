@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery
 
-from games.views import get_category_hierarchy
+from games.views import get_category_hierarchy, main_filter as g_main_filter
 from .models import Patch
 from categories.models import Category
 from games.models import Game
@@ -26,7 +26,7 @@ def patch_generator(request):
     patch_id = request.GET.get('selectedPatch')
     
     if game_id is None and patch_id is None:
-        return render(request, 'patch_generator/game_select/patchgen_select_game.html', context)
+        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', title="Patch Generator", CSS='patchgen', nav_text_color='.text-info', nav_main_color='.bg-primary')
     return render(request, 'patch_generator/patch_generator.html', context)
 
 def patches_list(request):

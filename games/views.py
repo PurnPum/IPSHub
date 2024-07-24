@@ -21,7 +21,7 @@ def games_list(request):
     
     return main_filter(request)
 
-def main_filter(request,extravars={},html='games/games.html'):
+def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='games',nav_text_color='.text-warning-emphasis',nav_main_color='.bg-success'):
     
     developer = request.GET.get('selectedDeveloper','any')
     emulator = request.GET.get('selectedEmulator','any')
@@ -162,10 +162,10 @@ def main_filter(request,extravars={},html='games/games.html'):
         'amountTyp': len(top_8_types),
         'sorting_criteria': ['Patches','Categories','Name','Release Date','Latest Patch'],
         'sorting_by': sorting_by,
-        'title': 'Games',
-        'CSS': 'games',
-        'nav_text_color': '.text-warning-emphasis',
-        'nav_main_color': '.bg-success',
+        'title': title,
+        'CSS': CSS,
+        'nav_text_color': nav_text_color,
+        'nav_main_color': nav_main_color,
         'extravars': extravars
     }
     

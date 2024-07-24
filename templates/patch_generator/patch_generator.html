@@ -1,9 +1,11 @@
-{% extends 'generic/main/main.html' %}
+{% extends 'base.html' %}
 
-{% block list_navbar %}{% include 'patches/filters/list_navbar.html' %}{% endblock %}
-{% block main_layout_double %}{% include 'patches/main_layout.html' with display_mode="double" %}{% endblock %}
-{% block main_layout_single %}{% include 'patches/main_layout.html' with display_mode="single" %}{% endblock %}
-{% block main_layout_double_id %}patches-main-layout-double{% endblock %}
-{% block main_layout_single_id %}patches-main-layout-single{% endblock %}
-{% block pagination %}{% include 'patches/pagination.html' %}{% endblock %}
-{% block sidebar_layout %}{% include 'patches/sidebar/all_sidebars_layout.html' %}{% endblock %}
+{% block content %}
+
+    {% include 'navbar.html' %}
+
+    
+
+    {% include 'footer.html' %}
+
+{% endblock %}

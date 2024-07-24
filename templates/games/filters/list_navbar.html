@@ -1,6 +1,10 @@
 {% extends "generic/filters/list_navbar.html" %}
 
-{% block nav %}{% include 'games/filters/filter_nav.html' %}{% endblock %}
+{% block nav %}{% if patchgen %}
+    {% include 'patch_generator/game_select/filter_nav.html' %}
+{% else %}
+    {% include 'games/filters/filter_nav.html' %}
+{% endif %}{% endblock %}
 
 {% block create_patch_button_color %}success{% endblock %}
 

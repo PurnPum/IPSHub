@@ -1,0 +1,12 @@
+:root {
+    --custom-light-gray: rgb(33, 33, 33);
+    --custom-gray: rgb(22, 22, 22);
+    --custom-darker-gray: rgb(11, 11, 11);
+    --custom-nav-main-color: rgb(90, 12, 155);
+    --custom-nav-darker-color: rgb(45, 6, 77);
+    --custom-nav-lighter-color: rgb(135, 24, 225);
+    --custom-sorting-color: rgb(141, 70, 255);
+    --custom-sorting-hover-color: rgb(98, 0, 255);
+    --custom-disabled-color: rgb(116, 91, 121);
+    --custom-accordion-active-color: rgb(225, 74, 255);
+  }
