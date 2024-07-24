@@ -1,14 +1,4 @@
-<nav class="row custom-title-bg custom-top-border d-flex align-items-center">
-    <div class="d-flex justify-content-between custom-list-header">
-        <h3 id="nav-title" class="fw-bold mb-0 flex-grow-1 d-flex align-items-center">
-            {% block title %}{% endblock %}
-        </h3>
-        <button type="button" class="btn btn-{% block create_patch_button_color %}{% endblock %} mt-1 mb-1">
-            <i class="bi bi-plus-lg d-none d-sm-inline"></i>
-            <span class="ms-2 text-truncate" title="Create Patch">Create Patch</span>
-        </button>
-    </div>
-</nav>
+{% block nav %}{% endblock %}
 <div id="{% block list_filters_id %}{% endblock %}" class="row row-cols-1 row-cols-sm-2 custom-title-bg custom-element-top-border pt-0 pb-2"
     hx-get="{% block list_filters_url %}{% endblock %}"
     hx-trigger="{% block list_filters_trigger %}{% endblock %}"

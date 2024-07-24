@@ -1,5 +1,6 @@
 {% extends "generic/main/main_component.html" %}
 
+{% block col_classes %}col-12 col-lg-8{% endblock %}
 {% block list_navbar %}{% include 'games/filters/list_navbar.html' %}{% endblock %}
 {% block main_layout_double %}{% include 'games/main_layout.html' with display_mode="double" %}{% endblock %}
 {% block main_layout_single %}{% include 'games/main_layout.html' with display_mode="single" %}{% endblock %}
