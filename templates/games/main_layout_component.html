@@ -1,6 +1,7 @@
 {% extends "generic/main/main_layout_component.html" %}
 
-{% block list_url %}{% url 'game_list' %}{% endblock %}
+{% block list_url %}{% if patchgen != "False" %}{% url 'game_list_patchgen' %}{% else %}{% url 'game_list' %}{% endif %}{% endblock %}
+
 {% block includes %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #game-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
 
 {% block main_element %}

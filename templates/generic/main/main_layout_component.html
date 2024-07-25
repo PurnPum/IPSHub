@@ -2,7 +2,7 @@
     {% if forloop.last %}
         {% if paginated_list.has_next %}
             <div class="{{ col_class }} p-0 accordion-item"
-            hx-get="{% block list_url %}{% endblock %}?page={{ paginated_list.next_page_number }}&display_mode={{ display_mode }}&patchgen={{ patchgen }}"
+            hx-get="{% block list_url %}{% endblock %}?page={{ paginated_list.next_page_number }}&display_mode={{ display_mode }}"
             hx-trigger="intersect once"
             hx-swap="afterend"
             hx-include="{% block includes %}{% endblock %}">
