@@ -1,0 +1,5 @@
+{% extends "generic/main/main_layout_component.html" %}
+
+{% block list_url %}{% url 'patch_list' %}{% endblock %}
+{% block includes %}#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
+{% block main_element %}{% include 'patches/main_element.html' %}{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "generic/main/main_layout_component.html" %}
+
+{% block list_url %}{% url 'game_list' %}{% endblock %}
+{% block includes %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #game-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
+
+{% block main_element %}
+{% if patchgen != "False" %}
+    <a href="{% url 'patch_generator' %}?selectedGame={{ data.game.id }}" style="text-decoration: none;">{% include 'games/main_element.html' %}</a>
+{% else %}
+    {% include 'games/main_element.html' %}
+{% endif %}
+{% endblock %}

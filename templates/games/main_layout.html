@@ -1,23 +1,4 @@
 {% extends "generic/main/main_layout.html" %}
 
-{% block list_url_double %}{% url 'game_list' %}{% endblock %}
-{% block includes_double %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #game-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
-
-{% block main_element_double %}
-{% if patchgen != "False" %}
-    <a href="{% url 'patch_generator' %}?selectedGame={{ data.game.id }}" style="text-decoration: none;">{% include 'games/main_element.html' %}</a>
-{% else %}
-    {% include 'games/main_element.html' %}
-{% endif %}
-{% endblock %}
-
-{% block list_url_single %}{% url 'game_list' %}{% endblock %}
-{% block includes_single %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #game-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
-
-{% block main_element_single %}
-{% if patchgen != "False" %}
-    <a href="{% url 'patch_generator' %}?selectedGame={{ data.game.id }}" style="text-decoration: none;">{% include 'games/main_element.html' %}</a>
-{% else %}
-    {% include 'games/main_element.html' %}
-{% endif %}
-{% endblock %}
+{% block main_layout_double %}{% include 'games/main_layout_component.html' with col_class="col-6" %}{% endblock %}
+{% block main_layout_single %}{% include 'games/main_layout_component.html' with col_class="col-12" %}{% endblock %}

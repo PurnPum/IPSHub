@@ -1,9 +1,4 @@
 {% extends "generic/main/main_layout.html" %}
 
-{% block list_url_double %}{% url 'patch_list' %}{% endblock %}
-{% block includes_double %}#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
-{% block main_element_double %}{% include 'patches/main_element.html' %}{% endblock %}
-
-{% block list_url_single %}{% url 'patch_list' %}{% endblock %}
-{% block includes_single %}#game-select-hx, #category-select-hx, #patch-select-hx, #patch-pagination, #sorting-order-hidden, #sorting-criteria-hx{% endblock %}
-{% block main_element_single %}{% include 'patches/main_element.html' %}{% endblock %}
+{% block main_layout_double %}{% include 'patches/main_layout_component.html' with col_class="col-6" %}{% endblock %}
+{% block main_layout_single %}{% include 'patches/main_layout_component.html' with col_class="col-12" %}{% endblock %}
