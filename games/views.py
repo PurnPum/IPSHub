@@ -19,9 +19,14 @@ def games_list(request):
     add_real_data_to_db.add_real_patch_options_to_db()
     add_real_data_to_db.add_real_patches_to_db()
     
-    return main_filter(request)
+    patchgen = request.GET.get('patchgen',"False")
+    
+    return main_filter(request, patchgen=patchgen)
 
-def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='games',nav_text_color='.text-warning-emphasis',nav_main_color='.bg-success'):
+def main_filter_patchgen(request):
+    return main_filter(request, patchgen="True")
+
+def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='games',nav_text_color='.text-warning-emphasis',nav_main_color='.bg-success',patchgen="False"):
     
     developer = request.GET.get('selectedDeveloper','any')
     emulator = request.GET.get('selectedEmulator','any')
@@ -166,6 +171,7 @@ def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='
         'CSS': CSS,
         'nav_text_color': nav_text_color,
         'nav_main_color': nav_main_color,
+        'patchgen': patchgen,
         'extravars': extravars
     }
     
@@ -173,7 +179,8 @@ def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='
 
 def get_game_list_only(request):
     display_mode = request.GET.get('display_mode')
-    return main_filter(request, extravars={'display_mode': display_mode},html='games/filters/filter_game_list_scroll.html')
+    patchgen = request.GET.get('patchgen',"False")
+    return main_filter(request, extravars={'display_mode': display_mode}, html='games/filters/filter_game_list_scroll.html', patchgen=patchgen)
 
 def load_modal(request):
     html='games/main_modal.html'
