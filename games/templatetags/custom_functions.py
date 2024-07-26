@@ -44,3 +44,7 @@ def latestpatch(element):
 @register.filter
 def getpatchimg(patch):
     return patch.patch_options.first().category.image_ref
+
+@register.filter
+def undertowhite(arg1):
+    return arg1.replace('_', ' ')
