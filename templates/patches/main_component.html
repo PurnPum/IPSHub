@@ -2,8 +2,6 @@
 
 {% block col_classes %}col-12 col-lg-8{% endblock %}
 {% block list_navbar %}{% include 'patches/filters/list_navbar.html' %}{% endblock %}
-{% block main_layout_double %}{% include 'patches/main_layout.html' with display_mode="double" %}{% endblock %}
-{% block main_layout_single %}{% include 'patches/main_layout.html' with display_mode="single" %}{% endblock %}
-{% block main_layout_double_id %}patches-main-layout-double{% endblock %}
-{% block main_layout_single_id %}patches-main-layout-single{% endblock %}
+{% block main_layout %}{% include 'patches/main_layout.html' %}{% endblock %}
+{% block main_layout_id %}patches-main-layout{% endblock %}
 {% block pagination %}{% include 'patches/pagination.html' %}{% endblock %}

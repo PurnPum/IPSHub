@@ -4,7 +4,7 @@
 {% block accordion_button_bs_target_aria %}collapse-{{ data.patch.id }}{% endblock %}
 {% block accordion_body_id %}collapse-{{ data.patch.id }}{% endblock %}
 
-{% block hs_layout %}patches-main-layout-{{ display_mode }}{% endblock %}
+{% block hs_layout %}patches-main-layout{% endblock %}
 
 {% block image_src %}{{ data.game.image_ref }}{% endblock %}
 {% block image_alt %}{{ data.game.title }}{% endblock %}
@@ -41,6 +41,6 @@
     {% include 'patches/main_elements_sorting/categories.html' with strong="false" %}
 {% endblock %}
 
-{% block data_bs_parent %}patches-main-layout-{{ display_mode }}{% endblock %}
+{% block data_bs_parent %}patches-main-layout{% endblock %}
 
 {% block accordion_body %}{% include 'patches/main_accordion_buttons.html' with patch=data.patch %}{% endblock %}

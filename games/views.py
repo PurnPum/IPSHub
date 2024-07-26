@@ -181,8 +181,7 @@ def get_game_list_only_patchgen(request):
     return get_game_list_only(request,patchgen="True")
 
 def get_game_list_only(request,patchgen="False"):
-    display_mode = request.GET.get('display_mode')
-    return main_filter(request, extravars={'display_mode': display_mode}, html='games/filters/filter_game_list_scroll.html', patchgen=patchgen)
+    return main_filter(request, html='games/filters/filter_game_list_scroll.html', patchgen=patchgen)
 
 def load_modal(request):
     html='games/main_modal.html'

@@ -1,16 +1,16 @@
 {% for data in final_list %}
     {% if forloop.last %}
         {% if paginated_list.has_next %}
-            <div class="{{ col_class }} p-0 accordion-item"
-            hx-get="{% block list_url %}{% endblock %}?page={{ paginated_list.next_page_number }}&display_mode={{ display_mode }}"
+            <div class="{{ col_class }} p-0 accordion-item custom-main-element"
+            hx-get="{% block list_url %}{% endblock %}?page={{ paginated_list.next_page_number }}"
             hx-trigger="intersect once"
             hx-swap="afterend"
             hx-include="{% block includes %}{% endblock %}">
         {% else %}
-            <div class="{{ col_class }} p-0 accordion-item">
+            <div class="{{ col_class }} p-0 accordion-item custom-main-element">
         {% endif %}
     {% else %}
-        <div class="{{ col_class }} p-0 accordion-item">
+        <div class="{{ col_class }} p-0 accordion-item custom-main-element">
     {% endif %}
     {% block main_element %}{% endblock %}
     </div>

@@ -1,7 +1,5 @@
 {% extends "generic/filters/filter_list.html" %}
 
-{% block main_layout_double_id %}games-main-layout-double{% endblock %}
-{% block main_layout_single_id %}games-main-layout-single{% endblock %}
+{% block main_layout_id %}games-main-layout{% endblock %}
 
-{% block main_layout_double %}{% include 'games/main_layout.html' with display_mode="double" %}{% endblock %}
-{% block main_layout_single %}{% include 'games/main_layout.html' with display_mode="single" %}{% endblock %}
+{% block main_layout %}{% include 'games/main_layout.html' %}{% endblock %}

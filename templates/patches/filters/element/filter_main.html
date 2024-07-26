@@ -1,7 +1,5 @@
 {% extends "generic/filters/filter_main.html" %}
 
-{% block main_layout_double_id %}patches-main-layout-double{% endblock %}
-{% block main_layout_single_id %}patches-main-layout-single{% endblock %}
+{% block main_layout_id %}patches-main-layout{% endblock %}
 
-{% block main_layout_double %}{% include 'patches/main_layout.html' with display_mode="double" %}{% endblock %}
-{% block main_layout_single %}{% include 'patches/main_layout.html' with display_mode="single" %}{% endblock %}
+{% block main_layout_component %}{% include 'patches/main_layout.html' %}{% endblock %}

@@ -1,8 +1,4 @@
-{% if display_mode == 'double' %}
-  {% block main_layout_double %}{% endblock %}
-{% elif display_mode == 'single' %}
-  {% block main_layout_single %}{% endblock %}
-{% endif %}
+{% block main_layout_component %}{% endblock %}
 
 {% if not final_list %}
   <div class="col-12 text-center custom-element-top-border">

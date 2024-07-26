@@ -1,11 +1,24 @@
 <div class="{% block col_classes %}{% endblock %} p-0 flex">
     <div class="container-fluid bg-dark">
         {% block list_navbar %}{% endblock %}
-        <div hx-swap-oob="true" id="{% block main_layout_double_id %}{% endblock %}" data-display-mode="double" class="accordion accordion-flush row d-none d-xxl-flex custom-bottom-border pb-2">
-            {% block main_layout_double %}{% endblock %}
-        </div>
-        <div hx-swap-oob="true" id="{% block main_layout_single_id %}{% endblock %}" data-display-mode="single" class="accordion accordion-flush row d-flex d-xxl-none custom-bottom-border pb-2">
-            {% block main_layout_single %}{% endblock %}
+        <div hx-swap-oob="true" id="{% block main_layout_id %}{% endblock %}" class="accordion accordion-flush row d-flex custom-bottom-border pb-2"
+        _="on load or resize from window
+        set divs to <div.custom-main-element/> in me
+        if the window's innerWidth >= 1400
+            repeat in divs
+                if it matches .col-12
+                    remove .col-12 from it
+                    add .col-6 to it
+                end
+            end
+        else
+            repeat in divs
+                if it matches .col-6
+                    remove .col-6 from it
+                    add .col-12 to it
+                end
+            end">
+            {% block main_layout %}{% endblock %}
         </div>
         {% block pagination %}{% endblock %}
     </div>

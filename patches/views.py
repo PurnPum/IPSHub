@@ -224,10 +224,9 @@ def filter(request, htmlkey=None, extravars={}):
     return main_filter(request, htmlkey, sorting_order, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
 def get_patch_list_only(request):
-    display_mode = request.GET.get('display_mode')
     game_id = request.GET.get('selectedGame','any')
     htmlkey='patch_list_page'     
-    return filter(request, htmlkey, {'display_mode': display_mode})
+    return filter(request, htmlkey)
 
 def load_modal(request):
     game_id = request.GET.get('selectedGame')
