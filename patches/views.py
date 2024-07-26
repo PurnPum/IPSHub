@@ -15,7 +15,7 @@ def paginate(request, qs, limit=4):
 
 def patch_generator(request):
     
-    context = {
+    extravars = {
         'title': 'Patch Generator',
         'CSS': 'patchgen',
         'nav_text_color': '.text-danger-emphasis',
@@ -23,11 +23,14 @@ def patch_generator(request):
         'patchgen': 'True'
     }
     
+    context={
+        'extravars':extravars}
+    
     game_id = request.GET.get('selectedGame')
     patch_id = request.GET.get('selectedPatch')
     
     if game_id is None and patch_id is None:
-        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=context)
+        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
     return render(request, 'patch_generator/patch_generator.html', context)
 
 def patches_list(request):
