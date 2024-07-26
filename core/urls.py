@@ -22,7 +22,7 @@ from patches import views as p_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('patches/', p_views.patches_list),
+    path('patches/', p_views.patches),
     path('patches/filter/', p_views.filter, name='patch_filter'),
     path('patches/list/', p_views.get_patch_list_only, name='patch_list'),
     path('patches/modal/', p_views.load_modal, name='load_modal_patch'),

@@ -1,7 +1,7 @@
 {% extends "generic/main/main_component.html" %}
 
 {% block col_classes %}col-12 col-lg-8{% endblock %}
-{% block list_navbar %}{% include 'patches/filters/list_navbar.html' %}{% endblock %}
+{% block filter_navbar %}{% include 'patches/filters/filter_navbar.html' %}{% endblock %}
 {% block main_layout %}{% include 'patches/main_layout.html' %}{% endblock %}
 {% block main_layout_id %}patches-main-layout{% endblock %}
-{% block pagination %}{% include 'patches/pagination.html' %}{% endblock %}
+{% block pagination %}{% include 'patches/main_pagination.html' %}{% endblock %}

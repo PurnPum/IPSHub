@@ -33,7 +33,7 @@ def patch_generator(request):
         return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
     return render(request, 'patch_generator/patch_generator.html', context)
 
-def patches_list(request):
+def patches(request):
     
     """add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
@@ -225,13 +225,10 @@ def filter(request, htmlkey=None, extravars={}):
     
     if selected_filter == 'category':
         patch_id = 'any'
-        
-    print(game_id, category_id, patch_id, sorting_by, sorting_order, htmlkey)
     
     return main_filter(request, htmlkey, sorting_order, extravars=extravars, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
 def get_patch_list_only(request):
-    game_id = request.GET.get('selectedGame','any')
     htmlkey='patch_list_page'     
     return filter(request, htmlkey)
 
