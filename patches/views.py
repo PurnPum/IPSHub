@@ -17,16 +17,17 @@ def patch_generator(request):
     
     context = {
         'title': 'Patch Generator',
-        'CSS': 'patches',
-        'nav_text_color': '.text-info',
-        'nav_main_color': '.bg-primary',
+        'CSS': 'patchgen',
+        'nav_text_color': '.text-danger-emphasis',
+        'nav_main_color': '.custom-navbar-darker-bg',
+        'patchgen': 'True'
     }
     
     game_id = request.GET.get('selectedGame')
     patch_id = request.GET.get('selectedPatch')
     
     if game_id is None and patch_id is None:
-        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', title="Patch Generator", CSS='patchgen', nav_text_color='.text-danger-emphasis', nav_main_color='.custom-navbar-darker-bg', patchgen=True)
+        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=context)
     return render(request, 'patch_generator/patch_generator.html', context)
 
 def patches_list(request):
@@ -47,7 +48,14 @@ def patches_list(request):
     
     return main_filter(request, 'all', sorting_order=sorting_order, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
-def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=None,category_id=None,patch_id=None,sorting_by=None):
+def main_filter(request,htmlkey,sorting_order='descending',extravars=None,game_id=None,category_id=None,patch_id=None,sorting_by=None):
+    
+    default_extravars = {'title':'Patches','CSS':'patches','nav_text_color':'.text-info','nav_main_color':'.bg-primary'}
+
+    if extravars is None:
+        extravars = {}
+
+    merged_extravars = {**default_extravars, **extravars}
     
     htmls = {'all': 'patches/patches.html', 'base_game': 'patches/filters/filter_categories_patches_and_main.html' , 'category': 'patches/filters/filter_patches_and_main.html', 'base_patch': 'patches/filters/element/filter_main.html', 'patch_list_page': 'patches/filters/element/filter_main_scroll.html'}
     html = htmls['all']
@@ -183,11 +191,7 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars={},game_id=
         'amountPat': len(top_8_parent_patches),
         'sorting_criteria': sorting_criteria,
         'sorting_by': sorting_by,
-        'title': 'Patches',
-        'CSS': 'patches',
-        'nav_text_color': '.text-info',
-        'nav_main_color': '.bg-primary',
-        'extravars': extravars
+        'extravars': merged_extravars
     }
     
     return render(request, html, context)

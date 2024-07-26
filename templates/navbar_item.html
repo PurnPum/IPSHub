@@ -3,11 +3,10 @@
 {% block nav_item %}
 <li class="nav-item">
   <a class="nav-link fw-bold enabled {{ extra_classes }}" href="{{ href }}"
-     _="on mouseenter toggle {{ nav_main_color }} .border .rounded until mouseleave
+     _="on mouseenter toggle {{ extravars.nav_main_color }} .border .rounded until mouseleave
         on load
         set pageURL to window.location.href
-        log pageURL
         set mytext to '{{ item_text|lower }}'
-        if pageURL includes mytext then add {{ nav_text_color }} to me else add .text-light to me">{{ item_text|undertowhite }}</a>
+        if pageURL includes mytext then add {{ extravars.nav_text_color }} to me else add .text-light to me">{{ item_text|undertowhite }}</a>
 </li>
 {% endblock %}

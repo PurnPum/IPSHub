@@ -21,12 +21,19 @@ def games_list(request):
     
     patchgen = request.GET.get('patchgen',"False")
     
-    return main_filter(request, patchgen=patchgen)
+    return main_filter(request, extravars={'patchgen':patchgen})
 
 def main_filter_patchgen(request):
-    return main_filter(request, patchgen="True")
+    return main_filter(request, extravars={'patchgen':"True"})
 
-def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='games',nav_text_color='.text-warning-emphasis',nav_main_color='.bg-success',patchgen="False"):
+def main_filter(request,extravars=None,html='games/games.html'):
+    
+    default_extravars = {'title':'Games','CSS':'games','nav_text_color':'.text-warning-emphasis','nav_main_color':'.bg-success','patchgen':"False"}
+    
+    if extravars is None:
+        extravars = {}
+
+    merged_extravars = {**default_extravars, **extravars}
     
     developer = request.GET.get('selectedDeveloper','any')
     emulator = request.GET.get('selectedEmulator','any')
@@ -167,12 +174,7 @@ def main_filter(request,extravars={},html='games/games.html',title='Games',CSS='
         'amountTyp': len(top_8_types),
         'sorting_criteria': ['Patches','Categories','Name','Release Date','Latest Patch'],
         'sorting_by': sorting_by,
-        'title': title,
-        'CSS': CSS,
-        'nav_text_color': nav_text_color,
-        'nav_main_color': nav_main_color,
-        'patchgen': patchgen,
-        'extravars': extravars
+        'extravars': merged_extravars
     }
     
     return render(request, html, context)
@@ -181,7 +183,7 @@ def get_game_list_only_patchgen(request):
     return get_game_list_only(request,patchgen="True")
 
 def get_game_list_only(request,patchgen="False"):
-    return main_filter(request, html='games/filters/filter_game_list_scroll.html', patchgen=patchgen)
+    return main_filter(request, html='games/filters/filter_game_list_scroll.html', extravars={'patchgen':patchgen})
 
 def load_modal(request):
     html='games/main_modal.html'
