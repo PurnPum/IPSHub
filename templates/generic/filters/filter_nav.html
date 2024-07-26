@@ -1,6 +1,6 @@
 <nav class="row custom-title-bg custom-top-border d-flex align-items-center">
     <div class="d-flex justify-content-between custom-list-header">
-        <h3 id="nav-title" class="fw-bold mb-0 flex-grow-1 d-flex align-items-center">{% block title %}{% endblock %}</h3>
+        <h3 id="nav-title" class="fw-bold flex-grow-1 d-flex align-items-center {% block h3_extra_classes %}{% endblock %}">{% block title %}{% endblock %}</h3>
         {% block create_button %}{% endblock %}
     </div>
 </nav>
