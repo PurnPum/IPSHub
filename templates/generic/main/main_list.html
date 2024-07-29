@@ -1,0 +1,13 @@
+{% extends 'generic/main/main.html' %}
+
+{% block main_content %}
+    <div class="row justify-content-around">
+        {% block main_component %}{% endblock %}
+        <div class="row d-none d-lg-flex col-4 ms-auto p-0 flex">
+            {% block sidebar_layout %}{% endblock %}
+        </div>
+    </div>
+    <div id="active_modal" class="modal fade" tabindex="-1" aria-labelledby="active_modal_title" aria-hidden="true">
+        <div class="modal-dialog"></div>
+    </div>
+{% endblock %}

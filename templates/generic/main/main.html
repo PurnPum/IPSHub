@@ -5,15 +5,7 @@
     {% include 'navbar.html' %}
 
     <div class="container-fluid bg-dark pt-3 ps-0 pe-0 custom-mw-85">
-        <div class="row justify-content-around">
-            {% block main_component %}{% endblock %}
-            <div class="row d-none d-lg-flex col-4 ms-auto p-0 flex">
-                {% block sidebar_layout %}{% endblock %}
-            </div>
-        </div>
-        <div id="active_modal" class="modal fade" tabindex="-1" aria-labelledby="active_modal_title" aria-hidden="true">
-            <div class="modal-dialog"></div>
-        </div>
+        {% block main_content %}{% endblock %}
     </div>
 
     {% include 'footer.html' %}

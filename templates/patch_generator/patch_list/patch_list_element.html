@@ -1,0 +1,19 @@
+{% extends "generic/patchgen/patch_list/patch_list_element.html" %}
+
+{% block image_src %}{{ game.image_mini_ref }}{% endblock %}
+{% block image_alt %}{{ game.title }}{% endblock %}
+{% block image_title %}{{ game.title }}{% endblock %}
+{% block image_aria %}{{ game.title }}{% endblock %}
+{% block main_title %}{{ data.patch.name }}{% endblock %}
+{% block shown_title %}{{ data.patch.name }}{% endblock %}
+
+{% block data_list %}
+
+    {% include 'patches/main_elements_sorting/sub_patches.html' with tag="strong" extra_second_element_classes="d-none d-lg-inline" %}
+    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" extra_first_element_classes="d-none d-xl-inline" %}
+    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" extra_first_element_classes="d-none d-xl-inline" %}
+    {% include 'patches/main_elements_sorting/creator.html' with tag="span" %}
+
+{% endblock %}
+
+{% block data_categories %}{% include 'patches/main_elements_sorting/categories.html' with tag="span" %}{% endblock %}

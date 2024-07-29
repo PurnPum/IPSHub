@@ -23,15 +23,36 @@ def patch_generator(request):
         'patchgen': 'True'
     }
     
-    context={
-        'extravars':extravars}
-    
     game_id = request.GET.get('selectedGame')
     patch_id = request.GET.get('selectedPatch')
     
-    if game_id is None and patch_id is None:
+    if game_id is not None:
+        game=Game.objects.get(id=game_id)
+        patches = get_top_5_patches_by_subpatches(game_id)
+        
+        func_get_parent = lambda c: c if (c.parent_category is None) else func_get_parent(c.parent_category)
+        top_5_patches = []
+        for patch in patches:
+            subpatches_amount = patch.subpatches.count()
+            patch_options = patch.patch_options.all()
+            categories = list(set([func_get_parent(p.category) for p in patch_options]))
+            top_5_patches.append({'patch': patch, 'subpatches_amount': subpatches_amount, 'categories': categories})
+            
+        context={
+            'top_5_patch_list': top_5_patches,
+            'game': game,
+            'extravars':extravars}
+            
+        return render(request, 'patch_generator/patch_generator.html', context)
+    elif patch_id is not None:
         return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
-    return render(request, 'patch_generator/patch_generator.html', context)
+    else:
+        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
+
+def get_top_5_patches_by_subpatches(game_id):
+    patches = Patch.objects.filter(patch_options__category__base_game_id=game_id)
+    sorted_patches = patches.annotate(subpatch_count=Count('subpatches')).order_by('-subpatch_count')
+    return sorted_patches[:5]
 
 def patches(request):
     
@@ -114,16 +135,14 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars=None,game_i
         else:
             game = None  # TODO
         
-        func_get_parent = lambda c: c.name if (c.parent_category is None) else func_get_parent(c.parent_category)
+        func_get_parent = lambda c: c if (c.parent_category is None) else func_get_parent(c.parent_category)
     
-        loop_categories = set([func_get_parent(c) for c in loop_categories])
-        
-        categories_string = ", ".join(loop_categories)
+        loop_categories = list(set([func_get_parent(c) for c in loop_categories]))
         
         final_patch_list.append({
             'patch': patch,
             'game': game,
-            'categories': categories_string,
+            'categories': loop_categories,
             'subpatches_amount': subpatch_count
         })
     

@@ -1,0 +1,17 @@
+<div>
+    <h4 class="fw-bold d-flex text-center justify-content-between">Most popular base patches
+        <button class="btn btn-outline-primary fw-bold" type="button"
+        _="on click
+            toggle .d-none on the next <div/>
+            if my innerText is 'Show'
+                set my innerText to 'Hide'
+            else
+                set my innerText to 'Show'">Hide</button></h4>
+    <div class="overflow-y-auto overflow-x-hidden ps-0 pe-1" style="max-height: 200px">
+        {% for data in top_5_patch_list %}
+            <div class="p-0 mb-1 w-100">
+                {% block main_element %}{% endblock %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -80,11 +80,19 @@
     }
 
     .custom-hover-scale-110 {
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease !important;
     }
 
     .custom-hover-scale-110:hover {
         transform: scale(1.10);
+    }
+
+    .custom-hover-scale-105 {
+        transition: transform 0.3s ease !important;
+    }
+
+    .custom-hover-scale-105:hover {
+        transform: scale(1.05);
     }
 
     .custom-color-border{
@@ -143,6 +151,10 @@
     .custom-img-default-size {
         width: auto !important;
         height: 2rem !important;
+    }
+
+    ul.list-unstyled > li {
+        min-width: 0;
     }
 
     @media (max-width: 1200px) {
