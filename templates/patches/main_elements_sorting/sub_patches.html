@@ -1,5 +1,3 @@
-{% if strong == 'true' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <strong class="ms-2">Sub-Patches:</strong><strong class="ms-2">{{ data.subpatches_amount }}</strong></li>
-{% else %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i> <span class="ms-2">Sub-Patches:</span><span class="ms-2">{{ data.subpatches_amount }}</span></li>
-{% endif %}
+<li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bandaid-fill"></i>
+<{{ tag }} class="text-truncate custom-truncate ms-2">Sub-Patches:</{{ tag }}><{{ tag }} class="ms-2">{{ data.subpatches_amount }}</{{ tag }}>
+</li>

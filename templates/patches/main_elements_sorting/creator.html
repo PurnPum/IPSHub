@@ -1,5 +1,3 @@
-{% if strong == 'true' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <strong class="ms-2">{{ data.patch.creator }}</strong></li>
-{% else %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i> <span class="ms-2">{{ data.patch.creator }}</span></li>
-{% endif %}
+<li class="col d-flex justify-content-center align-items-center"><i class="bi bi-person-fill"></i>
+<{{ tag }} class="ms-2">{{ data.patch.creator }}</{{ tag }}>
+</li>

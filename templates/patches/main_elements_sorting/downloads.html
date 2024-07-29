@@ -1,5 +1,3 @@
-{% if strong == 'true' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <strong class="ms-2">Downloads:</strong><strong class="ms-2">{{ data.patch.downloads }}</strong></li>
-{% else %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> <span class="ms-2">Downloads:</span><span class="ms-2">{{ data.patch.downloads }}</span></li>
-{% endif %}
+<li class="col d-flex justify-content-center align-items-center"><i class="bi bi-download"></i> 
+<{{ tag }} class="ms-2">Downloads:</{{ tag }}><{{ tag }} class="ms-2">{{ data.patch.downloads }}</{{ tag }}>
+</li>

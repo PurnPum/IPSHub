@@ -1,5 +1,5 @@
-{% if strong == 'true' %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <strong class="ms-2">Total Categories:</strong><strong class="ms-2">{{ data.categories_amount }}</strong></li>
-{% else %}
-    <li class="col d-flex justify-content-center align-items-center"><i class="bi bi-bookmark-fill"></i> <span class="ms-2">Total Categories:</span><span class="ms-2">{{ data.categories_amount }}</span></li>
-{% endif %}
+<li class="col d-flex justify-content-center align-items-center">
+    <i class="bi bi-bookmark-fill"></i>
+    <{{ tag }} class="ms-2">Total Categories:</{{ tag }}>
+    <{{ tag }} class="ms-2">{{ data.categories_amount }}</{{ tag }}>
+</li>
