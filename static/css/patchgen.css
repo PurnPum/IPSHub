@@ -5,24 +5,24 @@
     --custom-nav-main-color: rgb(90, 12, 155);
     --custom-nav-darker-color: rgb(45, 6, 77);
     --custom-nav-lighter-color: rgb(135, 24, 225);
+    --custom-nav-darkest-color: rgb(22, 1, 44);
     --custom-sorting-color: rgb(141, 70, 255);
     --custom-sorting-hover-color: rgb(98, 0, 255);
     --custom-disabled-color: rgb(116, 91, 121);
     --custom-accordion-active-color: rgb(225, 74, 255);
   }
 
-
 .btn-outline-primary {
     --bs-bg-opacity: 1;
-    background-color: var(--custom-nav-main-color) !important;
-    border-color: var(--custom-sorting-color) !important;
+    background-color: var(--custom-nav-darker-color) !important;
+    border-color: var(--custom-nav-lighter-color) !important;
     color: var(--bs-accordion-btn-color) !important;
     --bs-link-hover-color: var(--custom-nav-darker-color) !important;
     --bs-link-hover-decoration: none !important;
 }
 
 .btn-outline-primary:hover {
-    background-color: var(--custom-nav-darker-color) !important;
+    background-color: var(--custom-nav-darkest-color) !important;
     border-color: var(--custom-nav-main-color) !important;
     color: var(--bs-danger-text-emphasis) !important;
 }
@@ -42,3 +42,35 @@
     background-color: var(--custom-nav-darker-color) !important;
     border-color: var(--custom-nav-main-color) !important;
 }
+
+.btn-outline-secondary {
+    --bs-bg-opacity: 1;
+    background-color: var(--custom-nav-main-color) !important;
+    border-color: var(--custom-sorting-color) !important;
+    color: var(--bs-accordion-btn-color) !important;
+    --bs-link-hover-color: var(--custom-nav-darker-color) !important;
+    --bs-link-hover-decoration: none !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--custom-nav-darker-color) !important;
+    border-color: var(--custom-nav-main-color) !important;
+    color: var(--bs-danger-text-emphasis) !important;
+}
+
+.btn-outline-secondary:active {
+    background-color: var(--custom-nav-lighter-color) !important;
+    border-color: var(--custom-nav-darker-color) !important;
+}
+
+.btn-outline.disabled, .btn-outline-secondary:disabled {
+    background-color: var(--custom-disabled-color) !important;
+    border-color: var(--custom-disabled-color) !important;
+}
+
+.btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active,
+.show > .btn-outline-secondary.dropdown-toggle {
+    background-color: var(--custom-nav-darker-color) !important;
+    border-color: var(--custom-nav-main-color) !important;
+}
+

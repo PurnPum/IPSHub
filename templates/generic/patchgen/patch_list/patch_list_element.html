@@ -1,12 +1,12 @@
 <div class="col">
     <a href="{% url 'patch_generator' %}?selectedPatch={{ data.patch.id }}" class="btn btn-outline-primary border-4 w-100 p-0">
         <div class="container-fluid">
-            <div class="row p-0 custom-title-bg">
+            <div class="row p-0">
                 <div class="col-1 d-none d-sm-flex ps-1 pe-0 align-items-center d-flex justify-content-center">
                     <img src="{% block image_src %}{% endblock %}" aria-label="{% block image_aria %}{% endblock %}" alt="{% block image_alt %}{% endblock %}" title="{% block image_title %}{% endblock %}" class="bd-placeholder-img img-fluid custom-img-default-size"/>
                 </div>
                 <div class="col-sm-11 col-12 d-flex flex-column pe-0 ps-1 justify-content-center align-items-center">
-                    <div class="row row-cols-1 custom-lighter-color-font w-100">
+                    <div class="row row-cols-1 w-100">
                         <div class="mb-0 fw-bold h5 d-flex justify-content-center align-items-center">
                             <div class="text-truncate custom-truncate w-100 text-center" title="{% block main_title %}{% endblock %}">{% block shown_title %}{% endblock %}</div>
                         </div>
