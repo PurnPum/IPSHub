@@ -1,6 +1,6 @@
 {% extends "generic/filters/filter_navbar.html" %}
 
-{% block nav %}{% if patchgen != "False" %}
+{% block nav %}{% if extravars.patchgen != "False" %}
     {% include 'patch_generator/game_select/filter_nav.html' %}
 {% else %}
     {% include 'games/filters/filter_nav.html' %}
@@ -9,7 +9,7 @@
 {% block create_patch_button_color %}success{% endblock %}
 
 {% block list_filters_id %}game-list-filters{% endblock %}
-{% block list_filters_url %}{% if patchgen != "False" %}{% url 'game_filter_patchgen' %}{% else %}{% url 'game_filter' %}{% endif %}{% endblock %}
+{% block list_filters_url %}{% if extravars.patchgen != "False" %}{% url 'game_filter_patchgen' %}{% else %}{% url 'game_filter' %}{% endif %}{% endblock %}
 {% block list_filters_trigger %}changed_developer, changed_emulator, changed_type, changed_sorting{% endblock %}
 {% block list_filters_include %}#developer-select-hx, #emulator-select-hx, #type-select-hx, #sorting-criteria-hx, #sorting-order-hidden, #selected-filter{% endblock %}
 {% block list_filters %}{% include 'games/filters/filter_all_no_main.html' %}{% endblock %}

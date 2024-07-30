@@ -44,7 +44,7 @@
 {% block data_bs_parent %}games-main-layout{% endblock %}
 
 {% block accordion_body %}
-{% if patchgen != "False" %}
+{% if extravars.patchgen != "False" %}
 {% else %}
     {% include 'games/main_accordion_buttons.html' with game=data.game %}
 {% endif %}
