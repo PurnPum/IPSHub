@@ -1,0 +1,10 @@
+<div id="{% block patch_options_nav_id %}{% endblock %}" class="custom-active-patch-options-nav">
+    <ul class="nav nav-tabs me-auto mb-2 mb-lg-0 flex-grow-1 justify-content-evenly align-items-center d-flex">
+        {% for parent in parental_tree %}
+            {% include 'generic/patchgen/patch_options_list/patch_options_list_nav_button.html' with cat=parent parent="True" %}
+        {% endfor %}
+        {% for cat in children_categories %}
+            {% include 'generic/patchgen/patch_options_list/patch_options_list_nav_button.html' %}
+        {% endfor %}
+    </ul>
+</div>

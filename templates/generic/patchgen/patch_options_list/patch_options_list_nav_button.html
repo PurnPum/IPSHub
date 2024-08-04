@@ -1,0 +1,24 @@
+<li class="nav-item">
+    {% if parent %}
+        <i class="bi bi-chevron-double-right"></i>
+    {% endif %}
+    <div class="btn"
+    hx-get="{% url 'patch_generator_load_data' %}?parent={{ cat.id }}"
+    hx-trigger="custom_proceed"
+    hx-target="#loaded_patch_list_data"
+    hx-swap="beforeend"
+    _="on click
+        set allListDivs to <div.custom-active-patch-options-list/>
+        set allNavDivs to <div.custom-active-patch-options-nav/>
+        repeat in allListDivs
+            hide it 
+        end
+        repeat in allNavDivs
+            hide it unless it matches #patch_options_list_nav_primary
+        end
+        if #patch_options_list_data_{{ cat.id }} does not exist
+            then send custom_proceed to me
+        else
+            show #patch_options_list_data_{{ cat.id }}
+            show #patch_options_list_nav_{{ cat.id }}">{{ cat.name }}</div>
+</li>

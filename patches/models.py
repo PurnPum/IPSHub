@@ -6,13 +6,13 @@ from django.forms import ValidationError
 class Patch(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
     parent_patch = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subpatches')
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     downloads = models.IntegerField(default=0)
     favorites = models.IntegerField(default=0)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     creation_date = models.DateField(auto_now_add=True)
     patch_options = models.ManyToManyField('PatchOption', related_name='patches', blank=False)
-    field_data = models.JSONField()
+    download_link = models.URLField(max_length=500)
     
     def __str__(self):
         return self.name
@@ -42,11 +42,36 @@ class PatchOption(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
     category = models.ForeignKey('categories.Category', on_delete=models.CASCADE) 
     # In the case of a category getting removed, before doing so make sure all the patch options linked to this category or any of its sub-categories have been moved to a different category, or they will also get erased.
-    code_file = models.CharField(max_length=200)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    fields = models.JSONField()
     #github_issue = models.URLField(max_length=200) TODO
 
     def __str__(self):
         return self.name
+    
+class POField(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    field_type = models.CharField(max_length=100)
+    code_file = models.CharField(max_length=200)
+    initial_data = models.JSONField(blank=True)
+    parent_field = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subfields')
+    patch_option = models.ForeignKey('patches.PatchOption', on_delete=models.CASCADE)
+    default_data = models.JSONField(blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class PatchData(models.Model):
+    patch = models.ForeignKey('patches.Patch', on_delete=models.CASCADE)
+    field = models.ForeignKey('patches.POField', on_delete=models.CASCADE)
+    data = models.JSONField(blank=False)
+    
+    def __str__(self):
+        return self.data
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['patch', 'field'], name='patchdata_identifier')
+        ]

@@ -32,5 +32,7 @@ urlpatterns = [
     path('games/list/', g_views.get_game_list_only, name='game_list'),
     path('games/list_patchgen/', g_views.get_game_list_only_patchgen, name='game_list_patchgen'),
     path('games/modal/', g_views.load_modal, name='load_modal_game'),
-    path('patch_generator/', p_views.patch_generator, name='patch_generator')
+    path('patch_generator/', p_views.patch_generator, name='patch_generator'),
+    path('patch_generator/subcategories/', p_views.patch_generator_load_data, name='patch_generator_load_data'),
+    path('patch_generator/generate_patch/', p_views.gather_form_data, name="gather_form_data")
 ]

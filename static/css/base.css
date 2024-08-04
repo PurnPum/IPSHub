@@ -153,6 +153,12 @@
         height: 2rem !important;
     }
 
+    .custom-patch-name-red {
+        background-color: darkred;
+        color: white;
+        font-weight: bold;
+    }
+
     ul.list-unstyled > li {
         min-width: 0;
     }

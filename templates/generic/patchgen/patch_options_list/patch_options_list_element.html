@@ -1,0 +1,7 @@
+<li class="list-group-item">
+    <fieldset>
+        <legend>{{ po_data.name }}</legend>
+        {% csrf_token %}
+        {{ form.as_p }}
+    </fieldset>
+</li>

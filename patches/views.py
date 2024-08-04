@@ -1,12 +1,16 @@
+import datetime
 from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery
+from django.core.paginator import Paginator
+from django.contrib.auth.models import User
 
 from games.views import get_category_hierarchy, main_filter as g_main_filter
-from .models import Patch
+from patches.forms import DynamicPatchForm
+from .models import Patch, PatchOption, POField, PatchData
 from categories.models import Category
 from games.models import Game
 from . import add_real_data_to_db
-from django.core.paginator import Paginator
+
 
 def paginate(request, qs, limit=4):
     paginated_qs = Paginator(qs, limit)
@@ -30,6 +34,8 @@ def patch_generator(request):
         game=Game.objects.get(id=game_id)
         patches = get_top_5_patches_by_subpatches(game_id)
         
+        children_categories = get_all_categories_from_game_by_parents(game_id=game_id)
+        
         func_get_parent = lambda c: c if (c.parent_category is None) else func_get_parent(c.parent_category)
         top_5_patches = []
         for patch in patches:
@@ -38,7 +44,10 @@ def patch_generator(request):
             categories = list(set([func_get_parent(p.category) for p in patch_options]))
             top_5_patches.append({'patch': patch, 'subpatches_amount': subpatches_amount, 'categories': categories})
             
+        extravars['patch_options_list_nav_id'] = 'patch_options_list_nav_primary'
+        
         context={
+            'children_categories': children_categories,
             'top_5_patch_list': top_5_patches,
             'game': game,
             'extravars':extravars}
@@ -49,10 +58,94 @@ def patch_generator(request):
     else:
         return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
 
+def patch_generator_load_data(request):
+    parent_id = request.GET.get('parent')
+    parental_tree = get_category_parent_tree(Category.objects.get(id=parent_id))
+    children_categories = get_all_categories_from_game_by_parents(parent_id=parent_id)
+    patch_options = get_patch_options_from_category(parent_id)
+    po_fields = POField.objects.filter(patch_option__in=patch_options)
+
+    forms = [DynamicPatchForm(patch_options=[po]) for po in patch_options]
+ 
+    patch_option_data= { patch_option:fields for patch_option,fields in
+                              [(po,
+                                [field for field in po_fields.filter(patch_option_id=po.id)]
+                                ) for po in patch_options]}
+ 
+    context={
+        'patch_option_data_forms': zip(forms, patch_option_data),
+        'parental_tree': parental_tree,
+        'children_categories': children_categories,
+        
+        'extravars':{
+            'patch_options_list_nav_id': 'patch_options_list_nav_'+parent_id,
+            'patch_options_list_data_id': 'patch_options_list_data_'+parent_id
+        }
+    }
+    
+    return render(request, 'patch_generator/patch_options_list/patch_options_load_data.html', context)
+
+def gather_form_data(request):
+    if request.method == 'POST': 
+        
+        patch_options_ids = request.POST.getlist('patch_option_ids')
+        patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
+        forms = [DynamicPatchForm(request.POST, patch_options=[po]) for po in patch_options]
+        if all(form.is_valid() for form in forms):
+            patch = generate_patch(request,forms,[po for po in patch_options])
+        else:
+            print("INVALID FORM")
+    return patches(request) # TODO Temporal
+                
+def generate_patch(request,forms,patch_options):
+
+    patch = Patch()
+    patch.name = request.POST.get('patchName')
+    patch.downloads = 0
+    patch.favorites = 0
+    if request.user.is_authenticated:
+        patch.creator = User.objects.get(username='admin') # TODO : Add user system
+    else:
+        patch.creator = request.user
+    patch.creation_date = datetime.date.today()
+    patch.download_link = 'TEMPORAL_PLACEHOLDER'
+    patch.save()
+    patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
+    
+    print("CREATED PATCH", patch)
+
+    for form in forms:
+        # Process the data in form.cleaned_data
+        for field, value in form.cleaned_data.items():
+            # Your logic to handle each field's data
+            print(f'Field: {field}, Value: {value}')
+        # Redirect or render success template
+        
+    return patch
+
+def get_category_parent_tree(category,result=[]):
+    if category.parent_category is None:
+        return result
+    else:
+        return get_category_parent_tree(category.parent_category, result=[category]+result)
+
+def get_patch_options_from_category(category_id):
+    return PatchOption.objects.filter(category_id=category_id)
+
 def get_top_5_patches_by_subpatches(game_id):
     patches = Patch.objects.filter(patch_options__category__base_game_id=game_id)
     sorted_patches = patches.annotate(subpatch_count=Count('subpatches')).order_by('-subpatch_count')
     return sorted_patches[:5]
+
+def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
+    if parent_id:
+        categories = Category.objects.all().filter(parent_category=parent_id)
+    elif game_id:
+        categories = Category.objects.all().filter(base_game_id=game_id).filter(parent_category=parent_id)
+    else:
+        print("Error, neither game nor category provided")
+        return None
+    return categories
 
 def patches(request):
     
@@ -60,15 +153,15 @@ def patches(request):
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
-    add_real_data_to_db.add_real_patches_to_db()"""
+    add_real_data_to_db.add_real_patches_to_db()
+    add_real_data_to_db.add_real_fields_to_db()
+    add_real_data_to_db.add_real_patch_data_to_db()"""
     
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
     patch_id = request.GET.get('selectedPatch','any')
     sorting_by = request.GET.get('selectedSorting','Downloads')
     sorting_order = request.GET.get('sorting_order','descending')
-    
-    print(game_id, category_id, patch_id, sorting_by, sorting_order)
     
     return main_filter(request, 'all', sorting_order=sorting_order, game_id=game_id, category_id=category_id, patch_id=patch_id, sorting_by=sorting_by)
 
