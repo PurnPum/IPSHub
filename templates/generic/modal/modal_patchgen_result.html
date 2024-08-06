@@ -1,0 +1,22 @@
+{% extends "generic/modal/components/modal.html" %}
+
+{% block label_title %}<img src="{{ game.image_mini_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: auto; height: 2rem;"/>{% if patchgen %}Successfully created patch {% endif %}{{ element.name }}{% endblock %}
+
+{% block modal_body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-lg-3">
+                <img src="{{ game.image_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" title="{{ game.title }}" class="bd-placeholder-img img-fluid mb-2" style="max-width: 300px ;width: 100%; height: auto;">
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Downloads" h6_title="Downloads" component_text=element.downloads %}
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Favorites" h6_title="Favorites" component_text=element.favorites %}
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Creator" h6_title="Type" component_text=element.creator %}
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Creation Date" h6_title="Release Date" component_text=element.creation_date %}
+            </div>
+            <div class="col-md-12 col-lg-9">
+                {% include 'generic/modal/components/modal_patch_data.html' with patch_config=patch_config %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modal_buttons %}{% include 'games/main_accordion_buttons.html' with game=element in_modal="true" %}{% endblock %}

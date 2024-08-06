@@ -9,7 +9,12 @@ class DynamicPatchForm(forms.Form):
         patch_options = kwargs.pop('patch_options', [])
         super(DynamicPatchForm, self).__init__(*args, **kwargs)
         
-        field_types = {'Boolean': forms.BooleanField, 'Text': forms.CharField, 'Integer': forms.IntegerField, 'Selection': forms.ChoiceField}
+        field_types = {
+            'Boolean': forms.BooleanField,
+            'Text': forms.CharField,
+            'Integer': forms.IntegerField,
+            'Selection': forms.ChoiceField
+            }
         
         for patch_option in patch_options:
             fields = POField.objects.filter(patch_option=patch_option)
@@ -48,8 +53,9 @@ class DynamicPatchForm(forms.Form):
             if field_name.startswith('field_'):
                 field_id = field_name.split('_')[1]
                 po_field = POField.objects.get(id=field_id)
-                PatchData.objects.update_or_create(
-                    patch=patch,
-                    field=po_field,
-                    defaults={'data': field_value}
-                )
+                if field_value != json.loads(po_field.default_data)['data']: # If the value is the same as the default value, dont save it.
+                    PatchData.objects.update_or_create(
+                        patch=patch,
+                        field=po_field,
+                        defaults={'data': field_value}
+                    )

@@ -1,0 +1,16 @@
+<div class="card mb-1">
+    <div class="card-body">
+        <h5 class="card-title mb-3 d-none d-sm-inline">Patch configuration:</h5>
+        <h6 class="card-title mb-3 d-sm-none fw-bold">Patch configuration:</h6>
+        <table class="table m-0">
+            <tbody>
+            {% for patch_data in patch_config %}
+                <tr>
+                    <td>{{ patch_data.field }}</td>
+                    <td>{{ patch_data.data }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

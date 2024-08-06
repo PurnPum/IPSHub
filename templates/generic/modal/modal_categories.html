@@ -2,12 +2,17 @@
 
 {% load custom_functions %}
 
-{% block label_title %}<img src="{{ element.image_ref }}" title="{{ element.name }}" aria-label="{{ element.name }}" alt="{{ element.name }}" class="bd-placeholder-img custom-img-default-size"/>{{ element.name}}{% endblock %}
+{% block label_title %}<img src="{{ game.image_mini_ref }}" title="{{ game.title }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img custom-img-default-size"/>{{ element.name }}{% endblock %}
 
 {% block modal_body %}
     <div class="container-fluid">
         <div class="row">
-            {% include 'generic/modal/components/modal_component_left.html' with h5_title="Description" h6_title="Description" component_text=element.description %}
+            <div class="col-md-12 col-lg-4">
+                <img src="{{ element.image_ref }}" aria-label="{{ element.name }}" alt="{{ element.name }}" title="{{ element.name }}" class="bd-placeholder-img img-fluid mb-2" style="max-width: 300px ;width: 100%; height: auto;">
+            </div>
+            <div class="col-md-12 col-lg-8">
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Description" h6_title="Description" component_text=element.description %}
+            </div>
             <div class="container mt-3">
                 <h4>Category Hierarchy</h4>
                 <ul id="category-hierarchy" class="ps-2">

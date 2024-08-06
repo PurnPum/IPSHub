@@ -12,25 +12,32 @@ class Patch(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     creation_date = models.DateField(auto_now_add=True)
     patch_options = models.ManyToManyField('PatchOption', related_name='patches', blank=False)
-    download_link = models.URLField(max_length=500)
+    download_link = models.TextField(max_length=500) # TODO Change to URLField later
     
     def __str__(self):
         return self.name
     
     def clean(self):
         if self.parent_patch is not None and self.parent_patch in self.get_all_subpatches():
-            raise ValidationError('The parent patch cannot be a subpatch of itself.')
+            raise ValidationError('The parent patch cannot be a subpatch of itself.',code='self_sub_parent')
         if self.parent_patch == self:
-            raise ValidationError('The parent patch cannot be itself.')
-        if len(self.get_game_titles()) > 1:
-            raise ValidationError('The patch options assigned to this patch must all be for the same game.')
+            raise ValidationError('The parent patch cannot be itself.',code='self_parent')
+        if len(self.get_games()) > 1:
+            raise ValidationError('The patch options assigned to this patch must all be for the same game.',code='multiple_game_patch')
+        existing_patches = Patch.objects.filter(name=self.name).exclude(id=self.id)
+        if existing_patches.exists():
+            raise ValidationError('A patch with this name already exists.',code='duplicated_name')
+        #if not self.patch_options.exists():
+        #    raise ValidationError('A patch must have at least one patch option.',code='empty_patch') TODO
+    
+    def get_base_game(self):
+        return self.patch_options.first().category.base_game
         
-        
-    def get_game_titles(self):
-        base_game_titles = []
+    def get_games(self):
+        base_games = []
         for patch_option in self.patch_options.all():
-            base_game_titles.append(patch_option.category.base_game.title)
-        return list(set(base_game_titles))
+            base_games.append(patch_option.category.base_game)
+        return list(set(base_games))
     
     def get_all_subpatches(self):
         subpatches = [self]

@@ -3,7 +3,7 @@
 {% include 'patch_generator/main_selected_game.html' %} 
 {% include 'patch_generator/patch_list/patch_list_layout.html' %}
 {% include 'patch_generator/patch_options_list/patch_options_list_nav.html' %}
-<form id="main_form" class="target-class" method="post" action="{% url 'gather_form_data' %}"
+<form id="main_form" class="target-class" hx-post="{% url 'gather_form_data' %}" hx-target="#active_modal" hx-on::after-request:once="show.bs.modal"
     _="
     on submit
     if #patch_name_input's value is '' or #patch_name_input's value is 'Name your patch'
@@ -23,5 +23,5 @@
         on focusout
             if my value is '' set my value to 'Name your patch' end
             if my value is 'Name your patch' add .custom-patch-name-red to me end"></input></div>
-    <input type="submit" value="Generate Patch" class="btn"></input>
+    <input type="submit" value="Generate Patch" class="btn" data-bs-toggle='modal' data-bs-target='#active_modal'></input>
 </form>

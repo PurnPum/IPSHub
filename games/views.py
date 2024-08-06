@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery
-from patches.models import Patch, PatchOption
+from patches.models import Patch, PatchData, PatchOption
 from .models import Game
 from categories.models import Category
 #from patches import add_real_data_to_db
@@ -183,6 +183,7 @@ def load_modal(request):
     html='games/main_modal.html'
     game_id = request.GET.get('selectedGame')
     category_id = request.GET.get('selectedCategory')
+    patch_id = request.GET.get('selectedPatch')
     if game_id:
         game = Game.objects.get(id=game_id)
         context = {'element': game}
@@ -191,6 +192,14 @@ def load_modal(request):
         category = Category.objects.get(id=category_id)
         game = category.base_game
         context={'element': category, 'hierarchy': get_category_hierarchy(category), 'game': game}
+    elif patch_id:
+        html = 'games/sidebar/first/sidebar_modal.html'
+        patch = Patch.objects.get(id=patch_id)
+        context = {
+            'element': patch,
+            'patch_config': PatchData.objects.filter(patch=patch),
+            'game': patch.get_base_game()
+        }
     else:
         context={'element': 'any'}
     return render(request, html, context)

@@ -1,4 +1,7 @@
-import datetime
+import datetime, json
+from django.db import IntegrityError
+from django.forms import ValidationError
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery
 from django.core.paginator import Paginator
@@ -85,42 +88,60 @@ def patch_generator_load_data(request):
     
     return render(request, 'patch_generator/patch_options_list/patch_options_load_data.html', context)
 
-def gather_form_data(request):
-    if request.method == 'POST': 
-        
-        patch_options_ids = request.POST.getlist('patch_option_ids')
-        patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
+def gather_form_data(request):   
+    patch_options_ids = request.POST.getlist('patch_option_ids')
+    patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
+    patchgen_error = ""
+    if patch_options and len(patch_options) > 0:
         forms = [DynamicPatchForm(request.POST, patch_options=[po]) for po in patch_options]
-        if all(form.is_valid() for form in forms):
-            patch = generate_patch(request,forms,[po for po in patch_options])
-        else:
+        if any([not form.is_valid() for form in forms]):
             print("INVALID FORM")
-    return patches(request) # TODO Temporal
+            patchgen_error = "Invalid form: " + form
+        else:
+            patch = generate_patch_object(request,[po for po in patch_options])
+            for form in forms:
+                form.save(patch)
+            if isinstance(patch, Patch):
+                # TODO: Generate real patch
+                context = {
+                    'element': patch,
+                    'patch_config': PatchData.objects.filter(patch=patch),
+                    'game': patch.get_base_game(),
+                    'patchgen': 'True'
+                }
+                return render(request, 'generic/modal/modal_patchgen_result.html', context)
+            else:
+                patchgen_error = str(patch)
+    context = {
+        'error_message': patchgen_error
+    }
+    return render(request,'generic/modal/modal_patchgen_error.html', context)
                 
-def generate_patch(request,forms,patch_options):
-
-    patch = Patch()
-    patch.name = request.POST.get('patchName')
-    patch.downloads = 0
-    patch.favorites = 0
-    if request.user.is_authenticated:
-        patch.creator = User.objects.get(username='admin') # TODO : Add user system
-    else:
-        patch.creator = request.user
-    patch.creation_date = datetime.date.today()
-    patch.download_link = 'TEMPORAL_PLACEHOLDER'
-    patch.save()
-    patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
-    
-    print("CREATED PATCH", patch)
-
-    for form in forms:
-        # Process the data in form.cleaned_data
-        for field, value in form.cleaned_data.items():
-            # Your logic to handle each field's data
-            print(f'Field: {field}, Value: {value}')
-        # Redirect or render success template
-        
+def generate_patch_object(request,patch_options):
+    try:
+        patch = Patch()
+        patch.name = request.POST.get('patchName')
+        patch.downloads = 0
+        patch.favorites = 0
+        if request.user.is_authenticated:
+            patch.creator = User.objects.get(username='admin') # TODO : Add user system
+        else:
+            patch.creator = request.user
+        patch.creation_date = datetime.date.today()
+        patch.download_link = 'TEMPORAL_PLACEHOLDER'
+        try:
+            patch.save()
+            patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
+            patch.full_clean()
+        except ValidationError as e:
+            print('Validation error: ' + str(e))
+            return e
+    except IntegrityError as e:
+        print('Integrity error: ' + str(e))
+        return e
+    except Exception as e:
+        print(str(e))
+        return e
     return patch
 
 def get_category_parent_tree(category,result=[]):
@@ -360,7 +381,11 @@ def load_modal(request):
         context={'element': category, 'hierarchy': get_category_hierarchy(category), 'game': game}
     elif patch_id:
         patch = Patch.objects.get(id=patch_id)
-        context={'element': patch}
+        context = {
+            'element': patch,
+            'patch_config': PatchData.objects.filter(patch=patch),
+            'game': patch.get_base_game()
+        }
     else:
         context={'element': 'any'}
 
