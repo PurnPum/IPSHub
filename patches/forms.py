@@ -48,14 +48,36 @@ class DynamicPatchForm(forms.Form):
                         initial=''
                     )
 
-    def save(self, patch):
+    def save(self, patch, commit=True):
+        print('Patch: ',patch)
+        saved_objects = []
+        
         for field_name, field_value in self.cleaned_data.items():
             if field_name.startswith('field_'):
                 field_id = field_name.split('_')[1]
                 po_field = POField.objects.get(id=field_id)
                 if field_value != json.loads(po_field.default_data)['data']: # If the value is the same as the default value, dont save it.
-                    PatchData.objects.update_or_create(
+                    patch_data = PatchData(
                         patch=patch,
                         field=po_field,
-                        defaults={'data': field_value}
+                        data=field_value
+                    )
+                    saved_objects.append(patch_data)
+        
+        if commit:
+            for obj in saved_objects:
+                obj.save()
+        
+        return saved_objects
+
+    def patchless(self):
+        for field_name, field_value in self.cleaned_data.items():
+            if field_name.startswith('field_'):
+                field_id = field_name.split('_')[1]
+                po_field = POField.objects.get(id=field_id)
+                if field_value != json.loads(po_field.default_data)['data']: # If the value is the same as the default value, dont save it.
+                    return PatchData(
+                        patch=None,
+                        field=po_field,
+                        data=field_value
                     )

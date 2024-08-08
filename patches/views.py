@@ -1,15 +1,14 @@
 import datetime, json
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.forms import ValidationError
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render
-from django.db.models import Count, OuterRef, Subquery
+from django.db.models import Count, OuterRef, Subquery, Q
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 
 from games.views import get_category_hierarchy, main_filter as g_main_filter
 from patches.forms import DynamicPatchForm
-from .models import Patch, PatchOption, POField, PatchData
+from .models import Patch, PatchOption, POField, PatchData, get_hash_code_from_patchDatas
 from categories.models import Category
 from games.models import Game
 from . import add_real_data_to_db
@@ -88,36 +87,68 @@ def patch_generator_load_data(request):
     
     return render(request, 'patch_generator/patch_options_list/patch_options_load_data.html', context)
 
-def gather_form_data(request):   
+def gather_form_data(request):
+    error_texts = {
+        'UNIQUE constraint failed: patches_patch.name':'Could not create patch: Patch with the same name already exists.',
+        'UNIQUE constraint failed: patches_patch.patch_hash':'Could not create patch: Patch with the same configuration already exists.'
+    }
     patch_options_ids = request.POST.getlist('patch_option_ids')
     patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
     patchgen_error = ""
+
+    print("EXISTING PATCHES HASHES:")
+    for patch in Patch.objects.all():
+        print(patch.name, patch.patch_hash)
+        
     if patch_options and len(patch_options) > 0:
         forms = [DynamicPatchForm(request.POST, patch_options=[po]) for po in patch_options]
         if any([not form.is_valid() for form in forms]):
             print("INVALID FORM")
             patchgen_error = "Invalid form: " + form
         else:
-            patch = generate_patch_object(request,[po for po in patch_options])
+            list_patchless_data = []
             for form in forms:
-                form.save(patch)
-            if isinstance(patch, Patch):
-                # TODO: Generate real patch
-                context = {
-                    'element': patch,
-                    'patch_config': PatchData.objects.filter(patch=patch),
-                    'game': patch.get_base_game(),
-                    'patchgen': 'True'
-                }
-                return render(request, 'generic/modal/modal_patchgen_result.html', context)
+                patchless_data = form.patchless()
+                if patchless_data:
+                    list_patchless_data.append(patchless_data)
+            print("LIST PATCHLESS DATA: ", list_patchless_data)
+            temporal_hash = get_hash_code_from_patchDatas(list_patchless_data)
+            print("TEMPORAL HASH: ", temporal_hash)
+            if not is_duplicated_temporal_hash(temporal_hash):
+                try:
+                    with transaction.atomic():
+                        patch = generate_patch_object(request,patch_options,forms)
+                except Exception as e:
+                    patchgen_error = str(e)
+                if isinstance(patch, Patch):
+                    # TODO: Generate real patch
+                    context = {
+                        'element': patch,
+                        'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
+                        'game': patch.get_base_game(),
+                        'patchgen': 'True'
+                    }
+                    return render(request, 'generic/modal/modal_patchgen_result.html', context)
+                else:
+                    patchgen_error = str(patch)
             else:
-                patchgen_error = str(patch)
+                existing_patch = Patch.objects.get(patch_hash=temporal_hash)
+                context = {
+                    'element': existing_patch,
+                    'patch_config': { po: PatchData.objects.filter(patch=existing_patch, field__patch_option=po) for po in patch_options },
+                    'game': existing_patch.get_base_game(),
+                    'duplicated': 'True'
+                }
+                return render(request,'generic/modal/modal_patchgen_result.html', context)
+
+    final_error = error_texts[patchgen_error] if patchgen_error in error_texts else patchgen_error
     context = {
-        'error_message': patchgen_error
+        'error_message': final_error
     }
     return render(request,'generic/modal/modal_patchgen_error.html', context)
                 
-def generate_patch_object(request,patch_options):
+@transaction.atomic
+def generate_patch_object(request,patch_options,forms):
     try:
         patch = Patch()
         patch.name = request.POST.get('patchName')
@@ -130,9 +161,18 @@ def generate_patch_object(request,patch_options):
         patch.creation_date = datetime.date.today()
         patch.download_link = 'TEMPORAL_PLACEHOLDER'
         try:
+            print('Saving patch without hash')
             patch.save()
+            print('Saving forms')
+            for form in forms:
+                form.save(patch)
             patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
+            print('Cleaning patch')
             patch.full_clean()
+            print('Saving patch with hash')
+            patch.patch_hash = patch.generate_patch_code()
+            print('hash:', patch.patch_hash)
+            patch.save()
         except ValidationError as e:
             print('Validation error: ' + str(e))
             return e
@@ -143,6 +183,9 @@ def generate_patch_object(request,patch_options):
         print(str(e))
         return e
     return patch
+
+def is_duplicated_temporal_hash(hash):
+    return Patch.objects.filter(patch_hash=hash).exists()
 
 def get_category_parent_tree(category,result=[]):
     if category.parent_category is None:
@@ -170,14 +213,13 @@ def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
 
 def patches(request):
     
-    """add_real_data_to_db.clean_db()
+    add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
-    add_real_data_to_db.add_real_patches_to_db()
     add_real_data_to_db.add_real_fields_to_db()
-    add_real_data_to_db.add_real_patch_data_to_db()"""
-    
+    add_real_data_to_db.add_real_patches_to_db()
+
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
     patch_id = request.GET.get('selectedPatch','any')
@@ -381,9 +423,10 @@ def load_modal(request):
         context={'element': category, 'hierarchy': get_category_hierarchy(category), 'game': game}
     elif patch_id:
         patch = Patch.objects.get(id=patch_id)
+        patch_options = PatchOption.objects.filter(id__in=PatchData.objects.filter(patch=patch).values_list('field__patch_option', flat=True).distinct())
         context = {
             'element': patch,
-            'patch_config': PatchData.objects.filter(patch=patch),
+            'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
             'game': patch.get_base_game()
         }
     else:

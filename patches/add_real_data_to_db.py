@@ -26,7 +26,8 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://bgb.bircd.org/',
             'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
-            'release_date': datetime.date(2000,9,28)
+            'release_date': datetime.date(2000,9,28),
+            'repository': 'https://github.com/pret/pokecrystal/tree/master'
         },
         {
             'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
@@ -37,7 +38,8 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://bgb.bircd.org/',
             'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
-            'release_date': datetime.date(1995,9,28)
+            'release_date': datetime.date(1995,9,28),
+            'repository': 'https://github.com/pret/pokeyellow/tree/master'
         },
         {
             'image_mini_ref': '/static/images/pokemon_crystal_mini.png',
@@ -48,7 +50,8 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
             'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
-            'release_date': datetime.date(2022,3,16)
+            'release_date': datetime.date(2022,3,16),
+            'repository': 'https://github.com/pret/pokecrystal/tree/master'
         },
         {
             'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
@@ -59,7 +62,8 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
             'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
-            'release_date': datetime.date(2021,6,21)
+            'release_date': datetime.date(2021,6,21),
+            'repository': 'https://github.com/pret/pokeyellow/tree/master'
         }
     ]
     
@@ -453,6 +457,8 @@ def add_real_patches_to_db():
     patch.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch.save()
     patch.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Crystal', category__base_game__title='Pokémon Crystal'))
+    add_real_patch_data_to_db(patch)
+    patch.save()
     
     patch2 = Patch()
     patch2.name = 'Basic Egglocke Crystal'
@@ -464,6 +470,8 @@ def add_real_patches_to_db():
     patch2.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch2.save()
     patch2.patch_options.set(PatchOption.objects.filter(category__name='Egglocke Crystal', category__base_game__title='Pokémon Crystal'))
+    add_real_patch_data_to_db(patch2)
+    patch2.save()
     
     patch3 = Patch()
     patch3.name = 'Basic Nuzlocke Yellow'
@@ -474,6 +482,8 @@ def add_real_patches_to_db():
     patch3.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch3.save()
     patch3.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Yellow', category__base_game__title='Pokémon Yellow'))
+    add_real_patch_data_to_db(patch3)
+    patch3.save()
     
     patch4 = Patch()
     patch4.name = 'Basic Egglocke Yellow'
@@ -485,6 +495,8 @@ def add_real_patches_to_db():
     patch4.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch4.save()
     patch4.patch_options.set(PatchOption.objects.filter(category__name='Egglocke Yellow', category__base_game__title='Pokémon Yellow'))
+    add_real_patch_data_to_db(patch4)
+    patch4.save()
     
     patch5 = Patch()
     patch5.name = 'Wild Pokemon Randomizer Crystal'
@@ -495,6 +507,8 @@ def add_real_patches_to_db():
     patch5.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch5.save()
     patch5.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal', category__base_game__title='Pokémon Crystal'))
+    add_real_patch_data_to_db(patch5)
+    patch5.save()
     
     patch6 = Patch()
     patch6.name = 'Warp Pokemon Randomizer Crystal Clear'
@@ -505,6 +519,8 @@ def add_real_patches_to_db():
     patch6.download_link = 'static/patches/PokemonCrystalClear/patch.ips'
     patch6.save()
     patch6.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal Clear', category__base_game__title='Pokémon Crystal Clear'))
+    add_real_patch_data_to_db(patch6)
+    patch6.save()
     
     patch7 = Patch()
     patch7.name = 'Warp Pokemon Randomizer NO-BS Yellow'
@@ -515,6 +531,8 @@ def add_real_patches_to_db():
     patch7.download_link = 'static/patches/PokemonNOBSYellow/patch.ips'
     patch7.save()
     patch7.patch_options.set(PatchOption.objects.filter(category__name='Randomizer NO-BS Yellow', category__base_game__title='Pokémon NO-BS Yellow'))
+    add_real_patch_data_to_db(patch7)
+    patch7.save()
     
     patch8 = Patch()
     patch8.name = 'Wild Pokemon Randomizer Nuzlocke Yellow'
@@ -530,17 +548,18 @@ def add_real_patches_to_db():
         Q(category__name='Nuzlocke Yellow', category__base_game__title='Pokémon Yellow')
     )
     patch8.patch_options.set(pos)
+    add_real_patch_data_to_db(patch8)
+    patch8.save()
     
-def add_real_patch_data_to_db():
-    all_patches = Patch.objects.all()
-    for patch in all_patches:
-        for po in patch.patch_options.all():
-            for field in POField.objects.filter(patch_option=po):
-                patchData = PatchData()
-                patchData.patch = patch
-                patchData.field = field
-                patchData.data = json.dumps({'data': "True"})
-                patchData.save()
+def add_real_patch_data_to_db(patch):
+    print('all patch options for patch',patch,' :',patch.patch_options.all())
+    for po in patch.patch_options.all():
+        for field in POField.objects.filter(patch_option=po):
+            patchData = PatchData()
+            patchData.patch = patch
+            patchData.field = field
+            patchData.data = 'True'
+            patchData.save()
                 
 def add_anonymous_user_to_db():
     

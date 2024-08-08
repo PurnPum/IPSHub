@@ -1,6 +1,12 @@
 {% extends "generic/modal/components/modal.html" %}
 
-{% block label_title %}<img src="{{ game.image_mini_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img" style="width: auto; height: 2rem;"/>{% if patchgen %}Successfully created patch {% endif %}{{ element.name }}{% endblock %}
+{% block extra_header %}{% if duplicated %}
+    <div class="p-1 mb-2 bg-danger text-white">
+        <h4 class="mb-0 fw-bold text-center">Patch already exists</h4>
+    </div>{% endif %}
+{% endblock %}
+
+{% block label_title %}<img src="{{ game.image_mini_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img me-2" style="width: auto; height: 2rem;"/>{% if patchgen %}Successfully created patch {% endif %}{{ element.name }}{% endblock %}
 
 {% block modal_body %}
     <div class="container-fluid">
@@ -9,11 +15,11 @@
                 <img src="{{ game.image_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" title="{{ game.title }}" class="bd-placeholder-img img-fluid mb-2" style="max-width: 300px ;width: 100%; height: auto;">
                 {% include 'generic/modal/components/modal_component_left.html' with h5_title="Downloads" h6_title="Downloads" component_text=element.downloads %}
                 {% include 'generic/modal/components/modal_component_left.html' with h5_title="Favorites" h6_title="Favorites" component_text=element.favorites %}
-                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Creator" h6_title="Type" component_text=element.creator %}
-                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Creation Date" h6_title="Release Date" component_text=element.creation_date %}
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Creator" h6_title="Creator" component_text=element.creator %}
+                {% include 'generic/modal/components/modal_component_left.html' with h5_title="Creation Date" h6_title="Creation Date" component_text=element.creation_date %}
             </div>
             <div class="col-md-12 col-lg-9">
-                {% include 'generic/modal/components/modal_patch_data.html' with patch_config=patch_config %}
+                {% include 'generic/modal/components/modal_patch_data.html' %}
             </div>
         </div>
     </div>

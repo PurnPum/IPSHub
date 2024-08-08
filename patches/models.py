@@ -1,3 +1,5 @@
+import hashlib
+import json
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
@@ -11,11 +13,19 @@ class Patch(models.Model):
     favorites = models.IntegerField(default=0)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     creation_date = models.DateField(auto_now_add=True)
-    patch_options = models.ManyToManyField('PatchOption', related_name='patches', blank=False)
+    patch_options = models.ManyToManyField('PatchOption', related_name='patches', blank=False) # TODO Discard this relationship, since we can go through PatchData and POFields to have a relation
     download_link = models.TextField(max_length=500) # TODO Change to URLField later
+    patch_hash = models.CharField(max_length=64, editable=False, unique=True, blank=True, null=True)
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            super(Patch, self).save(*args, **kwargs)
+        else:
+            self.patch_hash = self.generate_patch_code()
+            super(Patch, self).save(*args, **kwargs)
     
     def clean(self):
         if self.parent_patch is not None and self.parent_patch in self.get_all_subpatches():
@@ -29,6 +39,9 @@ class Patch(models.Model):
             raise ValidationError('A patch with this name already exists.',code='duplicated_name')
         #if not self.patch_options.exists():
         #    raise ValidationError('A patch must have at least one patch option.',code='empty_patch') TODO
+        
+    def generate_patch_code(self):
+        return get_hash_code_from_patchDatas(PatchData.objects.filter(patch=self).order_by('field__id'))
     
     def get_base_game(self):
         return self.patch_options.first().category.base_game
@@ -45,6 +58,7 @@ class Patch(models.Model):
             subpatches.extend(subpatch.get_all_subpatches())
         return subpatches
     
+
 class PatchOption(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
     category = models.ForeignKey('categories.Category', on_delete=models.CASCADE) 
@@ -73,7 +87,7 @@ class POField(models.Model):
 class PatchData(models.Model):
     patch = models.ForeignKey('patches.Patch', on_delete=models.CASCADE)
     field = models.ForeignKey('patches.POField', on_delete=models.CASCADE)
-    data = models.JSONField(blank=False)
+    data = models.CharField(blank=False,max_length=10000)
     
     def __str__(self):
         return self.data
@@ -82,3 +96,14 @@ class PatchData(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['patch', 'field'], name='patchdata_identifier')
         ]
+        
+def get_hash_code_from_patchDatas(patch_data):
+    data_list = []
+    for pd in patch_data:
+        data_tuple = (str(pd.field.id), pd.data)
+        data_list.append(data_tuple)
+    
+    data_string = json.dumps(data_list, sort_keys=True)
+    patch_code = hashlib.sha256(data_string.encode('utf-8')).hexdigest()
+    print("PATCH CODE: ", patch_code)
+    return patch_code

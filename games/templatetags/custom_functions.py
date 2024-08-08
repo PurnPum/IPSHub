@@ -1,3 +1,4 @@
+import json
 from django import template
 
 from patches.models import Patch

@@ -195,9 +195,10 @@ def load_modal(request):
     elif patch_id:
         html = 'games/sidebar/first/sidebar_modal.html'
         patch = Patch.objects.get(id=patch_id)
+        patch_options = PatchOption.objects.filter(id__in=PatchData.objects.filter(patch=patch).values_list('field__patch_option', flat=True).distinct())
         context = {
             'element': patch,
-            'patch_config': PatchData.objects.filter(patch=patch),
+            'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
             'game': patch.get_base_game()
         }
     else:

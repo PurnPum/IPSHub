@@ -12,6 +12,7 @@ class Game(models.Model):
     best_emulator = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     extra_info = models.URLField(max_length=200)
+    repository = models.URLField(max_length=200)
 
     def __str__(self):
         return self.title
