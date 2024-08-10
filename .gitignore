@@ -1,3 +1,5 @@
 *.sqlite3
 IPSHub_VEnv/
 *.pyc
+static/patches
+static/logs

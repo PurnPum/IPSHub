@@ -3,7 +3,7 @@ import json
 import random
 from games.models import Game
 from categories.models import Category
-from patches.models import Patch, PatchOption, POField, PatchData
+from patches.models import Patch, PatchOption, POField, PatchData, DiffFile
 from django.contrib.auth.models import User
 from django.db.models import Q
 
@@ -27,7 +27,9 @@ def add_real_games_to_db():
             'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
             'release_date': datetime.date(2000,9,28),
-            'repository': 'https://github.com/pret/pokecrystal/tree/master'
+            'repository': 'https://github.com/pret/pokecrystal.git',
+            'patch_file_name': 'pokecrystal.gbc',
+            'patch_sha': 'f2f52230b536214ef7c9924f483392993e226cfb'
         },
         {
             'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
@@ -39,7 +41,9 @@ def add_real_games_to_db():
             'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
             'release_date': datetime.date(1995,9,28),
-            'repository': 'https://github.com/pret/pokeyellow/tree/master'
+            'repository': 'https://github.com/pret/pokeyellow.git',
+            'patch_file_name': 'pokeyellow.gbc',
+            'patch_sha': 'cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1'
         },
         {
             'image_mini_ref': '/static/images/pokemon_crystal_mini.png',
@@ -51,7 +55,9 @@ def add_real_games_to_db():
             'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
             'release_date': datetime.date(2022,3,16),
-            'repository': 'https://github.com/pret/pokecrystal/tree/master'
+            'repository': 'https://github.com/pret/pokecrystal.git',
+            'patch_file_name': 'pokecrystal.gbc',
+            'patch_sha': 'f2f52230b536214ef7c9924f483392993e226cfb'
         },
         {
             'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
@@ -63,7 +69,9 @@ def add_real_games_to_db():
             'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
             'release_date': datetime.date(2021,6,21),
-            'repository': 'https://github.com/pret/pokeyellow/tree/master'
+            'repository': 'https://github.com/pret/pokeyellow.git',
+            'patch_file_name': 'pokeyellow.gbc',
+            'patch_sha': 'cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1'
         }
     ]
     
@@ -218,6 +226,14 @@ These rules and many other subsets of rules will be implemented within this cate
     category16.base_game = Game.objects.get(title='Pokémon Yellow')
     category16.save()
     
+    category17 = Category()
+    category17.image_ref = '/static/images/other.webp'
+    category17.name = 'Translated text to Spanish'
+    category17.description = 'Translates part of the game into Spanish.'
+    category17.parent_category = None
+    category17.base_game = Game.objects.get(title='Pokémon Yellow')
+    category17.save()
+    
 def add_real_patch_options_to_db():
     pOption = PatchOption()
     pOption.category = Category.objects.get(name='Nuzlocke Yellow', base_game__title='Pokémon Yellow')
@@ -291,6 +307,12 @@ def add_real_patch_options_to_db():
     pOption11.description = 'This is a special egglocke template.'
     pOption11.save()
     
+    pOption12 = PatchOption()
+    pOption12.category = Category.objects.get(name='Translated text to Spanish', base_game__title='Pokémon Yellow')
+    pOption12.name = 'Translated text to Spanish'
+    pOption12.description = 'Translates the text to Spanish.'
+    pOption12.save()
+    
 def add_real_fields_to_db():
     
     field = POField()
@@ -300,7 +322,6 @@ def add_real_fields_to_db():
     field.initial_data = json.dumps({'data': ["True", "False"]})
     field.parent_field = None
     field.default_data = json.dumps({'data': "False"})
-    field.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field.patch_option = PatchOption.objects.get(name='Pokémon death Yellow')
     field.save()
     
@@ -310,7 +331,6 @@ def add_real_fields_to_db():
     field2.field_type = 'Boolean'
     field2.initial_data = json.dumps({'data': ["True", "False"]})
     field2.parent_field = None
-    field2.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field2.default_data = json.dumps({'data': "False"})
     field2.patch_option = PatchOption.objects.get(name='Pokémon death Crystal')
     field2.save()
@@ -321,7 +341,6 @@ def add_real_fields_to_db():
     field3.field_type = 'Boolean'
     field3.initial_data = json.dumps({'data': ["True", "False"]})
     field3.parent_field = None
-    field3.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field3.default_data = json.dumps({'data': "False"})
     field3.patch_option = PatchOption.objects.get(name='Swap encounter with egg Yellow')
     field3.save()
@@ -332,7 +351,6 @@ def add_real_fields_to_db():
     field4.field_type = 'Boolean'
     field4.initial_data = json.dumps({'data': ["True", "False"]})
     field4.parent_field = None
-    field4.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field4.default_data = json.dumps({'data': "False"})
     field4.patch_option = PatchOption.objects.get(name='Add the latest caught pokemon to the family tree')
     field4.save()
@@ -343,7 +361,6 @@ def add_real_fields_to_db():
     field5.field_type = 'Boolean'
     field5.initial_data = json.dumps({'data': ["True", "False"]})
     field5.parent_field = None
-    field5.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field5.default_data = json.dumps({'data': "False"})
     field5.patch_option = PatchOption.objects.get(name='Wild encounter randomizer Crystal')
     field5.save()
@@ -354,7 +371,6 @@ def add_real_fields_to_db():
     field6.field_type = 'Boolean'
     field6.initial_data = json.dumps({'data': ["True", "False"]})
     field6.parent_field = None
-    field6.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field6.default_data = json.dumps({'data': "False"})
     field6.patch_option = PatchOption.objects.get(name='Kill the partner of the fainted Pokemon')
     field6.save()
@@ -365,7 +381,6 @@ def add_real_fields_to_db():
     field7.field_type = 'Boolean'
     field7.initial_data = json.dumps({'data': ["True", "False"]})
     field7.parent_field = None
-    field7.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field7.default_data = json.dumps({'data': "False"})
     field7.patch_option = PatchOption.objects.get(name='Swap encounter with egg Crystal')
     field7.save()
@@ -376,7 +391,6 @@ def add_real_fields_to_db():
     field8.field_type = 'Boolean'
     field8.initial_data = json.dumps({'data': ["True", "False"]})
     field8.parent_field = None
-    field8.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field8.default_data = json.dumps({'data': "False"})
     field8.patch_option = PatchOption.objects.get(name='Wild encounter randomizer NO-BS Yellow')
     field8.save()
@@ -387,7 +401,6 @@ def add_real_fields_to_db():
     field9.field_type = 'Boolean'
     field9.initial_data = json.dumps({'data': ["True", "False"]})
     field9.parent_field = None
-    field9.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field9.default_data = json.dumps({'data': "False"})
     field9.patch_option = PatchOption.objects.get(name='Special egglocke')
     field9.save()
@@ -398,7 +411,6 @@ def add_real_fields_to_db():
     field10.field_type = 'Boolean'
     field10.initial_data = json.dumps({'data': ["True", "False"]})
     field10.parent_field = None
-    field10.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field10.default_data = json.dumps({'data': "False"})
     field10.patch_option = PatchOption.objects.get(name='Wild encounter randomizer Crystal Clear')
     field10.save()
@@ -409,7 +421,6 @@ def add_real_fields_to_db():
     field11.field_type = 'Boolean'
     field11.initial_data = json.dumps({'data': ["True", "False"]})
     field11.parent_field = None
-    field11.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field11.default_data = json.dumps({'data': "False"})
     field11.patch_option = PatchOption.objects.get(name='Wild encounter randomizer Yellow')
     field11.save()
@@ -420,7 +431,6 @@ def add_real_fields_to_db():
     field12.field_type = 'Boolean'
     field12.initial_data = json.dumps({'data': ["True", "False"]})
     field12.parent_field = None
-    field12.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field12.default_data = json.dumps({'data': "False"})
     field12.patch_option = PatchOption.objects.get(name='Link the latest caught pokemon')
     field12.save()
@@ -431,7 +441,6 @@ def add_real_fields_to_db():
     field13.field_type = 'Text'
     field13.initial_data = json.dumps({'data': ["Option1", "Opcion2", "Opcion3"]})
     field13.parent_field = None
-    field13.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field13.default_data = json.dumps({'data': "Opcion2"})
     field13.patch_option = PatchOption.objects.get(name='Link the latest caught pokemon')
     field13.save()
@@ -442,10 +451,19 @@ def add_real_fields_to_db():
     field14.field_type = 'Text'
     field14.initial_data = json.dumps({'data': ""})
     field14.parent_field = None
-    field14.code_file = 'patches/game_patches/pokemon_yellow_egglocke.py'
     field14.default_data = json.dumps({'data': ""})
     field14.patch_option = PatchOption.objects.get(name='Kill the partner of the fainted Pokemon')
     field14.save()
+    
+    field15 = POField()
+    field15.name = 'Binary selector'
+    field15.description = 'Selection between true and false'
+    field15.field_type = 'Boolean'
+    field15.initial_data = json.dumps({'data': ["True", "False"]})
+    field15.parent_field = None
+    field15.default_data = json.dumps({'data': "False"})
+    field15.patch_option = PatchOption.objects.get(name='Translated text to Spanish')
+    field15.save()
     
 def add_real_patches_to_db():
     patch = Patch()
@@ -550,6 +568,13 @@ def add_real_patches_to_db():
     patch8.patch_options.set(pos)
     add_real_patch_data_to_db(patch8)
     patch8.save()
+    
+def add_real_diff_files_to_db():
+    dfile = DiffFile()
+    dfile.filename = 'pokeyellow/engine/menus/main_menu.patch'
+    dfile.original_file = 'pokeyellow/engine/menus/main_menu.asm'
+    dfile.trigger_value = 'True'
+    dfile.field = POField.objects.get(name='Main Menu')
     
 def add_real_patch_data_to_db(patch):
     print('all patch options for patch',patch,' :',patch.patch_options.all())

@@ -13,6 +13,8 @@ class Game(models.Model):
     type = models.CharField(max_length=100)
     extra_info = models.URLField(max_length=200)
     repository = models.URLField(max_length=200)
+    patch_file_name = models.CharField(max_length=200)
+    patch_sha = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title

@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+PATCH_ROOT = BASE_DIR / 'static/patches'
+
+TEMP_ROOT = BASE_DIR / 'static/clones'
 
 # Application definition
 

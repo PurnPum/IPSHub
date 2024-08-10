@@ -5,14 +5,17 @@ from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery, Q
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from games.views import get_category_hierarchy, main_filter as g_main_filter
 from patches.forms import DynamicPatchForm
-from .models import Patch, PatchOption, POField, PatchData, get_hash_code_from_patchDatas
+from .models import Patch, PatchOption, POField, PatchData, DiffFile, get_hash_code_from_patchDatas
 from categories.models import Category
 from games.models import Game
 from . import add_real_data_to_db
 
+import os
+import subprocess
 
 def paginate(request, qs, limit=4):
     paginated_qs = Paginator(qs, limit)
@@ -95,10 +98,6 @@ def gather_form_data(request):
     patch_options_ids = request.POST.getlist('patch_option_ids')
     patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
     patchgen_error = ""
-
-    print("EXISTING PATCHES HASHES:")
-    for patch in Patch.objects.all():
-        print(patch.name, patch.patch_hash)
         
     if patch_options and len(patch_options) > 0:
         forms = [DynamicPatchForm(request.POST, patch_options=[po]) for po in patch_options]
@@ -111,9 +110,7 @@ def gather_form_data(request):
                 patchless_data = form.patchless()
                 if patchless_data:
                     list_patchless_data.append(patchless_data)
-            print("LIST PATCHLESS DATA: ", list_patchless_data)
             temporal_hash = get_hash_code_from_patchDatas(list_patchless_data)
-            print("TEMPORAL HASH: ", temporal_hash)
             if not is_duplicated_temporal_hash(temporal_hash):
                 try:
                     with transaction.atomic():
@@ -121,7 +118,8 @@ def gather_form_data(request):
                 except Exception as e:
                     patchgen_error = str(e)
                 if isinstance(patch, Patch):
-                    # TODO: Generate real patch
+                    base_game = patch.get_base_game()
+                    generate_real_patch(patch,base_game)
                     context = {
                         'element': patch,
                         'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
@@ -161,17 +159,12 @@ def generate_patch_object(request,patch_options,forms):
         patch.creation_date = datetime.date.today()
         patch.download_link = 'TEMPORAL_PLACEHOLDER'
         try:
-            print('Saving patch without hash')
             patch.save()
-            print('Saving forms')
             for form in forms:
                 form.save(patch)
             patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
-            print('Cleaning patch')
             patch.full_clean()
-            print('Saving patch with hash')
             patch.patch_hash = patch.generate_patch_code()
-            print('hash:', patch.patch_hash)
             patch.save()
         except ValidationError as e:
             print('Validation error: ' + str(e))
@@ -183,6 +176,44 @@ def generate_patch_object(request,patch_options,forms):
         print(str(e))
         return e
     return patch
+
+def generate_real_patch(patch, game):
+    # Define paths
+    repo_url = game.repository
+    repo_dir = settings.TEMP_ROOT
+    output_diff = os.path.join(settings.PATCH_ROOT, f'{patch.id}.xdelta')
+     
+    # Define the path to the shell script
+    shell_script = os.path.join(settings.BASE_DIR, 'static/code/generate_patch.sh')
+
+    patch_datas = PatchData.objects.filter(patch=patch) # All patch datas are the ones recently created, so no filtering needed
+    
+    diff_files = []
+    for pd in patch_datas:
+        for df in DiffFile.objects.filter(field=pd.field, trigger_value=pd.data):
+            diff_files.append(df)
+            
+    print(diff_files)
+            
+    original_files = ','.join([df.original_file for df in diff_files])
+    filenames = ','.join([df.filename for df in diff_files])
+
+    # Run the shell script with the necessary arguments
+    with open(settings.BASE_DIR / str('static/logs/' + str(patch.id) + '-' + datetime.date.today().isoformat() + '.log'), 'w') as f:
+        subprocess.run(
+            ['bash', shell_script, repo_url, repo_dir, output_diff, game.patch_file_name, game.patch_sha, original_files, filenames],
+            stdout=f,
+            stderr=subprocess.STDOUT,
+            check=True
+        )
+
+    # Save the diff file path to the Patch model
+    patch.download_link = output_diff
+    patch.save()
+
+    # Cleanup
+    subprocess.run(['rm', '-rf', repo_dir])
+
 
 def is_duplicated_temporal_hash(hash):
     return Patch.objects.filter(patch_hash=hash).exists()

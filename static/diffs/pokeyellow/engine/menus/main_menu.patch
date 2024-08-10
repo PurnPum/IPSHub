@@ -1,0 +1,33 @@
+--- main_menu.asm	2024-08-09 23:37:58.573334207 +0200
++++ main_menu_changed.asm	2024-08-09 23:36:46.404881304 +0200
+@@ -179,13 +179,13 @@
+ 	jp EnterMap
+ 
+ ContinueText:
+-	db "CONTINUE"
++	db "CONTINUAR"
+ 	next ""
+ 	; fallthrough
+ 
+ NewGameText:
+-	db   "NEW GAME"
+-	next "OPTION@"
++	db   "NUEVO JUEGO"
++	next "OPCIONES@"
+ 
+ DisplayContinueGameInfo:
+ 	xor a
+@@ -266,10 +266,10 @@
+ 	jp PrintNumber
+ 
+ SaveScreenInfoText:
+-	db   "PLAYER"
+-	next "BADGES    "
++	db   "JUGADOR"
++	next "MEDALLAS    "
+ 	next "#DEX    "
+-	next "TIME@"
++	next "TIEMPO@"
+ 
+ DisplayOptionMenu:
+ 	callfar DisplayOptionMenu_

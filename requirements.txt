@@ -1,3 +1,6 @@
 asgiref==3.8.1
 Django==5.0.4
 sqlparse==0.5.0
+make==4.3
+gcc==12.2.0
+git==2.39.2

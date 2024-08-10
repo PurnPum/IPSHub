@@ -75,7 +75,6 @@ class POField(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     field_type = models.CharField(max_length=100)
-    code_file = models.CharField(max_length=200)
     initial_data = models.JSONField(blank=True)
     parent_field = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subfields')
     patch_option = models.ForeignKey('patches.PatchOption', on_delete=models.CASCADE)
@@ -83,6 +82,16 @@ class POField(models.Model):
 
     def __str__(self):
         return self.name
+    
+class DiffFile(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
+    filename = models.CharField(max_length=200)
+    original_file = models.CharField(max_length=200)
+    trigger_value = models.CharField(max_length=10000)
+    field = models.ForeignKey('patches.POField', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.filename
     
 class PatchData(models.Model):
     patch = models.ForeignKey('patches.Patch', on_delete=models.CASCADE)
@@ -105,5 +114,4 @@ def get_hash_code_from_patchDatas(patch_data):
     
     data_string = json.dumps(data_list, sort_keys=True)
     patch_code = hashlib.sha256(data_string.encode('utf-8')).hexdigest()
-    print("PATCH CODE: ", patch_code)
     return patch_code
