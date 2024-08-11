@@ -188,18 +188,21 @@ def generate_real_patch(patch, game):
 
     patch_datas = PatchData.objects.filter(patch=patch) # All patch datas are the ones recently created, so no filtering needed
     
+    print(patch_datas)
+    
     diff_files = []
     for pd in patch_datas:
-        for df in DiffFile.objects.filter(field=pd.field, trigger_value=pd.data):
+        
+        dfs = DiffFile.objects.filter(field=pd.field)
+        for df in dfs.filter(trigger_value=pd.data):
             diff_files.append(df)
             
-    print(diff_files)
-            
-    original_files = ','.join([df.original_file for df in diff_files])
-    filenames = ','.join([df.filename for df in diff_files])
+    original_files = ','.join([str(settings.TEMP_ROOT / df.original_file) for df in diff_files])
+    filenames = ','.join([str(settings.DIFF_ROOT / df.filename) for df in diff_files])
 
     # Run the shell script with the necessary arguments
-    with open(settings.BASE_DIR / str('static/logs/' + str(patch.id) + '-' + datetime.date.today().isoformat() + '.log'), 'w') as f:
+    current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    with open(settings.BASE_DIR / str('static/logs/' + str(patch.id) + '-' + current_datetime + '.log'), 'w') as f:
         subprocess.run(
             ['bash', shell_script, repo_url, repo_dir, output_diff, game.patch_file_name, game.patch_sha, original_files, filenames],
             stdout=f,
@@ -250,6 +253,7 @@ def patches(request):
     add_real_data_to_db.add_real_patch_options_to_db()
     add_real_data_to_db.add_real_fields_to_db()
     add_real_data_to_db.add_real_patches_to_db()
+    add_real_data_to_db.add_real_diff_files_to_db()
 
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')

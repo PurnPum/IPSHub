@@ -29,6 +29,8 @@ ALLOWED_HOSTS = []
 
 PATCH_ROOT = BASE_DIR / 'static/patches'
 
+DIFF_ROOT = BASE_DIR / 'static/diffs'
+
 TEMP_ROOT = BASE_DIR / 'static/clones'
 
 # Application definition

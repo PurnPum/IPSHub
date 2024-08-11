@@ -13,18 +13,19 @@ apply_patch_to_file() {
     patch_file=$1
     target_file=$2
 
+    echo "Patch File:"
+    cat $patch_file
+    echo "Target file:"
+    cat $target_file
+
     # Apply the patch to the text file
     # Use the 'diff' command to apply the patch
+
     patch $target_file < $patch_file
+
+    echo "Target file after patching: "
+    cat $target_file
 }
-
-for file in "${original_files[@]}"; do
-    echo "Original file: $file"
-done
-
-for filename in "${filenames[@]}"; do
-    echo "Filename: $filename"
-done
 
 # Clone the repository
 git clone $REPO_URL $REPO_DIR
@@ -64,7 +65,6 @@ done
 
 
 # Rebuild after replacing files
-make clean
 make
 
 # Check if the new file was generated
@@ -74,4 +74,4 @@ if [ ! -f $PATCH_NAME ]; then
 fi
 
 # Run xdelta to generate a patch file
-xdelta3 -e -s $PATCH_NAME ORIGINAL_$PATCH_NAME > $OUTPUT_PATCH
+xdelta3 -e -s ORIGINAL_$PATCH_NAME $PATCH_NAME $OUTPUT_PATCH

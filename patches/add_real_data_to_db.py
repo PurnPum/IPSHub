@@ -456,7 +456,7 @@ def add_real_fields_to_db():
     field14.save()
     
     field15 = POField()
-    field15.name = 'Binary selector'
+    field15.name = 'Binary selector translate'
     field15.description = 'Selection between true and false'
     field15.field_type = 'Boolean'
     field15.initial_data = json.dumps({'data': ["True", "False"]})
@@ -572,12 +572,12 @@ def add_real_patches_to_db():
 def add_real_diff_files_to_db():
     dfile = DiffFile()
     dfile.filename = 'pokeyellow/engine/menus/main_menu.patch'
-    dfile.original_file = 'pokeyellow/engine/menus/main_menu.asm'
+    dfile.original_file = 'engine/menus/main_menu.asm'
     dfile.trigger_value = 'True'
-    dfile.field = POField.objects.get(name='Main Menu')
+    dfile.field = POField.objects.get(name='Binary selector translate')
+    dfile.save()
     
 def add_real_patch_data_to_db(patch):
-    print('all patch options for patch',patch,' :',patch.patch_options.all())
     for po in patch.patch_options.all():
         for field in POField.objects.filter(patch_option=po):
             patchData = PatchData()
