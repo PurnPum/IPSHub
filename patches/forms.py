@@ -7,6 +7,7 @@ from .models import POField, PatchData
 class DynamicPatchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         patch_options = kwargs.pop('patch_options', [])
+        patch = kwargs.pop('patch', [])
         super(DynamicPatchForm, self).__init__(*args, **kwargs)
         
         field_types = {
@@ -17,27 +18,33 @@ class DynamicPatchForm(forms.Form):
             }
         
         for patch_option in patch_options:
+            print(patch)
+            default=None
             fields = POField.objects.filter(patch_option=patch_option)
+            if patch is not None:
+                patchDatas = PatchData.objects.filter(patch=patch)
+                print(patchDatas)
             for field in fields:
                 initial_json_data = json.loads(field.initial_data)
                 field_name = f'field_{field.id}'
+                if patch is not None:
+                    try:
+                        default = patchDatas.get(field=field).data
+                    except:
+                        default = None
                 if 'data' in initial_json_data:
                     if isinstance(initial_json_data['data'], list):
-                        default_data_json = json.loads(field.default_data)
-                        if 'data' in default_data_json:
-                            default=default_data_json['data']
-                        else:
-                            default=''
                         choices = [(choice, choice) for choice in initial_json_data['data']]
+                        if default is None:
+                            default_data_json = json.loads(field.default_data)
+                            if 'data' in default_data_json:
+                                default=default_data_json['data']
+                            else:
+                                default=''
+                        print(default)
                         self.fields[field_name] = field_types['Selection'](
                             label=field.name,
                             choices=choices,
-                            required=False,
-                            initial=default
-                        )
-                    else:
-                        self.fields[field_name] = field_types[field.field_type](
-                            label=field.name,
                             required=False,
                             initial=default
                         )

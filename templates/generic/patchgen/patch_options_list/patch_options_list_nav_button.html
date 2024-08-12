@@ -3,7 +3,11 @@
         <i class="bi bi-chevron-double-right"></i>
     {% endif %}
     <div class="btn"
-    hx-get="{% url 'patch_generator_load_data' %}?parent={{ cat.id }}"
+    {% if patch %}
+        hx-get="{% url 'patch_generator_load_data' %}?parent={{ cat.id }}&patch={{ patch }}"
+    {% else %}
+        hx-get="{% url 'patch_generator_load_data' %}?parent={{ cat.id }}"
+    {% endif %}
     hx-trigger="custom_proceed"
     hx-target="#loaded_patch_list_data"
     hx-swap="beforeend"

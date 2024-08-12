@@ -35,6 +35,12 @@ def patch_generator(request):
     game_id = request.GET.get('selectedGame')
     patch_id = request.GET.get('selectedPatch')
     
+    context = {}
+    
+    if patch_id is not None:
+        game_id = Patch.objects.get(id=patch_id).get_base_game().id
+        patch = Patch.objects.get(id=patch_id)
+        context.update({'patch': patch})
     if game_id is not None:
         game=Game.objects.get(id=game_id)
         patches = get_top_5_patches_by_subpatches(game_id)
@@ -51,33 +57,34 @@ def patch_generator(request):
             
         extravars['patch_options_list_nav_id'] = 'patch_options_list_nav_primary'
         
-        context={
+        context.update({
             'children_categories': children_categories,
             'top_5_patch_list': top_5_patches,
             'game': game,
-            'extravars':extravars}
+            'extravars':extravars})
             
         return render(request, 'patch_generator/patch_generator.html', context)
-    elif patch_id is not None:
-        return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
     else:
         return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
 
 def patch_generator_load_data(request):
+    patch_id = request.GET.get('patch')
+    patch = Patch.objects.get(id=patch_id)
     parent_id = request.GET.get('parent')
     parental_tree = get_category_parent_tree(Category.objects.get(id=parent_id))
     children_categories = get_all_categories_from_game_by_parents(parent_id=parent_id)
     patch_options = get_patch_options_from_category(parent_id)
     po_fields = POField.objects.filter(patch_option__in=patch_options)
 
-    forms = [DynamicPatchForm(patch_options=[po]) for po in patch_options]
+    forms = [DynamicPatchForm(patch_options=[po],patch=patch) for po in patch_options]
  
-    patch_option_data= { patch_option:fields for patch_option,fields in
+    patch_option_data = { patch_option:fields for patch_option,fields in
                               [(po,
                                 [field for field in po_fields.filter(patch_option_id=po.id)]
                                 ) for po in patch_options]}
  
     context={
+        'patch': patch,
         'patch_option_data_forms': zip(forms, patch_option_data),
         'parental_tree': parental_tree,
         'children_categories': children_categories,

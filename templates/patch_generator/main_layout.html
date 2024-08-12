@@ -1,6 +1,9 @@
 <!-- #TODO: Add patch list layout, add patch options layout, add extra elements such as selected game with link to go back to game selection. -->
 {% include 'patch_generator/main_nav.html' %}
-{% include 'patch_generator/main_selected_game.html' %} 
+{% include 'patch_generator/main_selected_game.html' %}
+{% if patch %}
+    {% include 'patch_generator/main_selected_patch.html' %}
+{% endif %}
 {% include 'patch_generator/patch_list/patch_list_layout.html' %}
 {% include 'patch_generator/patch_options_list/patch_options_list_nav.html' %}
 <form id="main_form" class="target-class" hx-post="{% url 'gather_form_data' %}" hx-target="#active_modal" hx-on::after-request:once="show.bs.modal"
