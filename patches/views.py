@@ -6,6 +6,7 @@ from django.db.models import Count, OuterRef, Subquery, Q
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.cache import cache
 
 from games.views import get_category_hierarchy, main_filter as g_main_filter
 from patches.forms import DynamicPatchForm
@@ -69,7 +70,10 @@ def patch_generator(request):
 
 def patch_generator_load_data(request):
     patch_id = request.GET.get('patch')
-    patch = Patch.objects.get(id=patch_id)
+    if patch_id is not None:
+        patch = Patch.objects.get(id=patch_id)
+    else:
+        patch=None
     parent_id = request.GET.get('parent')
     parental_tree = get_category_parent_tree(Category.objects.get(id=parent_id))
     children_categories = get_all_categories_from_game_by_parents(parent_id=parent_id)
@@ -97,7 +101,23 @@ def patch_generator_load_data(request):
     
     return render(request, 'patch_generator/patch_options_list/patch_options_load_data.html', context)
 
+def get_progress_percentile(request):
+    progress_ck = f'progress_{request.user.id}'
+    current_task_ck = f'current_task_{request.user.id}'
+    print('get: ',cache.get(progress_ck, 0))
+    print('get: ',cache.get(current_task_ck, '...'))
+    return render(request, 'patch_generator/main_progress_bar_animation.html', {'progress': cache.get(progress_ck, 0), 'current_task': cache.get(current_task_ck, '...')})
+
+def get_progress_bar(request):
+    return render(request, 'patch_generator/modal_progress_bar.html')
+
 def gather_form_data(request):
+    
+    progress_ck = f'progress_{request.user.id}' # We're going to use local cache in the developing environment. On production, this should be a redis cache
+    current_task_ck = f'current_task_{request.user.id}'
+    cache.set(progress_ck, 0)
+    cache.set(current_task_ck, 'Loading patch data...')
+    
     error_texts = {
         'UNIQUE constraint failed: patches_patch.name':'Could not create patch: Patch with the same name already exists.',
         'UNIQUE constraint failed: patches_patch.patch_hash':'Could not create patch: Patch with the same configuration already exists.'
@@ -105,9 +125,13 @@ def gather_form_data(request):
     patch_options_ids = request.POST.getlist('patch_option_ids')
     patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
     patchgen_error = ""
+    cache.set(progress_ck, 2)
+    cache.set(current_task_ck, 'Loading form data...')
         
     if patch_options and len(patch_options) > 0:
-        forms = [DynamicPatchForm(request.POST, patch_options=[po]) for po in patch_options]
+        forms = [DynamicPatchForm(request.POST, patch_options=[po], patch=None) for po in patch_options]
+        cache.set(progress_ck, 4)
+        cache.set(current_task_ck, 'Validating forms...')
         if any([not form.is_valid() for form in forms]):
             print("INVALID FORM")
             patchgen_error = "Invalid form: " + form
@@ -117,22 +141,33 @@ def gather_form_data(request):
                 patchless_data = form.patchless()
                 if patchless_data:
                     list_patchless_data.append(patchless_data)
+            cache.set(progress_ck, 7)
+            cache.set(current_task_ck, 'Creating objects...')
             temporal_hash = get_hash_code_from_patchDatas(list_patchless_data)
             if not is_duplicated_temporal_hash(temporal_hash):
                 try:
                     with transaction.atomic():
                         patch = generate_patch_object(request,patch_options,forms)
+                        cache.set(progress_ck, 15)
+                        cache.set(current_task_ck, 'Beggining patch generation...')
                 except Exception as e:
                     patchgen_error = str(e)
                 if isinstance(patch, Patch):
                     base_game = patch.get_base_game()
-                    generate_real_patch(patch,base_game)
+                    error_message = generate_real_patch(request,patch,base_game)
+                    if error_message is not None:
+                        context = {
+                            'error_message': error_message
+                        }
+                        return render(request,'generic/modal/modal_patchgen_error.html', context)
                     context = {
                         'element': patch,
                         'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
                         'game': patch.get_base_game(),
                         'patchgen': 'True'
                     }
+                    cache.set(progress_ck, 100)
+                    cache.set(current_task_ck, 'Finalizing...')
                     return render(request, 'generic/modal/modal_patchgen_result.html', context)
                 else:
                     patchgen_error = str(patch)
@@ -184,18 +219,28 @@ def generate_patch_object(request,patch_options,forms):
         return e
     return patch
 
-def generate_real_patch(patch, game):
+def generate_real_patch(request, patch, game):
+    progress_ck = f'progress_{request.user.id}'
+    current_task_ck = f'current_task_{request.user.id}'
     # Define paths
     repo_url = game.repository
     repo_dir = settings.TEMP_ROOT
     output_diff = os.path.join(settings.PATCH_ROOT, f'{patch.id}.xdelta')
      
+    # Cleanup
+    try:
+        clean_up_dir(repo_dir)
+    except Exception as e:
+        print(str(e))
+     
     # Define the path to the shell script
-    shell_script = os.path.join(settings.BASE_DIR, 'static/code/generate_patch.sh')
+    clone_repo_script = os.path.join(settings.BASE_DIR, 'static/code/clone_repository.sh')
+    make_script = os.path.join(settings.BASE_DIR, 'static/code/make.sh')
+    apply_diff_script = os.path.join(settings.BASE_DIR, 'static/code/apply_diff.sh')
+    generate_patch_script = os.path.join(settings.BASE_DIR, 'static/code/generate_patch.sh')
+    verify_rename_script = os.path.join(settings.BASE_DIR, 'static/code/verify_rename.sh')
 
     patch_datas = PatchData.objects.filter(patch=patch) # All patch datas are the ones recently created, so no filtering needed
-    
-    print(patch_datas)
     
     diff_files = []
     for pd in patch_datas:
@@ -209,20 +254,47 @@ def generate_real_patch(patch, game):
 
     # Run the shell script with the necessary arguments
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    with open(settings.BASE_DIR / str('static/logs/' + str(patch.id) + '-' + current_datetime + '.log'), 'w') as f:
-        subprocess.run(
-            ['bash', shell_script, repo_url, repo_dir, output_diff, game.patch_file_name, game.patch_sha, original_files, filenames],
-            stdout=f,
-            stderr=subprocess.STDOUT,
-            check=True
-        )
+    
+    data = [{'args':[clone_repo_script, repo_url, repo_dir],'progress': 25, 'current_task': "Cloning repository of the game...", 'error_msg': "Internal error while cloning the original game's repository"},
+            {'args':[make_script, game.patch_file_name, repo_dir],'progress': 32, 'current_task': "Building original game...", 'error_msg': "Internal error while building the original game"},
+            {'args':[verify_rename_script, game.patch_file_name, repo_dir, game.patch_sha],'progress': 38, 'current_task': "Verifying built files...", 'error_msg': "Internal error while verifying the built files"},
+            {'args':[apply_diff_script, original_files, filenames, repo_dir],'progress': 56, 'current_task': "Applying selected configurations to the game...", 'error_msg': "Internal error while applying all the changes to the original game code."},
+            {'args':[make_script, game.patch_file_name, repo_dir],'progress': 78, 'current_task': "Building modified game...", 'error_msg': "Internal error while building the modified game"},
+            {'args':[generate_patch_script, output_diff, game.patch_file_name, repo_dir],'progress': 95, 'current_task': "Creating patch file...", 'error_msg': "Internal error while creating the patch file"}
+            ]
+    
+    with open(settings.LOGS_DIR / str(str(patch.id) + '-' + current_datetime + '.log'), 'w') as f:
+        error_message = None
+        
+        for step in data:
+            error_message = run_subprocess(step['args'],f,patch,progress_ck,current_task_ck,step['progress'],step['error_msg'],step['current_task'])
+            if error_message is not None:
+                return error_message
 
     # Save the diff file path to the Patch model
     patch.download_link = output_diff
     patch.save()
+    
+    clean_up_dir(repo_dir)
 
-    # Cleanup
+def clean_up_dir(repo_dir):
     subprocess.run(['rm', '-rf', repo_dir])
+    
+def run_subprocess(list_args,f,patch,progress_ck,current_task_ck,progress,error_msg,current_task):
+    cache.set(progress_ck, progress)
+    cache.set(current_task_ck, current_task)
+    try:
+        subprocess.run(
+            ['bash', *list_args],
+            stdout=f,
+            stderr=subprocess.STDOUT,
+            check=True
+        )
+    except subprocess.CalledProcessError:
+        patch.delete()
+        error_message = error_msg
+        print(error_message)
+        return error_message
 
 
 def is_duplicated_temporal_hash(hash):

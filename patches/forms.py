@@ -18,12 +18,10 @@ class DynamicPatchForm(forms.Form):
             }
         
         for patch_option in patch_options:
-            print(patch)
             default=None
             fields = POField.objects.filter(patch_option=patch_option)
             if patch is not None:
                 patchDatas = PatchData.objects.filter(patch=patch)
-                print(patchDatas)
             for field in fields:
                 initial_json_data = json.loads(field.initial_data)
                 field_name = f'field_{field.id}'
@@ -41,7 +39,6 @@ class DynamicPatchForm(forms.Form):
                                 default=default_data_json['data']
                             else:
                                 default=''
-                        print(default)
                         self.fields[field_name] = field_types['Selection'](
                             label=field.name,
                             choices=choices,
@@ -56,7 +53,6 @@ class DynamicPatchForm(forms.Form):
                     )
 
     def save(self, patch, commit=True):
-        print('Patch: ',patch)
         saved_objects = []
         
         for field_name, field_value in self.cleaned_data.items():

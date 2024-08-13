@@ -26,5 +26,9 @@
         on focusout
             if my value is '' set my value to 'Name your patch' end
             if my value is 'Name your patch' add .custom-patch-name-red to me end"></input></div>
-    <input type="submit" value="Generate Patch" class="btn" data-bs-toggle='modal' data-bs-target='#active_modal'></input>
+    <input type="submit" value="Generate Patch" class="btn" data-bs-toggle='modal' data-bs-target='#active_modal'
+        hx-get="{% url 'get_progress_bar' %}"
+        hx-trigger="click"
+        hx-target="#active_modal"
+        _="on click trigger submit on #main_form"></input>
 </form>

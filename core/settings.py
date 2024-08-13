@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-PATCH_ROOT = BASE_DIR / 'static/patches'
+PATCH_ROOT = BASE_DIR / 'media/patches'
+
+LOGS_DIR = BASE_DIR / 'media/logs'
 
 DIFF_ROOT = BASE_DIR / 'static/diffs'
 

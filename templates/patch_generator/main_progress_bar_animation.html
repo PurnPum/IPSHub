@@ -1,0 +1,9 @@
+<div
+    id="patch_generator_progress_bar_animation"
+    class="progress-bar progress-bar-striped custom-navbar-bg progress-bar-animated"
+    style="width: {{ progress }}%;"
+    hx-get="{% url 'get_progress_percentile' %}"
+    hx-swap="outerHTML"
+    hx-trigger="every 1s">
+    {{ current_task }}
+</div>

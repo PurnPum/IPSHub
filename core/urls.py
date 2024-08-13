@@ -34,5 +34,7 @@ urlpatterns = [
     path('games/modal/', g_views.load_modal, name='load_modal_game'),
     path('patch_generator/', p_views.patch_generator, name='patch_generator'),
     path('patch_generator/subcategories/', p_views.patch_generator_load_data, name='patch_generator_load_data'),
-    path('patch_generator/generate_patch/', p_views.gather_form_data, name="gather_form_data")
+    path('patch_generator/generate_patch/', p_views.gather_form_data, name="gather_form_data"),
+    path('patch_generator/current_progress/', p_views.get_progress_percentile, name="get_progress_percentile"),
+    path('patch_generator/progress_bar/', p_views.get_progress_bar, name="get_progress_bar"),
 ]

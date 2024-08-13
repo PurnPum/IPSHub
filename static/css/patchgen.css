@@ -74,3 +74,6 @@
     border-color: var(--custom-nav-main-color) !important;
 }
 
+.bg-primary {
+    background-color: var(--custom-nav-main-color) !important;
+}
