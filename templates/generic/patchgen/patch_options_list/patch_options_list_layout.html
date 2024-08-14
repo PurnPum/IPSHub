@@ -1,4 +1,4 @@
-<div id="{% block patch_options_list_data_id %}{% endblock %}" class="custom-title-bg custom-element-top-border custom-active-patch-options-list">
+<div id="{% block patch_options_list_data_id %}{% endblock %}" class="my-2 custom-bottom-thick-border custom-top-thick-border custom-active-patch-options-list">
     <ul class="list-group list-group-flush">
         {% for form, po_data in patch_option_data_forms %}
             <input type="hidden" name="patch_option_ids" value="{{ po_data.id }}">

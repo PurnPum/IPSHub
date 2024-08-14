@@ -1,5 +1,5 @@
 {% block extra_header %}{% endblock %}
-<div class="modal-dialog custom-modal-width" style="max-width: 80%;">
+<div class="modal-dialog custom-modal-width" {% block extra_modal_attributes %}{% endblock %} style="max-width: 80%;">
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="active_modal_title" class="modal-title fw-bold">{% block label_title %}{% endblock %}</h2>

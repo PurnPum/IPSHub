@@ -1,0 +1,41 @@
+<form id="main_form" class="target-class p-0 custom-title-bg" hx-post="{% url 'gather_form_data' %}" hx-target="#active_modal" hx-on::after-request:once="show.bs.modal"
+    _="
+    on submit
+    if #patch_name_input's value is '' or #patch_name_input's value is 'Name your patch'
+        event.preventDefault()
+        log 'You must name your patch before submitting'
+        add .custom-patch-name-red to #patch_name_input
+    else
+        if #patch_name_input matches '.custom-patch-name-red'
+            remove .custom-patch-name-red from #patch_name_input end">
+    {% csrf_token %}
+    <div id="loaded_patch_list_data"></div>
+    <div class="mt-2 d-flex justify-content-center"><h6 class="fw-bold mb-0 me-2 d-flex justify-content-center align-items-center">Patch Name:</h6><input id="patch_name_input" name="patchName" class="m-0" value="Name your patch" 
+        _="
+        on focusin
+            if my value is 'Name your patch' set my value to '' end
+            if I match '.custom-patch-name-red' remove .custom-patch-name-red from me end
+        on focusout
+            if my value is ''
+                set my value to 'Name your patch'
+                add .custom-patch-name-red to me
+                add @disabled to #generate_patch_button
+            else if my value is 'Name your patch'
+                add .custom-patch-name-red to me
+                add @disabled to #generate_patch_button
+            else if #loaded_patch_list_data matches .custom-active
+                remove @disabled from #generate_patch_button end"></input></div>
+    <div class="d-flex col-12 justify-content-center my-2">
+        <input id="generate_patch_button" disabled type="submit" value="Generate Patch" class="btn btn-success border-4 fw-bold" data-bs-toggle='modal' data-bs-target='#active_modal'
+            hx-get="{% url 'get_progress_bar' %}"
+            hx-trigger="click"
+            hx-target="#active_modal"
+            _="on click
+            if #patch_name_input's value is '' or #patch_name_input's value is 'Name your patch'
+                then
+                    add .custom-patch-name-red to #patch_name_input
+                    halt the event
+            else
+                trigger submit on #main_form"></input>
+    </div>
+</form>

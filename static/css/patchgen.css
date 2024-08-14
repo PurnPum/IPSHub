@@ -1,4 +1,5 @@
 :root {
+    --custom-relative-gray: rgb(22, 11, 33);
     --custom-light-gray: rgb(33, 33, 33);
     --custom-gray: rgb(22, 22, 22);
     --custom-darker-gray: rgb(11, 11, 11);
@@ -10,6 +11,7 @@
     --custom-sorting-hover-color: rgb(98, 0, 255);
     --custom-disabled-color: rgb(116, 91, 121);
     --custom-accordion-active-color: rgb(225, 74, 255);
+    --custom-outline-hover-light: rgb(233, 185, 233);
   }
 
 .btn-outline-primary {
@@ -76,4 +78,35 @@
 
 .bg-primary {
     background-color: var(--custom-nav-main-color) !important;
+}
+
+.btn-outline-info {
+    --bs-bg-opacity: 1;
+    background-color: var(--custom-nav-darkest-color) !important;
+    border-color: var(--custom-sorting-hover-color) !important;
+    color: var(--custom-accordion-active-color) !important;
+    --bs-link-hover-color: var(--custom-nav-darker-color) !important;
+    --bs-link-hover-decoration: none !important;
+}
+
+.btn-outline-info:hover {
+    background-color: var(--custom-sorting-hover-color) !important;
+    border-color: var(--custom-sorting-color) !important;
+    color: var(--custom-outline-hover-light) !important;
+}
+
+.btn-outline-info:active {
+    background-color: var(--custom-nav-lighter-color) !important;
+    border-color: var(--custom-nav-darker-color) !important;
+}
+
+.btn-outline.disabled, .btn-outline-info:disabled {
+    background-color: var(--custom-disabled-color) !important;
+    border-color: var(--custom-disabled-color) !important;
+}
+
+.btn-outline-info:not(:disabled):not(.disabled):active, .btn-outline-info:not(:disabled):not(.disabled).active,
+.show > .btn-outline-info.dropdown-toggle {
+    background-color: var(--custom-nav-darker-color) !important;
+    border-color: var(--custom-nav-main-color) !important;
 }

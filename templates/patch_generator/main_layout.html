@@ -1,4 +1,3 @@
-<!-- #TODO: Add patch list layout, add patch options layout, add extra elements such as selected game with link to go back to game selection. -->
 {% include 'patch_generator/main_nav.html' %}
 {% include 'patch_generator/main_selected_game.html' %}
 {% if patch %}
@@ -6,29 +5,4 @@
 {% endif %}
 {% include 'patch_generator/patch_list/patch_list_layout.html' %}
 {% include 'patch_generator/patch_options_list/patch_options_list_nav.html' %}
-<form id="main_form" class="target-class" hx-post="{% url 'gather_form_data' %}" hx-target="#active_modal" hx-on::after-request:once="show.bs.modal"
-    _="
-    on submit
-    if #patch_name_input's value is '' or #patch_name_input's value is 'Name your patch'
-        event.preventDefault()
-        log 'You must name your patch before submitting'
-        add .custom-patch-name-red to #patch_name_input
-    else
-        if #patch_name_input matches '.custom-patch-name-red'
-            remove .custom-patch-name-red from #patch_name_input end">
-    {% csrf_token %}
-    <div id="loaded_patch_list_data"></div>
-    <div>Patch name: <input id="patch_name_input" name="patchName" class="ms-2" value="Name your patch" 
-        _="
-        on focusin
-            if my value is 'Name your patch' set my value to '' end
-            if I match '.custom-patch-name-red' remove .custom-patch-name-red from me end
-        on focusout
-            if my value is '' set my value to 'Name your patch' end
-            if my value is 'Name your patch' add .custom-patch-name-red to me end"></input></div>
-    <input type="submit" value="Generate Patch" class="btn" data-bs-toggle='modal' data-bs-target='#active_modal'
-        hx-get="{% url 'get_progress_bar' %}"
-        hx-trigger="click"
-        hx-target="#active_modal"
-        _="on click trigger submit on #main_form"></input>
-</form>
+{% include 'patch_generator/main_form.html' %}

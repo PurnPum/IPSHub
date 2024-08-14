@@ -1,6 +1,6 @@
-<li class="list-group-item">
+<li class="list-group-item custom-bg-relative-gray custom-bottom-border custom-top-border">
     <fieldset>
-        <legend>{{ po_data.name }}</legend>
+        <legend class="fw-bold d-flex justify-content-center">{{ po_data.name }}</legend>
         {% csrf_token %}
         {{ form.as_p }}
     </fieldset>

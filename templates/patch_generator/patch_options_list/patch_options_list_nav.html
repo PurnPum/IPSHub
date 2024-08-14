@@ -1,4 +1,13 @@
 {% extends 'generic/patchgen/patch_options_list/patch_options_list_nav.html' %}
 
 {% block patch_options_nav_id %}{{ extravars.patch_options_list_nav_id }}{% endblock %}
+{% block patch_options_subcategories_div %}
+{% if parental_tree %}
+    <div class="d-flex justify-content-center custom-element-bottom-border" id="{{ extravars.patch_options_subcategories_div_id }}">
+        {% for parent in parental_tree %}
+            {% include 'generic/patchgen/patch_options_list/patch_options_list_nav_button.html' with cat=parent parent="True" %}
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
 {% block patch_options_nav_target_id %}{{ extravars.patch_options_list_nav_id }}{% endblock %}

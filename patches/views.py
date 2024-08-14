@@ -1,4 +1,4 @@
-import datetime, json
+import datetime, json, time
 from django.db import IntegrityError, transaction
 from django.forms import ValidationError
 from django.shortcuts import render
@@ -57,6 +57,7 @@ def patch_generator(request):
             top_5_patches.append({'patch': patch, 'subpatches_amount': subpatches_amount, 'categories': categories})
             
         extravars['patch_options_list_nav_id'] = 'patch_options_list_nav_primary'
+        extravars['primary'] = 'True'
         
         context.update({
             'children_categories': children_categories,
@@ -95,7 +96,8 @@ def patch_generator_load_data(request):
         
         'extravars':{
             'patch_options_list_nav_id': 'patch_options_list_nav_'+parent_id,
-            'patch_options_list_data_id': 'patch_options_list_data_'+parent_id
+            'patch_options_list_data_id': 'patch_options_list_data_'+parent_id,
+            'patch_options_subcategories_div_id': 'patch_options_subcategories_div_'+parent_id,
         }
     }
     
@@ -104,8 +106,6 @@ def patch_generator_load_data(request):
 def get_progress_percentile(request):
     progress_ck = f'progress_{request.user.id}'
     current_task_ck = f'current_task_{request.user.id}'
-    print('get: ',cache.get(progress_ck, 0))
-    print('get: ',cache.get(current_task_ck, '...'))
     return render(request, 'patch_generator/main_progress_bar_animation.html', {'progress': cache.get(progress_ck, 0), 'current_task': cache.get(current_task_ck, '...')})
 
 def get_progress_bar(request):
@@ -117,11 +117,18 @@ def gather_form_data(request):
     current_task_ck = f'current_task_{request.user.id}'
     cache.set(progress_ck, 0)
     cache.set(current_task_ck, 'Loading patch data...')
+    time.sleep(1)
     
-    error_texts = {
-        'UNIQUE constraint failed: patches_patch.name':'Could not create patch: Patch with the same name already exists.',
-        'UNIQUE constraint failed: patches_patch.patch_hash':'Could not create patch: Patch with the same configuration already exists.'
-    }
+    patch_name = request.POST.get('patchName')
+    
+    patch_exists = Patch.objects.filter(name=patch_name).exists()
+    if patch_exists:
+        patchgen_error = 'Could not create patch: Patch with the same name already exists.'
+        context = {
+            'error_message': patchgen_error
+        }
+        return render(request,'generic/modal/modal_patchgen_error.html', context)
+    
     patch_options_ids = request.POST.getlist('patch_option_ids')
     patch_options = PatchOption.objects.filter(id__in=patch_options_ids)
     patchgen_error = ""
@@ -132,26 +139,36 @@ def gather_form_data(request):
         forms = [DynamicPatchForm(request.POST, patch_options=[po], patch=None) for po in patch_options]
         cache.set(progress_ck, 4)
         cache.set(current_task_ck, 'Validating forms...')
+        time.sleep(1)
         if any([not form.is_valid() for form in forms]):
             print("INVALID FORM")
             patchgen_error = "Invalid form: " + form
         else:
             list_patchless_data = []
             for form in forms:
-                patchless_data = form.patchless()
-                if patchless_data:
+                try:
+                    patchless_data = form.patchless()
+                except ValidationError as e:
+                    continue
+                if patchless_data and len(patchless_data) > 0:
                     list_patchless_data.append(patchless_data)
+            list_patchless_data = [item for sublist in list_patchless_data for item in sublist]
+            if len(list_patchless_data) == 0:
+                patchgen_error = 'Error: No configuration selected'
+                context = {
+                    'error_message': patchgen_error
+                }
+                return render(request,'generic/modal/modal_patchgen_error.html', context)
             cache.set(progress_ck, 7)
             cache.set(current_task_ck, 'Creating objects...')
+            time.sleep(1)
             temporal_hash = get_hash_code_from_patchDatas(list_patchless_data)
             if not is_duplicated_temporal_hash(temporal_hash):
-                try:
-                    with transaction.atomic():
-                        patch = generate_patch_object(request,patch_options,forms)
-                        cache.set(progress_ck, 15)
-                        cache.set(current_task_ck, 'Beggining patch generation...')
-                except Exception as e:
-                    patchgen_error = str(e)
+                with transaction.atomic():
+                    patch = generate_patch_object(request,patch_options,forms)
+                    cache.set(progress_ck, 15)
+                    cache.set(current_task_ck, 'Beggining patch generation...')
+                    time.sleep(1)
                 if isinstance(patch, Patch):
                     base_game = patch.get_base_game()
                     error_message = generate_real_patch(request,patch,base_game)
@@ -166,6 +183,7 @@ def gather_form_data(request):
                         'game': patch.get_base_game(),
                         'patchgen': 'True'
                     }
+                    time.sleep(1)
                     cache.set(progress_ck, 100)
                     cache.set(current_task_ck, 'Finalizing...')
                     return render(request, 'generic/modal/modal_patchgen_result.html', context)
@@ -181,42 +199,37 @@ def gather_form_data(request):
                 }
                 return render(request,'generic/modal/modal_patchgen_result.html', context)
 
-    final_error = error_texts[patchgen_error] if patchgen_error in error_texts else patchgen_error
     context = {
-        'error_message': final_error
+        'error_message': patchgen_error
     }
     return render(request,'generic/modal/modal_patchgen_error.html', context)
                 
 @transaction.atomic
 def generate_patch_object(request,patch_options,forms):
-    try:
-        patch = Patch()
-        patch.name = request.POST.get('patchName')
-        patch.downloads = 0
-        patch.favorites = 0
-        if request.user.is_authenticated:
-            patch.creator = User.objects.get(username='admin') # TODO : Add user system
-        else:
-            patch.creator = request.user
-        patch.creation_date = datetime.date.today()
-        patch.download_link = 'TEMPORAL_PLACEHOLDER'
+    patch = Patch()
+    patch.name = request.POST.get('patchName')
+    patch.downloads = 0
+    patch.favorites = 0
+    if request.user.is_authenticated:
+        patch.creator = User.objects.get(username='admin') # TODO : Add user system
+    else:
+        patch.creator = request.user
+    patch.creation_date = datetime.date.today()
+    patch.download_link = 'TEMPORAL_PLACEHOLDER'
+    patch.save()
+    saved_forms = 0
+    for form in forms:
         try:
-            patch.save()
-            for form in forms:
-                form.save(patch)
-            patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
-            patch.full_clean()
-            patch.patch_hash = patch.generate_patch_code()
-            patch.save()
-        except ValidationError as e:
-            print('Validation error: ' + str(e))
-            return e
-    except IntegrityError as e:
-        print('Integrity error: ' + str(e))
-        return e
-    except Exception as e:
-        print(str(e))
-        return e
+            saved_forms += 1
+            form.save(patch)
+        except:
+            continue
+    if saved_forms == 0:
+        raise ValidationError('All fields have their default value')
+    patch.patch_options.set(PatchOption.objects.filter(id__in=[po.id for po in patch_options]))
+    patch.full_clean()
+    patch.patch_hash = patch.generate_patch_code()
+    patch.save()
     return patch
 
 def generate_real_patch(request, patch, game):
@@ -268,6 +281,7 @@ def generate_real_patch(request, patch, game):
         
         for step in data:
             error_message = run_subprocess(step['args'],f,patch,progress_ck,current_task_ck,step['progress'],step['error_msg'],step['current_task'])
+            time.sleep(1)
             if error_message is not None:
                 return error_message
 
@@ -293,7 +307,6 @@ def run_subprocess(list_args,f,patch,progress_ck,current_task_ck,progress,error_
     except subprocess.CalledProcessError:
         patch.delete()
         error_message = error_msg
-        print(error_message)
         return error_message
 
 

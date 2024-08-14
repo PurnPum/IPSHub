@@ -67,6 +67,9 @@ class DynamicPatchForm(forms.Form):
                     )
                     saved_objects.append(patch_data)
         
+        if len(saved_objects) == 0:
+            raise(forms.ValidationError('All fields have their default value'))
+        
         if commit:
             for obj in saved_objects:
                 obj.save()
@@ -74,13 +77,4 @@ class DynamicPatchForm(forms.Form):
         return saved_objects
 
     def patchless(self):
-        for field_name, field_value in self.cleaned_data.items():
-            if field_name.startswith('field_'):
-                field_id = field_name.split('_')[1]
-                po_field = POField.objects.get(id=field_id)
-                if field_value != json.loads(po_field.default_data)['data']: # If the value is the same as the default value, dont save it.
-                    return PatchData(
-                        patch=None,
-                        field=po_field,
-                        data=field_value
-                    )
+        return self.save(None,commit=False)

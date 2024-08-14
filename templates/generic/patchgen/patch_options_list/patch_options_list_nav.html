@@ -1,10 +1,17 @@
-<div id="{% block patch_options_nav_id %}{% endblock %}" class="custom-active-patch-options-nav">
-    <ul class="nav nav-tabs me-auto mb-2 mb-lg-0 flex-grow-1 justify-content-evenly align-items-center d-flex">
-        {% for parent in parental_tree %}
-            {% include 'generic/patchgen/patch_options_list/patch_options_list_nav_button.html' with cat=parent parent="True" %}
-        {% endfor %}
+<div id="{% block patch_options_nav_id %}{% endblock %}" class="p-0 custom-element-top-border custom-title-bg custom-active-patch-options-nav">
+    {% if extravars.primary %}
+        <h4 class="m-0 py-2 fw-bold flex-grow-1 d-flex align-items-center justify-content-center custom-element-bottom-border">Select from these categories:</h4>
+    {% endif %}
+    {% block patch_options_subcategories_div %}{% endblock %}
+    <ul class="nav nav-tabs me-auto mb-2 mb-lg-0 flex-grow-1 justify-content-evenly align-items-center d-flex overflow-x-auto">
         {% for cat in children_categories %}
+            <li class="nav-item">
             {% include 'generic/patchgen/patch_options_list/patch_options_list_nav_button.html' %}
+            </li>
+        {% empty %}
+            <li class="nav-item">
+                <h5 class="fw-bold my-1">No subcategories found</h5>
+            </li>
         {% endfor %}
     </ul>
 </div>

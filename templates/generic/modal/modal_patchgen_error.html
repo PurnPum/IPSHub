@@ -6,5 +6,4 @@
 {{ error_message }}
 {% endblock %}
 
-{% block modal_buttons %}
-{% endblock %}
+{% block modal_buttons %}{% include 'generic/accordion/accordion_generic_button.html' with button_color='danger' icon='bi-x-lg' text='Cancel' text_short='Cancel' size_inline='sm' size_none='sm' extra_a_classes='col-12' extra_btn_attributes="data-bs-dismiss='modal' aria-label='Close'" %}{% endblock %}
