@@ -13,7 +13,16 @@
 hx-trigger="custom_proceed"
 hx-target="#loaded_patch_list_data"
 hx-swap="beforeend"
-_="on click
+_="{% if cat in extravars.modified_categories %}
+    on load
+        if #patch_options_list_data_{{ cat.id }} does not exist
+            then send custom_proceed to me
+    end
+    on htmx:afterOnLoad
+        call hideNavs()
+    end
+    {% endif %}
+    on click
     if #loaded_patch_list_data does not match .custom-active
         then add .custom-active to #loaded_patch_list_data end
     if #patch_name_input's value is not '' and #patch_name_input's value is not 'Name your patch'
@@ -27,14 +36,7 @@ _="on click
         remove .btn-outline-primary from me
         add .btn-warning to me
     end
-    set allListDivs to <div.custom-active-patch-options-list/>
-    set allNavDivs to <div.custom-active-patch-options-nav/>
-    repeat in allListDivs
-        hide it 
-    end
-    repeat in allNavDivs
-        hide it unless it matches #patch_options_list_nav_primary
-    end
+    call hideNavs()
     if #patch_options_list_data_{{ cat.id }} does not exist
         then send custom_proceed to me
     else
@@ -43,3 +45,16 @@ _="on click
     {% if parent %}
         <i class="mx-1 bi bi-chevron-double-right d-flex align-items-center"></i>
     {% endif %}
+
+<script type="text/hyperscript">
+    def hideNavs()
+        set allListDivs to <div.custom-active-patch-options-list/>
+        set allNavDivs to <div.custom-active-patch-options-nav/>
+        repeat in allListDivs
+            hide it 
+        end
+        repeat in allNavDivs
+            hide it unless it matches #patch_options_list_nav_primary
+        end
+    end
+</script>

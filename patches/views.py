@@ -42,6 +42,9 @@ def patch_generator(request):
         game_id = Patch.objects.get(id=patch_id).get_base_game().id
         patch = Patch.objects.get(id=patch_id)
         context.update({'patch': patch})
+        patch_datas = PatchData.objects.filter(patch=patch)
+        modified_categories = Category.objects.filter(id__in=patch_datas.values_list('field__patch_option__category', flat=True).distinct())
+        extravars.update({'modified_categories': modified_categories})
     if game_id is not None:
         game=Game.objects.get(id=game_id)
         patches = get_top_5_patches_by_subpatches(game_id)
@@ -66,7 +69,7 @@ def patch_generator(request):
             'extravars':extravars})
             
         # TODO If the user loads a Patch preset, the fields aren't loaded until clicked on, so trying to generate a patch will ignore them.
-            
+        
         return render(request, 'patch_generator/patch_generator.html', context)
     else:
         return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
