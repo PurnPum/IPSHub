@@ -65,6 +65,8 @@ def patch_generator(request):
             'game': game,
             'extravars':extravars})
             
+        # TODO If the user loads a Patch preset, the fields aren't loaded until clicked on, so trying to generate a patch will ignore them.
+            
         return render(request, 'patch_generator/patch_generator.html', context)
     else:
         return g_main_filter(request, html='patch_generator/game_select/patchgen_select_game.html', extravars=extravars)
@@ -113,7 +115,7 @@ def get_progress_bar(request):
 
 def gather_form_data(request):
     
-    progress_ck = f'progress_{request.user.id}' # We're going to use local cache in the developing environment. On production, this should be a redis cache
+    progress_ck = f'progress_{request.user.id}' # We're going to use local cache in the developing environment. On production, this should be a Redis cache
     current_task_ck = f'current_task_{request.user.id}'
     cache.set(progress_ck, 0)
     cache.set(current_task_ck, 'Loading patch data...')
