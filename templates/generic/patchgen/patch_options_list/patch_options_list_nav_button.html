@@ -41,6 +41,8 @@ _="{% if cat in extravars.modified_categories %}
             call hideNavs()
             show #patch_options_list_data_{{ cat.id }}
             show #patch_options_list_nav_{{ cat.id }}
+            remove .btn-outline-primary from me
+            add .btn-warning to me
         end
     {% endif %}
     on click
