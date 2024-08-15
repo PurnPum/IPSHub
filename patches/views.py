@@ -1,6 +1,7 @@
 import datetime, json, time
 from django.db import IntegrityError, transaction
 from django.forms import ValidationError
+from django.http import FileResponse, Http404
 from django.shortcuts import render
 from django.db.models import Count, OuterRef, Subquery, Q
 from django.core.paginator import Paginator
@@ -35,16 +36,20 @@ def patch_generator(request):
     
     game_id = request.GET.get('selectedGame')
     patch_id = request.GET.get('selectedPatch')
+    category_id = request.GET.get('selectedCategory')
     
     context = {}
     
+    if category_id is not None:
+        extra_cats = Category.objects.get(id=category_id)
+        extravars.update({'selected_category': extra_cats})
     if patch_id is not None:
         game_id = Patch.objects.get(id=patch_id).get_base_game().id
         patch = Patch.objects.get(id=patch_id)
         context.update({'patch': patch})
         patch_datas = PatchData.objects.filter(patch=patch)
-        modified_categories = Category.objects.filter(id__in=patch_datas.values_list('field__patch_option__category', flat=True).distinct())
-        extravars.update({'modified_categories': modified_categories})
+        extra_cats = Category.objects.filter(id__in=patch_datas.values_list('field__patch_option__category', flat=True).distinct())
+        extravars.update({'modified_categories': extra_cats})
     if game_id is not None:
         game=Game.objects.get(id=game_id)
         patches = get_top_5_patches_by_subpatches(game_id)
@@ -67,8 +72,6 @@ def patch_generator(request):
             'top_5_patch_list': top_5_patches,
             'game': game,
             'extravars':extravars})
-            
-        # TODO If the user loads a Patch preset, the fields aren't loaded until clicked on, so trying to generate a patch will ignore them.
         
         return render(request, 'patch_generator/patch_generator.html', context)
     else:
@@ -344,13 +347,13 @@ def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
 
 def patches(request):
     
-    add_real_data_to_db.clean_db()
+    """add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
     add_real_data_to_db.add_real_fields_to_db()
     add_real_data_to_db.add_real_patches_to_db()
-    add_real_data_to_db.add_real_diff_files_to_db()
+    add_real_data_to_db.add_real_diff_files_to_db()"""
 
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
@@ -565,3 +568,14 @@ def load_modal(request):
         context={'element': 'any'}
 
     return render(request, html, context)
+
+def download_patch(request):
+    patch = request.GET.get('patch')
+    patch_file = f'{patch}.xdelta'
+    file_path = os.path.join(settings.PATCH_ROOT, patch_file)
+    if os.path.exists(file_path):
+        response = FileResponse(open(file_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{patch_file}"'
+        return response
+    else:
+        raise Http404("File not found")

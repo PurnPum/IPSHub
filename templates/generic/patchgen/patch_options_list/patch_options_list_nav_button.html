@@ -1,3 +1,5 @@
+{% load custom_functions %}
+
 {% if extravars.primary %}
     <div class="custom-patch-options-nav-div btn btn-outline-primary my-2 fw-bold"
 {% elif parent %}
@@ -14,13 +16,32 @@ hx-trigger="custom_proceed"
 hx-target="#loaded_patch_list_data"
 hx-swap="beforeend"
 _="{% if cat in extravars.modified_categories %}
-    on load
-        if #patch_options_list_data_{{ cat.id }} does not exist
-            then send custom_proceed to me
-    end
-    on htmx:afterOnLoad
-        call hideNavs()
-    end
+        on load
+            if #patch_options_list_data_{{ cat.id }} does not exist
+                then 
+                    send custom_proceed to me
+                    add .custom-active to #loaded_patch_list_data
+        end
+        on htmx:afterOnLoad
+            call hideNavs()
+            show #patch_options_list_data_{{ cat.id }}
+            show #patch_options_list_nav_{{ cat.id }}
+            remove .btn-outline-primary from me
+            add .btn-warning to me
+        end
+    {% endif %}
+    {% if extravars.selected_category == cat or extravars.selected_category|iscategoryparent:cat %}
+        on load
+            if #patch_options_list_data_{{ cat.id }} does not exist
+                then
+                    send custom_proceed to me
+                    then add .custom-active to #loaded_patch_list_data end
+        end
+        on htmx:afterOnLoad
+            call hideNavs()
+            show #patch_options_list_data_{{ cat.id }}
+            show #patch_options_list_nav_{{ cat.id }}
+        end
     {% endif %}
     on click
     if #loaded_patch_list_data does not match .custom-active

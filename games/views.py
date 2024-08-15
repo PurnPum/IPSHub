@@ -208,6 +208,8 @@ def load_modal(request):
 def get_category_hierarchy(category):
     category_hierarchy = {}
     current_category = category
+    if current_category is None:
+        return category_hierarchy
     category_hierarchy['element'] = current_category
     category_hierarchy['children'] = []
     while current_category.parent_category is not None:
@@ -218,11 +220,6 @@ def get_category_hierarchy(category):
         child_category['children'].append(category_hierarchy)
         category_hierarchy = child_category
         current_category = parent_category
+        if current_category is None:
+            break
     return category_hierarchy
-
-def get_category_children(category):
-    children = Category.objects.filter(parent_category=category)
-    if len(children) > 0:
-        return children
-    else:
-        return None

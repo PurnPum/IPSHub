@@ -26,6 +26,7 @@ urlpatterns = [
     path('patches/filter/', p_views.filter, name='patch_filter'),
     path('patches/list/', p_views.get_patch_list_only, name='patch_list'),
     path('patches/modal/', p_views.load_modal, name='load_modal_patch'),
+    path('patches/download/', p_views.download_patch, name='download_patch'),
     path('games/', g_views.games_list),
     path('games/filter/', g_views.main_filter, name='game_filter'),
     path('games/filter_patchgen/', g_views.main_filter_patchgen, name='game_filter_patchgen'),
