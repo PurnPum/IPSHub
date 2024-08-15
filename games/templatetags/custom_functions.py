@@ -70,26 +70,19 @@ def getpatchgencaturl(category,game):
 
 @register.filter
 def iscategoryparent(cat1,cat2):
-    print('cat1:', cat1, 'cat2:', cat2)
     hierarchy = get_category_hierarchy(cat1)
     while 'children' in hierarchy and len(hierarchy['children']) > 0:
         if cat2 == hierarchy['element']:
-            print('True')
             return True
         hierarchy = hierarchy['children'][0]
-    print('False')
     return False
 
 @register.filter
 def whichcategoryisparent(listcats,cat2):
-    print('listcats:', listcats, 'cat2:', cat2)
     result = []
     for category in listcats:
-        print('is category', cat2, 'a parent of', category)
         if iscategoryparent(category,cat2):
-            print('yes')
             result.append(category)
     if len(result) > 0:
         result.append(cat2)
-    print('result:', result)
     return result

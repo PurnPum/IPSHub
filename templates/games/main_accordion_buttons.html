@@ -1,7 +1,7 @@
 {% load custom_functions %}
 
 <div class="col d-flex justify-content-around">
-    {% include "generic/accordion/accordion_generic_button.html" with href="#" button_color="success" extra_btn_classes="p-0" extra_a_classes="pe-1 col-4" size_inline="xl" size_none="xl" text="Create Patch" text_short="Add" icon="bi-plus-lg" hs_code="" %}
+    {% include "generic/accordion/accordion_generic_button.html" with href=game|getpatchgengameurl button_color="success" extra_btn_classes="p-0" extra_a_classes="pe-1 col-4" size_inline="xl" size_none="xl" text="Create Patch" text_short="Add" icon="bi-plus-lg" hs_code="" %}
     {% with href="/patches/?selectedGame="|concatstr:game.id hs_code="on click put 'run' into localStorage['external_filtering'] put '"|concatstr:game.id|concatstr:"' into localStorage['game_id'] put 'any' into localStorage['category_id'] put 'any' into localStorage['patch_id']" %}
         {% include 'generic/accordion/accordion_generic_button.html' with href=href button_color="secondary" extra_btn_classes="p-0" extra_a_classes="col-4" size_inline="xl" size_none="xl" text="View Patches" text_short="Filter" icon="bi-bandaid-fill" hs_code=hs_code %}
     {% endwith %}
