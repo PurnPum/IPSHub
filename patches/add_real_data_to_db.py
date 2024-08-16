@@ -29,7 +29,7 @@ def add_real_games_to_db():
             'release_date': datetime.date(2000,9,28),
             'repository': 'https://github.com/pret/pokecrystal.git',
             'patch_file_name': 'pokecrystal.gbc',
-            'patch_sha': 'f2f52230b536214ef7c9924f483392993e226cfb'
+            'patch_sha': 'f4cd194bdee0d04ca4eac29e09b8e4e9d818c133'
         },
         {
             'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
@@ -57,7 +57,7 @@ def add_real_games_to_db():
             'release_date': datetime.date(2022,3,16),
             'repository': 'https://github.com/pret/pokecrystal.git',
             'patch_file_name': 'pokecrystal.gbc',
-            'patch_sha': 'f2f52230b536214ef7c9924f483392993e226cfb'
+            'patch_sha': 'f4cd194bdee0d04ca4eac29e09b8e4e9d818c133'
         },
         {
             'image_mini_ref': '/static/images/pokemon_yellow_mini.png',

@@ -349,13 +349,13 @@ def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
 
 def patches(request):
     
-    add_real_data_to_db.clean_db()
+    """add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
     add_real_data_to_db.add_real_fields_to_db()
     add_real_data_to_db.add_real_patches_to_db()
-    add_real_data_to_db.add_real_diff_files_to_db()
+    add_real_data_to_db.add_real_diff_files_to_db()"""
 
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
@@ -367,7 +367,7 @@ def patches(request):
 
 def main_filter(request,htmlkey,sorting_order='descending',extravars=None,game_id=None,category_id=None,patch_id=None,sorting_by=None):
     
-    default_extravars = {'title':'Patches','CSS':'patches','nav_text_color':'.text-info','nav_main_color':'.bg-primary','fixed_top':'True'}
+    default_extravars = {'title':'Patches','CSS':'patches','nav_text_color':'.text-info','nav_main_color':'.bg-primary'}
 
     if extravars is None:
         extravars = {}

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block login_nav %}{% include 'navbar.html' %}{% endblock %}
+{% block login_nav %}{% include 'navbar.html' with not_fixed_top=True %}{% endblock %}
 
 {% block base_content %}
 <content class="block">
