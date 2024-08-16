@@ -11,7 +11,7 @@ from django.core.cache import cache
 
 from games.views import get_category_hierarchy, main_filter as g_main_filter
 from patches.forms import DynamicPatchForm
-from .models import Patch, PatchOption, POField, PatchData, DiffFile, get_hash_code_from_patchDatas
+from .models import Patch, PatchFav, PatchOption, POField, PatchData, DiffFile, get_hash_code_from_patchDatas
 from categories.models import Category
 from games.models import Game
 from . import add_real_data_to_db
@@ -349,13 +349,13 @@ def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
 
 def patches(request):
     
-    """add_real_data_to_db.clean_db()
+    add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
     add_real_data_to_db.add_real_fields_to_db()
     add_real_data_to_db.add_real_patches_to_db()
-    add_real_data_to_db.add_real_diff_files_to_db()"""
+    add_real_data_to_db.add_real_diff_files_to_db()
 
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
@@ -576,6 +576,9 @@ def download_patch(request):
     patch_file = f'{patch}.xdelta'
     file_path = os.path.join(settings.PATCH_ROOT, patch_file)
     if os.path.exists(file_path):
+        real_patch = Patch.objects.get(id=patch)
+        real_patch.downloads += 1
+        real_patch.save()
         response = FileResponse(open(file_path, 'rb'))
         response['Content-Disposition'] = f'attachment; filename="{patch_file}"'
         return response
@@ -584,3 +587,22 @@ def download_patch(request):
     
 def modal_login(request):
     return render(request, 'account/modal_login.html')
+
+def favorite_patch(request):
+    patch_id = request.GET.get('patch')
+    patch = Patch.objects.get(id=patch_id)
+    if not request.user.is_authenticated:
+        print("Only logined users can favorite a patch!")
+    else:
+        patchfav_match = PatchFav.objects.filter(patch=patch, user=request.user)
+        if patchfav_match.exists():
+            patchfav_match.delete()
+            if patch.favorites > 0:
+                patch.favorites -= 1
+                patch.save()
+        else:
+            PatchFav.objects.create(patch=patch, user=request.user)
+            patch.favorites += 1
+            patch.save()
+            
+    return render(request, 'generic/modal/components/modal_favorite_button.html', {'element': patch})

@@ -106,6 +106,18 @@ class PatchData(models.Model):
             models.UniqueConstraint(fields=['patch', 'field'], name='patchdata_identifier')
         ]
         
+class PatchFav(models.Model):
+    patch = models.ForeignKey('patches.Patch', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['patch', 'user'], name='patchfav_identifier')
+        ]
+    
+    def __str__(self):
+        return self.user.username+'-'+self.patch.name
+        
 def get_hash_code_from_patchDatas(patch_data):
     data_list = []
     for pd in patch_data:

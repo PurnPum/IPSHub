@@ -1,0 +1,21 @@
+--- main_menu.asm	2024-08-16 19:48:03.880557243 +0200
++++ main_menu_modified.asm	2024-08-16 19:49:57.828242797 +0200
+@@ -65,12 +65,12 @@
+ 
+ .Strings:
+ ; entries correspond to MAINMENUITEM_* constants
+-	db "CONTINUE@"
+-	db "NEW GAME@"
+-	db "OPTION@"
+-	db "MYSTERY GIFT@"
+-	db "MOBILE@"
+-	db "MOBILE STUDIUM@"
++	db "CONTINUAR@"
++	db "NOVO XOGO@"
++	db "OPCIONS@"
++	db "AGASALLO@"
++	db "MOBIL@"
++	db "MOBIL ESTADIO@"
+ if DEF(_DEBUG)
+ 	db "DEBUG ROOM@"
+ endc

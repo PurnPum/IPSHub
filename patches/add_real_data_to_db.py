@@ -228,11 +228,19 @@ These rules and many other subsets of rules will be implemented within this cate
     
     category17 = Category()
     category17.image_ref = '/static/images/other.webp'
-    category17.name = 'Translated text to Spanish'
+    category17.name = 'Translated yellow text to Spanish'
     category17.description = 'Translates part of the game into Spanish.'
     category17.parent_category = None
     category17.base_game = Game.objects.get(title='Pokémon Yellow')
     category17.save()
+    
+    category18 = Category()
+    category18.image_ref = '/static/images/other.webp'
+    category18.name = 'Translated crystal text to Spanish'
+    category18.description = 'Translates part of the game into Spanish.'
+    category18.parent_category = None
+    category18.base_game = Game.objects.get(title='Pokémon Crystal')
+    category18.save()
     
 def add_real_patch_options_to_db():
     pOption = PatchOption()
@@ -308,10 +316,16 @@ def add_real_patch_options_to_db():
     pOption11.save()
     
     pOption12 = PatchOption()
-    pOption12.category = Category.objects.get(name='Translated text to Spanish', base_game__title='Pokémon Yellow')
-    pOption12.name = 'Translated text to Spanish'
+    pOption12.category = Category.objects.get(name='Translated yellow text to Spanish', base_game__title='Pokémon Yellow')
+    pOption12.name = 'Translated yellow text to Spanish'
     pOption12.description = 'Translates the text to Spanish.'
     pOption12.save()
+    
+    pOption13 = PatchOption()
+    pOption13.category = Category.objects.get(name='Translated crystal text to Spanish', base_game__title='Pokémon Crystal')
+    pOption13.name = 'Translated crystal text to Spanish'
+    pOption13.description = 'Translates the text to Spanish.'
+    pOption13.save()
     
 def add_real_fields_to_db():
     
@@ -456,13 +470,23 @@ def add_real_fields_to_db():
     field14.save()
     
     field15 = POField()
-    field15.name = 'Binary selector translate'
-    field15.description = 'Selection between true and false'
+    field15.name = 'Translate yellow main menu'
+    field15.description = 'Translates the Continue/New Game menu'
     field15.field_type = 'Boolean'
     field15.initial_data = json.dumps({'data': ["True", "False"]})
     field15.parent_field = None
     field15.default_data = json.dumps({'data': "False"})
-    field15.patch_option = PatchOption.objects.get(name='Translated text to Spanish')
+    field15.patch_option = PatchOption.objects.get(name='Translated yellow text to Spanish')
+    field15.save()
+    
+    field15 = POField()
+    field15.name = 'Translate crystal main menu'
+    field15.description = 'Translates the Continue/New Game menu'
+    field15.field_type = 'Boolean'
+    field15.initial_data = json.dumps({'data': ["True", "False"]})
+    field15.parent_field = None
+    field15.default_data = json.dumps({'data': "False"})
+    field15.patch_option = PatchOption.objects.get(name='Translated crystal text to Spanish')
     field15.save()
     
 def add_real_patches_to_db():
@@ -574,8 +598,15 @@ def add_real_diff_files_to_db():
     dfile.filename = 'pokeyellow/engine/menus/main_menu.patch'
     dfile.original_file = 'engine/menus/main_menu.asm'
     dfile.trigger_value = 'True'
-    dfile.field = POField.objects.get(name='Binary selector translate')
+    dfile.field = POField.objects.get(name='Translate yellow main menu')
     dfile.save()
+    
+    dfile2 = DiffFile()
+    dfile2.filename = 'pokecrystal/engine/menus/main_menu.patch'
+    dfile2.original_file = 'engine/menus/main_menu.asm'
+    dfile2.trigger_value = 'True'
+    dfile2.field = POField.objects.get(name='Translate crystal main menu')
+    dfile2.save()
     
 def add_real_patch_data_to_db(patch):
     for po in patch.patch_options.all():
@@ -587,7 +618,6 @@ def add_real_patch_data_to_db(patch):
             patchData.save()
                 
 def add_anonymous_user_to_db():
-    
     if not User.objects.filter(username='anonymous').exists():
         user = User.objects.create_user(
         username='anonymous', 
