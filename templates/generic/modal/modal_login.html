@@ -1,0 +1,6 @@
+<div id="login_modal" class="modal fade" tabindex="-1" aria-labelledby="auth_modal_title" aria-hidden="true"
+    hx-get="{% url 'modal_login' %}"
+    hx-trigger="begin_login"
+    hx-target="#login_body_id">
+    {% include "generic/modal/modal_auth.html" with label_title="Login" modal_body_id="login_body_id" %}
+</div>

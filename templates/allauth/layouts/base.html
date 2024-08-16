@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block login_nav %}{% include 'navbar.html' %}{% endblock %}
+
+{% block base_content %}
+<content class="block">
+    <div class="card p-5 d-flex justify-content-center">
+        {% block content %}
+        {% endblock %}
+    </div>
+</content>
+
+{% include 'generic/modal/modal_login.html' %}
+{% endblock %}
+
+{% block login_footer %}{% include 'footer.html' %}{% endblock %}

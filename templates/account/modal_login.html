@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+            <div class="col d-flex justify-content-center">
+                <button class="col-6 btn btn-info" 
+                _="on click
+                    if #login_form matches @hidden
+                        add @hidden to #signup_form
+                        remove @hidden from #login_form
+                        add .btn-info to me
+                        remove .btn-outline-primary from me
+                        add .btn-outline-primary to the next <button/>
+                        remove .btn-info from the next <button/>
+                    end">
+                    <h2 class="mb-2">Sign in</h2>
+                </button>
+                <button class="col-6 btn btn-outline-primary" 
+                _="on click
+                    if #signup_form matches @hidden
+                        add @hidden to #login_form
+                        remove @hidden from #signup_form
+                        add .btn-info to me
+                        remove .btn-outline-primary from me
+                        add .btn-outline-primary to the previous <button/>
+                        remove .btn-info from the previous <button/>
+                    end">
+                    <h2 class="mb-2">Sign up</h2>
+                </button>
+            </div>
+            <div class="card-body p-3 text-center">
+                <form id="login_form" action="{% url 'account_login' %}" method="post">
+                    {% csrf_token %}
+                    <div data-mdb-input-init class="form-outline mb-3 mt-2">
+                        <label for="login_username_input">Username:</label>
+                        <input type="text" name="login" placeholder="Username" autocomplete="username" maxlength="150" required="" id="login_username_input" class="form-control form-control-lg">
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-2">
+                        <label for="login_password_input">Password:</label>
+                        <input type="password" name="password" placeholder="Password" autocomplete="current-password" required="" aria-describedby="login_password_helptext" id="login_password_input" class="form-control form-control-lg">
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-2">
+                        <span class="helptext" id="login_password_helptext"><a href="{% url 'account_reset_password' %}">Forgot your password?</a></span>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label for="login_remember">Remember Me:</label>
+                        <input type="checkbox" name="remember" id="login_remember">
+                    </div>
+
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                </form>
+                <form hidden id="signup_form" action="{% url 'account_signup' %}" method="post">
+                    {% csrf_token %}
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label for="signup_username_input">Username:</label>
+                        <input type="text" name="username" placeholder="Username" autocomplete="username" maxlength="150" required="" id="signup_username_input" class="form-control form-control-lg">
+                    </div>
+                    
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label for="signup_email">Email:</label>
+                        <input type="email" name="email" placeholder="Email address" autocomplete="email" maxlength="320" required="" id="signup_email" class="form-control form-control-lg">
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-2">
+                        <label class="form-label m-0 pt-2" for="signup_password_input">Password</label>
+                        <input type="password" name="password1" placeholder="Password" autocomplete="new-password" required="" id="signup_password_input" class="form-control form-control-lg" />
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-2">
+                        <label for="signup_password_input_second">Password (again):</label>
+                        <input type="password" name="password2" placeholder="Password (again)" autocomplete="new-password" required="" id="signup_password_input_second" class="form-control form-control-lg">
+                    </div>
+
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

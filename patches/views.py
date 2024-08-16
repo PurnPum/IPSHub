@@ -189,7 +189,8 @@ def gather_form_data(request):
                         'element': patch,
                         'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
                         'game': patch.get_base_game(),
-                        'patchgen': 'True'
+                        'patchgen': 'True',
+                        'in_patchgen': 'True'
                     }
                     time.sleep(1)
                     cache.set(progress_ck, 100)
@@ -203,7 +204,8 @@ def gather_form_data(request):
                     'element': existing_patch,
                     'patch_config': { po: PatchData.objects.filter(patch=existing_patch, field__patch_option=po) for po in patch_options },
                     'game': existing_patch.get_base_game(),
-                    'duplicated': 'True'
+                    'duplicated': 'True',
+                    'in_patchgen': 'True'
                 }
                 return render(request,'generic/modal/modal_patchgen_result.html', context)
 
@@ -219,9 +221,9 @@ def generate_patch_object(request,patch_options,forms):
     patch.downloads = 0
     patch.favorites = 0
     if request.user.is_authenticated:
-        patch.creator = User.objects.get(username='admin') # TODO : Add user system
-    else:
         patch.creator = request.user
+    else:
+        patch.creator = User.objects.get(username='anonymous')
     patch.creation_date = datetime.date.today()
     patch.download_link = 'TEMPORAL_PLACEHOLDER'
     patch.save()
@@ -365,7 +367,7 @@ def patches(request):
 
 def main_filter(request,htmlkey,sorting_order='descending',extravars=None,game_id=None,category_id=None,patch_id=None,sorting_by=None):
     
-    default_extravars = {'title':'Patches','CSS':'patches','nav_text_color':'.text-info','nav_main_color':'.bg-primary'}
+    default_extravars = {'title':'Patches','CSS':'patches','nav_text_color':'.text-info','nav_main_color':'.bg-primary','fixed_top':'True'}
 
     if extravars is None:
         extravars = {}
@@ -579,3 +581,6 @@ def download_patch(request):
         return response
     else:
         raise Http404("File not found")
+    
+def modal_login(request):
+    return render(request, 'account/modal_login.html')

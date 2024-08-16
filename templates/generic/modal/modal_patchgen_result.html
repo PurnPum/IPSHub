@@ -1,5 +1,7 @@
 {% extends "generic/modal/components/modal.html" %}
 
+{% load custom_functions %}
+
 {% block extra_header %}{% if duplicated %}
     <div class="p-1 mb-2 bg-danger text-white">
         <h4 class="mb-0 fw-bold text-center">Patch already exists</h4>
@@ -25,4 +27,12 @@
     </div>
 {% endblock %}
 
-{% block modal_buttons %}{% include 'patches/main_accordion_buttons.html' with patch=element in_modal="true" %}{% endblock %}
+{% block modal_buttons %}
+{% if in_patchgen %}
+    <div class="col d-flex justify-content-around">
+        {% include "generic/accordion/accordion_generic_button.html" with href=element|getpatchurl button_color="success" extra_btn_classes="p-0" extra_a_classes="pe-1 col-12" size_inline="xl" size_none="xl" text="Download" text_short="Get" icon="bi-download" hs_code="" %}
+    </div>
+{% else %}
+    {% include 'patches/main_accordion_buttons.html' with patch=element in_modal="true" %}
+{% endif %}
+{% endblock %}

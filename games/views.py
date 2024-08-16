@@ -22,7 +22,7 @@ def main_filter_patchgen(request):
 
 def main_filter(request,extravars=None,html='games/games.html'):
     
-    default_extravars = {'title':'Games','CSS':'games','nav_text_color':'.text-warning-emphasis','nav_main_color':'.bg-success','patchgen':"False"}
+    default_extravars = {'title':'Games','CSS':'games','nav_text_color':'.text-warning-emphasis','nav_main_color':'.bg-success','patchgen':"False",'fixed_top':'True'}
     
     if extravars is None:
         extravars = {}

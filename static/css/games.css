@@ -5,8 +5,68 @@
     --custom-nav-main-color: rgb(8, 112, 64);
     --custom-nav-darker-color: rgb(6, 84, 58);
     --custom-nav-lighter-color: rgb(20, 190, 120);
+    --custom-nav-darkest-color: rgb(2, 52, 39);
     --custom-sorting-color: rgb(0, 255, 156);
     --custom-sorting-hover-color: rgb(0, 127, 64);
     --custom-disabled-color: grey;
     --custom-accordion-active-color: rgb(255, 218, 106);
   }
+
+.btn-primary {
+  --bs-bg-opacity: 1;
+  background-color: var(--custom-nav-darker-color) !important;
+  border-color: var(--custom-nav-lighter-color) !important;
+  color: var(--bs-accordion-btn-color) !important;
+  --bs-link-hover-color: var(--custom-nav-darker-color) !important;
+  --bs-link-hover-decoration: none !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--custom-nav-main-color) !important;
+    border-color: var(--custom-nav-main-color) !important;
+    color: var(--custom-accordion-active-color) !important;
+}
+
+.btn-primary:active {
+    background-color: var(--custom-nav-lighter-color) !important;
+    border-color: var(--custom-nav-darker-color) !important;
+}
+
+.btn-outline-primary {
+  --bs-bg-opacity: 1;
+  border-color: var(--custom-nav-main-color) !important;
+  color: var(--custom-nav-main-color) !important;
+  --bs-link-hover-color: var(--custom-nav-darker-color) !important;
+  --bs-link-hover-decoration: none !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--custom-sorting-hover-color) !important;
+    border-color: var(--custom-sorting-hover-color) !important;
+    color: var(--custom-accordion-active-color) !important;
+}
+
+.btn-outline-primary:active {
+    background-color: var(--custom-nav-lighter-color) !important;
+    border-color: var(--custom-nav-darker-color) !important;
+}
+
+.btn-info {
+  --bs-bg-opacity: 1;
+  background-color: var(--custom-nav-darkest-color) !important;
+  border-color: var(--custom-nav-darker-color) !important;
+  color: var(--bs-accordion-btn-color) !important;
+  --bs-link-hover-color: var(--custom-nav-darker-color) !important;
+  --bs-link-hover-decoration: none !important;
+}
+
+.btn-info:hover {
+    background-color: var(--custom-nav-darkest-color) !important;
+    border-color: var(--custom-nav-darker-color) !important;
+    color: var(--custom-disabled-color) !important;
+}
+
+.btn-info:active {
+    background-color: var(--custom-nav-lighter-color) !important;
+    border-color: var(--custom-nav-darker-color) !important;
+}
