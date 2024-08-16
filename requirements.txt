@@ -1,6 +1,8 @@
 asgiref==3.8.1
 Django==5.0.4
+django-allauth==64.1.0
+factory-boy==3.3.0
+Faker==25.3.0
+python-dateutil==2.9.0.post0
+six==1.16.0
 sqlparse==0.5.0
-make==4.3
-gcc==12.2.0
-git==2.39.2

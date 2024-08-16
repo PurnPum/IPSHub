@@ -1,0 +1,9 @@
+make
+gcc
+git
+diff
+patch
+xdelta3
+patch
+coreutils
+gawk
