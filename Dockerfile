@@ -15,6 +15,13 @@ COPY apt-requirements.txt .
 # Install system dependencies
 RUN apt-get update && xargs apt-get install -y < apt-requirements.txt && rm -rf /var/lib/apt/lists/*
 
+RUN wget https://github.com/gbdev/rgbds/releases/download/v0.7.0/rgbds-0.7.0-linux-x86_64.tar.xz \
+    && mkdir rgbds \
+    && tar xf rgbds-0.7.0-linux-x86_64.tar.xz -C rgbds \
+    && cd rgbds \
+    && ./install.sh \
+    && rm ../rgbds-0.7.0-linux-x86_64.tar.xz  # Clean up the tar file
+
 # Install pip requirements
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
@@ -28,4 +35,15 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi"]
+
+# RUN python manage.py collectstatic --noinput
+
+RUN python manage.py migrate --noinput
+
+RUN python manage.py makemigrations --noinput
+
+RUN python manage.py shell -c "from django.contrib.auth.models import User; User.objects.get_or_create(username='anonymous', defaults={'email': 'anonymous@example.com'})"
+
+#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi", "-k", "gevent", "--worker-connections", "1000"]
+#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi", "--workers", "3"]

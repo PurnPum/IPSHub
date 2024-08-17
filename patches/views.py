@@ -125,7 +125,6 @@ def gather_form_data(request):
     current_task_ck = f'current_task_{request.user.id}'
     cache.set(progress_ck, 0)
     cache.set(current_task_ck, 'Loading patch data...')
-    time.sleep(1)
     
     patch_name = request.POST.get('patchName')
     
@@ -147,7 +146,6 @@ def gather_form_data(request):
         forms = [DynamicPatchForm(request.POST, patch_options=[po], patch=None) for po in patch_options]
         cache.set(progress_ck, 4)
         cache.set(current_task_ck, 'Validating forms...')
-        time.sleep(1)
         if any([not form.is_valid() for form in forms]):
             print("INVALID FORM")
             patchgen_error = "Invalid form: " + form
@@ -169,14 +167,12 @@ def gather_form_data(request):
                 return render(request,'generic/modal/modal_patchgen_error.html', context)
             cache.set(progress_ck, 7)
             cache.set(current_task_ck, 'Creating objects...')
-            time.sleep(1)
             temporal_hash = get_hash_code_from_patchDatas(list_patchless_data)
             if not is_duplicated_temporal_hash(temporal_hash):
                 with transaction.atomic():
                     patch = generate_patch_object(request,patch_options,forms)
                     cache.set(progress_ck, 15)
                     cache.set(current_task_ck, 'Beggining patch generation...')
-                    time.sleep(1)
                 if isinstance(patch, Patch):
                     base_game = patch.get_base_game()
                     error_message = generate_real_patch(request,patch,base_game)
@@ -192,9 +188,9 @@ def gather_form_data(request):
                         'patchgen': 'True',
                         'in_patchgen': 'True'
                     }
-                    time.sleep(1)
                     cache.set(progress_ck, 100)
                     cache.set(current_task_ck, 'Finalizing...')
+                    print(context)
                     return render(request, 'generic/modal/modal_patchgen_result.html', context)
                 else:
                     patchgen_error = str(patch)
@@ -247,7 +243,7 @@ def generate_real_patch(request, patch, game):
     current_task_ck = f'current_task_{request.user.id}'
     # Define paths
     repo_url = game.repository
-    repo_dir = settings.TEMP_ROOT
+    repo_dir = settings.CLONE_DIR
     output_diff = os.path.join(settings.PATCH_ROOT, f'{patch.id}.xdelta')
      
     # Cleanup
@@ -263,7 +259,7 @@ def generate_real_patch(request, patch, game):
     generate_patch_script = os.path.join(settings.BASE_DIR, 'static/code/generate_patch.sh')
     verify_rename_script = os.path.join(settings.BASE_DIR, 'static/code/verify_rename.sh')
 
-    patch_datas = PatchData.objects.filter(patch=patch) # All patch datas are the ones recently created, so no filtering needed
+    patch_datas = PatchData.objects.filter(patch=patch) # All patch datas are the ones recently created, so no extra filtering needed
     
     diff_files = []
     for pd in patch_datas:
@@ -272,8 +268,10 @@ def generate_real_patch(request, patch, game):
         for df in dfs.filter(trigger_value=pd.data):
             diff_files.append(df)
             
-    original_files = ','.join([str(settings.TEMP_ROOT / df.original_file) for df in diff_files])
+    original_files = ','.join([str(settings.CLONE_DIR / df.original_file) for df in diff_files])
     filenames = ','.join([str(settings.DIFF_ROOT / df.filename) for df in diff_files])
+    print(original_files)
+    print(filenames)
 
     # Run the shell script with the necessary arguments
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -286,12 +284,14 @@ def generate_real_patch(request, patch, game):
             {'args':[generate_patch_script, output_diff, game.patch_file_name, repo_dir],'progress': 95, 'current_task': "Creating patch file...", 'error_msg': "Internal error while creating the patch file"}
             ]
     
+    print(settings.LOGS_DIR / str(str(patch.id) + '-' + current_datetime + '.log'))
+    
     with open(settings.LOGS_DIR / str(str(patch.id) + '-' + current_datetime + '.log'), 'w') as f:
         error_message = None
         
         for step in data:
+            print(step)
             error_message = run_subprocess(step['args'],f,patch,progress_ck,current_task_ck,step['progress'],step['error_msg'],step['current_task'])
-            time.sleep(1)
             if error_message is not None:
                 return error_message
 
@@ -349,13 +349,13 @@ def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
 
 def patches(request):
     
-    """add_real_data_to_db.clean_db()
+    add_real_data_to_db.clean_db()
     add_real_data_to_db.add_real_games_to_db()
     add_real_data_to_db.add_real_categories_to_db()
     add_real_data_to_db.add_real_patch_options_to_db()
     add_real_data_to_db.add_real_fields_to_db()
     add_real_data_to_db.add_real_patches_to_db()
-    add_real_data_to_db.add_real_diff_files_to_db()"""
+    add_real_data_to_db.add_real_diff_files_to_db()
 
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')

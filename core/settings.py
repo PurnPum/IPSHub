@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from os import path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,9 +32,18 @@ PATCH_ROOT = BASE_DIR / 'media/patches'
 
 LOGS_DIR = BASE_DIR / 'media/logs'
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_ROOT = path.join(BASE_DIR, 'static')
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (path.join(BASE_DIR, 'static'),)
+
 DIFF_ROOT = BASE_DIR / 'static/diffs'
 
-TEMP_ROOT = BASE_DIR / 'static/clones'
+CLONE_DIR = BASE_DIR / 'static/clones'
 
 # Application definition
 
@@ -43,7 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'whitenoise.runserver_nostatic',
+    #'django.contrib.staticfiles',
     'allauth',
     'allauth.account',
     'patches',
@@ -53,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -132,12 +144,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [ BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

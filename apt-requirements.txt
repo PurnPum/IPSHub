@@ -1,9 +1,10 @@
 make
 gcc
 git
-diff
+diffutils
 patch
 xdelta3
-patch
 coreutils
 gawk
+wget
+xz-utils

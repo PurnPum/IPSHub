@@ -2,14 +2,14 @@
 
 <button class="btn btn-success col-12 d-flex justify-content-center align-items-center" data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
 _=" on load if @data-authenticated is 'false' then set @disabled to 'disabled' then remove .btn-success from me then add .btn-secondary to me end
-    {% if element|hasuserlikedpatch:user %}
+    {% if user.is_authenticated and element|hasuserlikedpatch:user %}
         on mouseenter remove .btn-success from me add .btn-danger to me then remove .bi-heart-fill from #favorite_icon then add .bi-heartbreak-fill to #favorite_icon
         on mouseleave remove .btn-danger from me add .btn-success to me then remove .bi-heartbreak-fill from #favorite_icon then add .bi-heart-fill to #favorite_icon
     {% else %}
         on mouseenter remove .bi-heart from #favorite_icon then add .bi-arrow-through-heart-fill to #favorite_icon
         on mouseleave remove .bi-arrow-through-heart-fill from #favorite_icon then add .bi-heart to #favorite_icon
     {% endif %}">
-    {% if element|hasuserlikedpatch:user %}
+    {% if user.is_authenticated and element|hasuserlikedpatch:user %}
         <i id="favorite_icon" class="bi bi-heart-fill me-2 d-flex"></i>
     {% else %}
         <i id="favorite_icon" class="bi bi-heart me-2 d-flex"></i>

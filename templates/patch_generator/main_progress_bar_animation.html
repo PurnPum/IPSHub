@@ -4,7 +4,7 @@
     style="width: {{ progress }}%;"
     hx-get="{% url 'get_progress_percentile' %}"
     hx-swap="outerHTML"
-    hx-trigger="every 1s visible"
+    hx-trigger="every 1s"
     _="on htmx:afterSettle
         set #progress_bar_task's innerText to my innerText">
     {{ current_task }}
