@@ -38,12 +38,17 @@ USER appuser
 
 # RUN python manage.py collectstatic --noinput
 
-RUN python manage.py migrate --noinput
+ENV DJANGO_SUPERUSER_USERNAME=admin \
+    DJANGO_SUPERUSER_EMAIL=admin@example.com \
+    DJANGO_SUPERUSER_PASSWORD=adminpassword
+
+RUN python manage.py migrate --noinput && \
+    python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); \
+    User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists() or \
+    User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD')"
 
 RUN python manage.py makemigrations --noinput
 
 RUN python manage.py shell -c "from django.contrib.auth.models import User; User.objects.get_or_create(username='anonymous', defaults={'email': 'anonymous@example.com'})"
 
-#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi", "-k", "gevent", "--worker-connections", "1000"]
-#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi", "--workers", "3"]
