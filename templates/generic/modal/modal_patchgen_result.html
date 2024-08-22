@@ -30,7 +30,7 @@
 {% block modal_buttons %}
 {% if in_patchgen %}
     <div class="col d-flex justify-content-around">
-        {% include "generic/accordion/accordion_generic_button.html" with href=element|getpatchurl button_color="success" extra_btn_classes="p-0" extra_a_classes="pe-1 col-12" size_inline="xl" size_none="xl" text="Download" text_short="Get" icon="bi-download" hs_code="" %}
+        {% include "generic/accordion/accordion_generic_button.html" with href=element|getpatchurl button_color="success" extra_btn_classes="p-0" extra_a_classes="pe-1 col-12" size_inline="sm" size_none="sm" text="Download" text_short="Download" icon="bi-download" hs_code="" %}
     </div>
 {% else %}
     {% include 'patches/main_accordion_buttons.html' with patch=element in_modal="true" %}

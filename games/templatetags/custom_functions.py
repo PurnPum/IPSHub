@@ -89,7 +89,4 @@ def whichcategoryisparent(listcats,cat2):
 
 @register.filter
 def hasuserlikedpatch(patch,user):
-    print(patch)
-    print(user)
-    print(PatchFav.objects.filter(patch=patch,user=user).exists())
     return PatchFav.objects.filter(patch=patch,user=user).exists()

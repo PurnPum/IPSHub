@@ -14,7 +14,7 @@ class Patch(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     creation_date = models.DateField(auto_now_add=True)
     patch_options = models.ManyToManyField('PatchOption', related_name='patches', blank=False) # TODO Discard this relationship, since we can go through PatchData and POFields to have a relation
-    download_link = models.TextField(max_length=500) # TODO Change to URLField later
+    download_link = models.TextField(max_length=500)
     patch_hash = models.CharField(max_length=64, editable=False, unique=True, blank=True, null=True)
     
     def __str__(self):

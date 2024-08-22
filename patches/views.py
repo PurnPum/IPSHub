@@ -19,6 +19,15 @@ from . import add_real_data_to_db
 import os
 import subprocess
 
+def add_data_to_bd():
+    add_real_data_to_db.clean_db()
+    add_real_data_to_db.add_real_games_to_db()
+    add_real_data_to_db.add_real_categories_to_db()
+    add_real_data_to_db.add_real_patch_options_to_db()
+    add_real_data_to_db.add_real_fields_to_db()
+    add_real_data_to_db.add_real_patches_to_db()
+    add_real_data_to_db.add_real_diff_files_to_db()
+
 def paginate(request, qs, limit=4):
     paginated_qs = Paginator(qs, limit)
     page_no = request.GET.get("page")
@@ -190,7 +199,7 @@ def gather_form_data(request):
                     }
                     cache.set(progress_ck, 100)
                     cache.set(current_task_ck, 'Finalizing...')
-                    print(context)
+
                     return render(request, 'generic/modal/modal_patchgen_result.html', context)
                 else:
                     patchgen_error = str(patch)
@@ -270,8 +279,6 @@ def generate_real_patch(request, patch, game):
             
     original_files = ','.join([str(settings.CLONE_DIR / df.original_file) for df in diff_files])
     filenames = ','.join([str(settings.DIFF_ROOT / df.filename) for df in diff_files])
-    print(original_files)
-    print(filenames)
 
     # Run the shell script with the necessary arguments
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -284,13 +291,10 @@ def generate_real_patch(request, patch, game):
             {'args':[generate_patch_script, output_diff, game.patch_file_name, repo_dir],'progress': 95, 'current_task': "Creating patch file...", 'error_msg': "Internal error while creating the patch file"}
             ]
     
-    print(settings.LOGS_DIR / str(str(patch.id) + '-' + current_datetime + '.log'))
-    
     with open(settings.LOGS_DIR / str(str(patch.id) + '-' + current_datetime + '.log'), 'w') as f:
         error_message = None
         
         for step in data:
-            print(step)
             error_message = run_subprocess(step['args'],f,patch,progress_ck,current_task_ck,step['progress'],step['error_msg'],step['current_task'])
             if error_message is not None:
                 return error_message
@@ -348,14 +352,6 @@ def get_all_categories_from_game_by_parents(game_id=None,parent_id=None):
     return categories
 
 def patches(request):
-    
-    add_real_data_to_db.clean_db()
-    add_real_data_to_db.add_real_games_to_db()
-    add_real_data_to_db.add_real_categories_to_db()
-    add_real_data_to_db.add_real_patch_options_to_db()
-    add_real_data_to_db.add_real_fields_to_db()
-    add_real_data_to_db.add_real_patches_to_db()
-    add_real_data_to_db.add_real_diff_files_to_db()
 
     game_id = request.GET.get('selectedGame','any')
     category_id = request.GET.get('selectedCategory','any')
@@ -573,14 +569,15 @@ def load_modal(request):
 
 def download_patch(request):
     patch = request.GET.get('patch')
-    patch_file = f'{patch}.xdelta'
-    file_path = os.path.join(settings.PATCH_ROOT, patch_file)
-    if os.path.exists(file_path):
-        real_patch = Patch.objects.get(id=patch)
+    real_patch = Patch.objects.get(id=patch)
+    patch_file_path = real_patch.download_link
+    patch_file_name = f'{patch}.xdelta'
+    
+    if os.path.exists(patch_file_path):    
         real_patch.downloads += 1
         real_patch.save()
-        response = FileResponse(open(file_path, 'rb'))
-        response['Content-Disposition'] = f'attachment; filename="{patch_file}"'
+        response = FileResponse(open(patch_file_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{patch_file_name}"'
         return response
     else:
         raise Http404("File not found")
