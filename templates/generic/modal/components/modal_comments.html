@@ -1,0 +1,32 @@
+<div id="comment_list" class="comments-list">
+    {% for comment in latest_comments %}
+        <div class="comment">
+            <p>
+                <strong>{{ comment.author.username }}</strong>
+                <span title="{{ comment.created|date:'M d, Y H:i' }}">
+                    {{ comment.created|timesince }} ago
+                </span>
+            </p>
+            <p>{{ comment.comment }}</p>
+            <div class="d-flex">
+                <form hx-post="{% url 'like_patch_comment' comment.id %}" hx-swap="innerHTML" hx-target="#like_comment_{{ comment.id }}_button" class="mb-0"
+                _="on htmx:afterRequest if detail.elt.tagName == 'FORM' then send update_dislikes to #dislike_comment_{{ comment.id }}_button">
+                    {% csrf_token %}
+                    <div hx-get="{% url 'update_likes_patch_comment' comment.id %}" hx-target="this" hx-trigger="update_likes" id="like_comment_{{ comment.id }}_button">
+                        {% include 'generic/modal/components/modal_like_comment_button.html' with dislike="False" element=comment %}
+                    </div>
+                </form>
+                <form hx-post="{% url 'dislike_patch_comment' comment.id %}" hx-swap="innerHTML" hx-target="#dislike_comment_{{ comment.id }}_button" class="mb-0"
+                _="on htmx:afterRequest if detail.elt.tagName == 'FORM' then send update_likes to #like_comment_{{ comment.id }}_button">
+                    {% csrf_token %}
+                    <div hx-get="{% url 'update_dislikes_patch_comment' comment.id %}" hx-target="this" hx-trigger="update_dislikes" id="dislike_comment_{{ comment.id }}_button">
+                        {% include 'generic/modal/components/modal_like_comment_button.html' with dislike="True" element=comment %}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+</div>

@@ -1,0 +1,27 @@
+{% load custom_functions %}
+
+<button class="d-flex justify-content-center align-items-center" 
+        data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+        _="on load if @data-authenticated is 'false' then set @disabled to 'disabled' end">
+    
+    {% with element|hasuserinteractedwithcomment:user as user_interacted %}
+        {% with element|howhasuserratedcomment:user as user_rating %}
+            {% if dislike == "True" %}
+                <i id="dislike_icon_{{ element.id }}" 
+                   class="bi 
+                          {% if user_interacted and user_rating == False %}bi-hand-thumbs-down-fill{% else %}bi-hand-thumbs-down{% endif %}
+                          me-2 d-flex align-items-center">
+                    {{ element|dislikespercomment }}
+                </i>
+            {% else %}
+                <i id="like_icon_{{ element.id }}" 
+                   class="bi 
+                          {% if user_interacted and user_rating == True %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %}
+                          me-2 d-flex align-items-center">
+                    {{ element|likespercomment }}
+                </i>
+            {% endif %}
+        {% endwith %}
+    {% endwith %}
+
+</button>

@@ -2,7 +2,7 @@ import datetime, json, time
 from django.db import IntegrityError, transaction
 from django.forms import ValidationError
 from django.http import FileResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery, Q
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ from django.core.cache import cache
 
 from games.views import get_category_hierarchy, main_filter as g_main_filter
 from patches.forms import DynamicPatchForm
-from .models import Patch, PatchFav, PatchOption, POField, PatchData, DiffFile, get_hash_code_from_patchDatas
+from .models import Patch, PatchFav, PatchOption, POField, PatchData, DiffFile, PatchComment, PatchCommentLike, get_hash_code_from_patchDatas
 from categories.models import Category
 from games.models import Game
 from . import add_real_data_to_db
@@ -560,7 +560,8 @@ def load_modal(request):
         context = {
             'element': patch,
             'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
-            'game': patch.get_base_game()
+            'game': patch.get_base_game(),
+            'latest_comments': PatchComment.objects.filter(patch=patch).order_by('-created')[:5]
         }
     else:
         context={'element': 'any'}
@@ -573,7 +574,7 @@ def download_patch(request):
     patch_file_path = real_patch.download_link
     patch_file_name = f'{patch}.xdelta'
     
-    if os.path.exists(patch_file_path):    
+    if os.path.exists(patch_file_path):
         real_patch.downloads += 1
         real_patch.save()
         response = FileResponse(open(patch_file_path, 'rb'))
@@ -585,9 +586,8 @@ def download_patch(request):
 def modal_login(request):
     return render(request, 'account/modal_login.html')
 
-def favorite_patch(request):
-    patch_id = request.GET.get('patch')
-    patch = Patch.objects.get(id=patch_id)
+def favorite_patch(request,patch_id):
+    patch = get_object_or_404(Patch, id=patch_id)
     if not request.user.is_authenticated:
         print("Only logined users can favorite a patch!")
     else:
@@ -603,3 +603,41 @@ def favorite_patch(request):
             patch.save()
             
     return render(request, 'generic/modal/components/modal_favorite_button.html', {'element': patch})
+
+def add_patch_comment(request,patch_id):
+    patch = get_object_or_404(Patch, id=patch_id)
+    
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            PatchComment.objects.create(
+                patch=patch,
+                author=request.user,
+                comment=comment_text
+            )
+    return render(request, 'generic/modal/components/modal_comments.html', {'latest_comments': PatchComment.objects.filter(patch=patch).order_by('-created')[:5]})
+
+def like_patch_comment(request,comment_id,dislike=False):
+    comment = get_object_or_404(PatchComment, id=comment_id)
+    if not request.user.is_authenticated:
+        print("Only logined users can like a comment!")
+    else:
+        commentlike_match = PatchCommentLike.objects.filter(comment=comment, user=request.user)
+        if commentlike_match.exists():
+            current_value = commentlike_match.first().likeordislike
+            if current_value != dislike:
+                commentlike_match.delete()
+            else:
+                commentlike_match.update(likeordislike=not dislike)
+        else:
+            PatchCommentLike.objects.create(comment=comment, user=request.user, likeordislike=not(dislike))
+    return render(request, 'generic/modal/components/modal_like_comment_button.html', {'element': comment, 'dislike':str(dislike)})
+
+def dislike_patch_comment(request,comment_id):
+    return like_patch_comment(request,comment_id,dislike=True)
+
+def update_likes_patch_comment(request,comment_id):
+    return render(request, 'generic/modal/components/modal_like_comment_button.html', {'element': get_object_or_404(PatchComment, id=comment_id), 'dislike':"False"})
+
+def update_dislikes_patch_comment(request,comment_id):
+    return render(request, 'generic/modal/components/modal_like_comment_button.html', {'element': get_object_or_404(PatchComment, id=comment_id), 'dislike':"True"})

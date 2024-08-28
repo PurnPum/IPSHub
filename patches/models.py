@@ -117,6 +117,40 @@ class PatchFav(models.Model):
     
     def __str__(self):
         return self.user.username+'-'+self.patch.name
+    
+class PatchComment(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
+    patch = models.ForeignKey('patches.Patch', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField()
+    
+    def __str__(self):
+        try:
+            return f'{self.author.username}: {self.comment}'
+        except:
+            return f'<deleted> : {self.comment}'
+        
+    def getLikes(self):
+        return PatchCommentLike.objects.filter(comment=self, likeordislike=True).count()
+    
+    def getDislikes(self):
+        return PatchCommentLike.objects.filter(comment=self, likeordislike=False).count()
+        
+class PatchCommentLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey('patches.PatchComment', on_delete=models.CASCADE)
+    likeordislike = models.BooleanField()
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['comment', 'user'], name='patchcommentlike_identifier')
+        ]
+    
+    def __str__(self):
+        if self.likeordislike:
+            return self.user.username+' liked comment '+self.comment.comment
+        else:
+            return self.user.username+' disliked comment '+self.comment.comment
         
 def get_hash_code_from_patchDatas(patch_data):
     data_list = []

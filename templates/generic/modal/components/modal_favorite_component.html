@@ -1,7 +1,7 @@
 <div class="card mb-1">
     <div class="card-body">
         {% if user.is_authenticated %}
-            <form hx-post="{% url 'favorite_patch' %}?patch={{ element.id }}" hx-swap="innerHTML" hx-target="#favorite_button" class="mb-0">
+            <form hx-post="{% url 'favorite_patch' element.id %}" hx-swap="innerHTML" hx-target="#favorite_button" class="mb-0">
                 {% csrf_token %}
                 <div id="favorite_button">
                     {% include 'generic/modal/components/modal_favorite_button.html' %}

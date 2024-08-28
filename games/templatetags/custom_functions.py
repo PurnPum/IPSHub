@@ -2,7 +2,7 @@ import json
 from django import template
 from django.urls import reverse
 
-from patches.models import Patch, PatchFav
+from patches.models import Patch, PatchFav, PatchCommentLike
 from ..models import Game
 from ..views import get_category_hierarchy
 from categories.models import Category
@@ -90,3 +90,22 @@ def whichcategoryisparent(listcats,cat2):
 @register.filter
 def hasuserlikedpatch(patch,user):
     return PatchFav.objects.filter(patch=patch,user=user).exists()
+
+@register.filter
+def hasuserinteractedwithcomment(comment,user):
+    return PatchCommentLike.objects.filter(comment=comment,user=user).exists()
+
+@register.filter
+def howhasuserratedcomment(comment,user):
+    if PatchCommentLike.objects.filter(comment=comment,user=user).exists():
+        return PatchCommentLike.objects.get(comment=comment,user=user).likeordislike
+    else:
+        return 'None'
+    
+@register.filter
+def likespercomment(comment):
+    return PatchCommentLike.objects.filter(comment=comment,likeordislike=True).count()
+
+@register.filter
+def dislikespercomment(comment):
+    return PatchCommentLike.objects.filter(comment=comment,likeordislike=False).count()

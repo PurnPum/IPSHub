@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta, date
 import json
 import random
 from games.models import Game
@@ -26,7 +26,7 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://bgb.bircd.org/',
             'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
-            'release_date': datetime.date(2000,9,28),
+            'release_date': date(2000,9,28),
             'repository': 'https://github.com/pret/pokecrystal.git',
             'patch_file_name': 'pokecrystal.gbc',
             'patch_sha': 'f4cd194bdee0d04ca4eac29e09b8e4e9d818c133'
@@ -40,7 +40,7 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://bgb.bircd.org/',
             'type': 'Vanilla Game',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
-            'release_date': datetime.date(1995,9,28),
+            'release_date': date(1995,9,28),
             'repository': 'https://github.com/pret/pokeyellow.git',
             'patch_file_name': 'pokeyellow.gbc',
             'patch_sha': 'cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1'
@@ -54,7 +54,7 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
             'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
-            'release_date': datetime.date(2022,3,16),
+            'release_date': date(2022,3,16),
             'repository': 'https://github.com/pret/pokecrystal.git',
             'patch_file_name': 'pokecrystal.gbc',
             'patch_sha': 'f4cd194bdee0d04ca4eac29e09b8e4e9d818c133'
@@ -68,7 +68,7 @@ def add_real_games_to_db():
             'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
             'type': 'ROM Hack',
             'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
-            'release_date': datetime.date(2021,6,21),
+            'release_date': date(2021,6,21),
             'repository': 'https://github.com/pret/pokeyellow.git',
             'patch_file_name': 'pokeyellow.gbc',
             'patch_sha': 'cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1'
@@ -489,13 +489,28 @@ def add_real_fields_to_db():
     field15.patch_option = PatchOption.objects.get(name='Translated crystal text to Spanish')
     field15.save()
     
+def random_date_current_month():
+    today = datetime.today()
+    start_date = today.replace(day=1)
+    end_date = today
+    
+    # Generate a random number of days between start_date and end_date
+    delta_days = (end_date - start_date).days
+    random_days = random.randint(0, delta_days)
+    
+    # Add the random number of days to the start_date
+    random_date = start_date + timedelta(days=random_days)
+    
+    return random_date.date()
+    
 def add_real_patches_to_db():
+    
     patch = Patch()
     patch.name = 'Basic Nuzlocke Crystal'
     patch.downloads = random.randint(0, 1000)
     patch.favorites = random.randint(0, 1000)
     patch.creator = User.objects.get(username='admin')
-    patch.creation_date = datetime.date.today()
+    patch.creation_date = random_date_current_month()
     patch.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch.save()
     patch.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Crystal', category__base_game__title='Pokémon Crystal'))
@@ -507,7 +522,7 @@ def add_real_patches_to_db():
     patch2.downloads = random.randint(0, 1000)
     patch2.favorites = random.randint(0, 1000)
     patch2.creator = User.objects.get(username='admin')
-    patch2.creation_date = datetime.date.today()
+    patch2.creation_date = random_date_current_month()
     patch2.parent_patch = patch
     patch2.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch2.save()
@@ -520,7 +535,7 @@ def add_real_patches_to_db():
     patch3.downloads = random.randint(0, 1000)
     patch3.favorites = random.randint(0, 1000)
     patch3.creator = User.objects.get(username='admin')
-    patch3.creation_date = datetime.date.today()
+    patch3.creation_date = random_date_current_month()
     patch3.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch3.save()
     patch3.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Yellow', category__base_game__title='Pokémon Yellow'))
@@ -532,7 +547,7 @@ def add_real_patches_to_db():
     patch4.downloads = random.randint(0, 1000)
     patch4.favorites = random.randint(0, 1000)
     patch4.creator = User.objects.get(username='admin')
-    patch4.creation_date = datetime.date.today()
+    patch4.creation_date = random_date_current_month()
     patch4.parent_patch = patch3
     patch4.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch4.save()
@@ -545,7 +560,7 @@ def add_real_patches_to_db():
     patch5.downloads = random.randint(0, 1000)
     patch5.favorites = random.randint(0, 1000)
     patch5.creator = User.objects.get(username='admin')
-    patch5.creation_date = datetime.date.today()
+    patch5.creation_date = random_date_current_month()
     patch5.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch5.save()
     patch5.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal', category__base_game__title='Pokémon Crystal'))
@@ -557,7 +572,7 @@ def add_real_patches_to_db():
     patch6.downloads = random.randint(0, 1000)
     patch6.favorites = random.randint(0, 1000)
     patch6.creator = User.objects.get(username='admin')
-    patch6.creation_date = datetime.date.today()
+    patch6.creation_date = random_date_current_month()
     patch6.download_link = 'static/patches/PokemonCrystalClear/patch.ips'
     patch6.save()
     patch6.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal Clear', category__base_game__title='Pokémon Crystal Clear'))
@@ -569,7 +584,7 @@ def add_real_patches_to_db():
     patch7.downloads = random.randint(0, 1000)
     patch7.favorites = random.randint(0, 1000)
     patch7.creator = User.objects.get(username='admin')
-    patch7.creation_date = datetime.date.today()
+    patch7.creation_date = random_date_current_month()
     patch7.download_link = 'static/patches/PokemonNOBSYellow/patch.ips'
     patch7.save()
     patch7.patch_options.set(PatchOption.objects.filter(category__name='Randomizer NO-BS Yellow', category__base_game__title='Pokémon NO-BS Yellow'))
@@ -581,7 +596,7 @@ def add_real_patches_to_db():
     patch8.downloads = random.randint(0, 1000)
     patch8.favorites = random.randint(0, 1000)
     patch8.creator = User.objects.get(username='admin')
-    patch8.creation_date = datetime.date.today()
+    patch8.creation_date = random_date_current_month()
     patch8.parent_patch = patch3
     patch8.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch8.save()

@@ -23,8 +23,33 @@
             <div class="col-md-12 col-lg-9">
                 {% include 'generic/modal/components/modal_patch_data.html' %}
             </div>
-        </div>
-    </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title d-flex justify-content-center">Comments</h3>
+                        {% if user.is_authenticated %}
+                            <form hx-post="{% url 'add_patch_comment' element.id %}" hx-swap="innerHTML" hx-target="#comment_list" class="mb-0">
+                                {% csrf_token %}
+                                <div class="form-group" _="on click remove @hidden from #submit_comment then remove @hidden from #cancel_comment">
+                                    <textarea name="comment" class="form-control" rows="3" placeholder="Write your comment here..." required></textarea>
+                                </div>
+                                <button hidden id="submit_comment" type="submit" class="btn btn-primary mt-2">Submit Comment</button>
+                                <button hidden id="cancel_comment" type="button" class="btn btn-danger mt-2" _="on click add @hidden to me then add @hidden to #submit_comment">Cancel</button>
+                            </form>
+                        {% else %}
+                            <p>Please <a href="{% url 'account_login' %}">login</a> to add a comment.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="mt-4 card-title">Latest Comments</h2>
+                        {% include 'generic/modal/components/modal_comments.html' %}
+                    </div>
+                </div>
+            </div>
 {% endblock %}
 
 {% block modal_buttons %}
