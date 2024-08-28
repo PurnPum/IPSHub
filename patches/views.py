@@ -557,11 +557,12 @@ def load_modal(request):
     elif patch_id:
         patch = Patch.objects.get(id=patch_id)
         patch_options = PatchOption.objects.filter(id__in=PatchData.objects.filter(patch=patch).values_list('field__patch_option', flat=True).distinct())
+        paginated_comments = paginate(request, PatchComment.objects.filter(patch=patch).order_by('-created'), limit=5)
         context = {
             'element': patch,
             'patch_config': { po: PatchData.objects.filter(patch=patch, field__patch_option=po) for po in patch_options },
             'game': patch.get_base_game(),
-            'latest_comments': PatchComment.objects.filter(patch=patch).order_by('-created')[:5]
+            'latest_comments': paginated_comments,
         }
     else:
         context={'element': 'any'}
@@ -615,7 +616,11 @@ def add_patch_comment(request,patch_id):
                 author=request.user,
                 comment=comment_text
             )
-    return render(request, 'generic/modal/components/modal_comments.html', {'latest_comments': PatchComment.objects.filter(patch=patch).order_by('-created')[:5]})
+    return render(request, 'generic/modal/components/modal_comments.html', {'element': patch, 'latest_comments': paginate(request, PatchComment.objects.filter(patch=patch).order_by('-created'), limit=5)})
+
+def refresh_patch_comments(request,patch_id):
+    patch = get_object_or_404(Patch, id=patch_id)
+    return render(request, 'generic/modal/components/modal_comments.html', {'element': patch, 'latest_comments': paginate(request, PatchComment.objects.filter(patch=patch).order_by('-created'), limit=5)})
 
 def like_patch_comment(request,comment_id,dislike=False):
     comment = get_object_or_404(PatchComment, id=comment_id)
