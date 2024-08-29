@@ -16,37 +16,30 @@
 {% block data_list %}
 
 {% if sorting_by == 'Patches' %}   
-    {% include 'games/main_elements_sorting/total_patches.html' with tag="strong" %}
-    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" %}
+    {% include 'games/main_elements_sorting/total_patches.html' with tag="strong" game=data.game %}
+    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" game=data.game %}
 {% elif sorting_by == 'Categories' %}
-    {% include 'games/main_elements_sorting/total_categories.html' with tag="strong" %}
-    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" %}
+    {% include 'games/main_elements_sorting/total_categories.html' with tag="strong" game=data.game %}
+    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" game=data.game %}
 {% elif sorting_by == 'Name' %}
-    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" %}
+    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" game=data.game %}
 {% elif sorting_by == 'Release Date' %}
-    {% include 'games/main_elements_sorting/release_date.html' with tag="strong" %}
-    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" %}
+    {% include 'games/main_elements_sorting/release_date.html' with tag="strong" game=data.game %}
+    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" game=data.game %}
 {% elif sorting_by == 'Latest Patch' %}
-    {% include 'games/main_elements_sorting/last_patch.html' with tag="strong" %}
-    {% include 'games/main_elements_sorting/created_on.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" %}
-    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" %}
+    {% include 'games/main_elements_sorting/last_patch.html' with tag="strong" game=data.game %}
+    {% include 'games/main_elements_sorting/created_on.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" game=data.game %}
+    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" game=data.game %}
 {% endif %}
-    {% include 'games/main_elements_sorting/top_category.html' with tag="span" %}
+    {% include 'games/main_elements_sorting/top_category.html' with tag="span" game=data.game %}
 {% endblock %}
 
-{% block data_bs_parent %}games-main-layout{% endblock %}
-
-{% block accordion_body %}
-{% if extravars.patchgen != "False" %}
-{% else %}
-    {% include 'games/main_accordion_buttons.html' with game=data.game %}
-{% endif %}
-{% endblock %}
+{% block full_accordion_body %}{% include 'games/main_accordion_body.html' %}{% endblock %}
 

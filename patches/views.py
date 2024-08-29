@@ -650,6 +650,3 @@ def update_dislikes_patch_comment(request,comment_id):
 
 def search_patches(request):
     return render(request, 'patches/search/modal_search.html', search_data(request,Patch))
-
-def search_categories(request):
-    return render(request, 'patches/main_search_categories.html', search_data(request,Category))

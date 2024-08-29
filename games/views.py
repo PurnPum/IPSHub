@@ -206,4 +206,4 @@ def load_modal(request):
     return render(request, html, context)
 
 def search_games(request):
-    return render(request, 'games/main_search.html', search_data(request,Game))
+    return render(request, 'games/search/modal_search.html', search_data(request,Game))

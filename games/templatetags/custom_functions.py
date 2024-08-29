@@ -112,3 +112,7 @@ def dislikespercomment(comment):
 @register.filter
 def getgamefrompatch(patch):
     return patch.get_base_game()
+
+@register.filter
+def getgamefromcategory(category):
+    return category.base_game

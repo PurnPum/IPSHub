@@ -1,0 +1,20 @@
+{% extends "generic/patchgen/patch_list/patch_list_element.html" %}
+
+{% load custom_functions %}
+
+{% block href %}#{% endblock %}
+{% block image_src %}{% with game=element|getgamefromcategory %}{{ game.image_mini_ref }}{% endwith %}{% endblock %}
+{% block image_alt %}{% with game=element|getgamefromcategory %}{{ game.title }}{% endwith %}{% endblock %}
+{% block image_title %}{% with game=element|getgamefromcategory %}{{ game.title }}{% endwith %}{% endblock %}
+{% block image_aria %}{% with game=element|getgamefromcategory %}{{ game.title }}{% endwith %}{% endblock %}
+{% block main_title %}{{ element.name }}{% endblock %}
+{% block shown_title %}{{ element.name }}{% endblock %}
+{% block border_size %}4{% endblock %}
+{% block btn_type %}btn-primary{% endblock %}
+{% block extra_btn_classes %}custom-search-btn{% endblock %}
+
+{% block data_list %}
+    {% include 'categories/main_elements_sorting/patches_amount.html' with tag="span" extra_first_element_classes="d-none d-xl-inline" category=element %}
+    {% include 'categories/main_elements_sorting/last_patch.html' with tag="span" extra_first_element_classes="d-none d-xl-inline" category=element %}
+    {% include 'categories/main_elements_sorting/sub_patches.html' with tag="span" category=element %}
+{% endblock %}

@@ -1,0 +1,5 @@
+{% load custom_functions %}
+
+<li class="col d-flex justify-content-center align-items-center flex-fill {{ extra_li_classes }}"><i class="bi bi-calendar3"></i>
+    <{{ tag }} class="ms-2 {{ extra_first_element_classes }}">Last patch:</{{ tag }}><{{ tag }} class="ms-2 {{ extra_second_element_classes }}">{{ category|latestpatch }}</{{ tag }}>
+</li>

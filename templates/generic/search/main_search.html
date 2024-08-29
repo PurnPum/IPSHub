@@ -1,11 +1,24 @@
 <form id="search_form" class="target-class p-0 d-flex justify-content-center" hx-get="{% url 'search_patches' %}" hx-target="#search_modal">
     {{ form.query }}
-    <button type="submit" class="ms-2">Search</button>
 </form>
+<div class="d-flex justify-content-around">
+    <button type="button" class="btn btn-primary ms-2" 
+            _="on click 
+                set #search_form's @hx-get to '{% url 'search_patches' %}' 
+                then trigger submit on #search_form">Search Patches</button>
+    <button type="button" class="btn btn-secondary ms-2" 
+            _="on click 
+                set #search_form's @hx-get to '{% url 'search_categories' %}' 
+                then trigger submit on #search_form">Search Categories</button>
+    <button type="button" class="btn btn-success ms-2" 
+            _="on click 
+                set #search_form's @hx-get to '{% url 'search_games' %}' 
+                then trigger submit on #search_form">Search Games</button>
+</div>
 
 {% if query %}
     <div id="search_results" class="custom-main-darker-bg custom-top-border">
-        <h4 class="fw-bold d-flex text-center justify-content-center align-items-center my-1">Results for "{{ query }}"</h4>
+        <h4 class="fw-bold d-flex text-center justify-content-center align-items-center my-2">Results for "{{ query }}"</h4>
         <div class="overflow-y-auto overflow-x-hidden ps-2 pe-2 custom-element-top-border custom-title-bg">
             {% if elements %}
                 {% for element in elements %}
@@ -21,7 +34,7 @@
                     </div>
                 {% endfor %}
             {% else %}
-                <div class="p-0 mb-1 w-100"><p>No results found.</p></div>
+                <div class="p-0 mb-1 w-100"><h5 class="fw-bold d-flex text-center justify-content-center align-items-center my-2">Nothing found for query: "{{ query }}"</h5></div>
             {% endif %}
         </div>
     </div>
