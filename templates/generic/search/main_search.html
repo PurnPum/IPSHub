@@ -1,0 +1,28 @@
+<form id="search_form" class="target-class p-0 d-flex justify-content-center" hx-get="{% url 'search_patches' %}" hx-target="#search_modal">
+    {{ form.query }}
+    <button type="submit" class="ms-2">Search</button>
+</form>
+
+{% if query %}
+    <div id="search_results" class="custom-main-darker-bg custom-top-border">
+        <h4 class="fw-bold d-flex text-center justify-content-center align-items-center my-1">Results for "{{ query }}"</h4>
+        <div class="overflow-y-auto overflow-x-hidden ps-2 pe-2 custom-element-top-border custom-title-bg">
+            {% if elements %}
+                {% for element in elements %}
+                    <div class="p-0 mb-1 w-100 accordion">
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <button type="button" class="accordion-button collapsed p-0" data-bs-toggle="collapse" data-bs-target="#{% block accordion_button_bs_target %}{% endblock %}" aria-expanded="true" aria-controls="{% block accordion_button_bs_target_aria %}{% endblock %}">
+                                    {% block main_element %}{% endblock %}
+                                </button>
+                            </div>
+                            {% block full_accordion_body %}{% endblock %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="p-0 mb-1 w-100"><p>No results found.</p></div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

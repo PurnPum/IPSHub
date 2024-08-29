@@ -12,6 +12,7 @@
     --custom-disabled-color: rgb(116, 91, 121);
     --custom-accordion-active-color: rgb(225, 74, 255);
     --custom-outline-hover-light: rgb(233, 185, 233);
+    --custom-darker-white: rgb(220, 220, 220);
   }
 
 .btn-primary {

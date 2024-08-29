@@ -101,6 +101,16 @@
         color: var(--custom-nav-lighter-color) !important;
     }
 
+    .custom-search-btn{
+        color: var(--custom-darker-white) !important;
+        background-color: var(--custom-nav-darker-color) !important;
+        border-color: var(--custom-nav-darker-color) !important;   
+    }
+    .custom-search-btn:hover {
+        background-color: var(--custom-nav-lighter-color) !important;
+        border-color: var(--custom-nav-lighter-color) !important;
+    }
+
     .custom-mw-85{
         max-width: 85vw;
     }

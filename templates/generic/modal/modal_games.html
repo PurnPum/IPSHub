@@ -4,6 +4,8 @@
 
 {% block label_title %}<a href="{{ element.extra_info }}"><img src="{{ element.image_mini_ref }}" aria-label="{{ element.title }}" alt="{{ element.title }}" class="bd-placeholder-img" style="width: auto; height: 2rem;"/>{{ element.title }}</a>{% endblock %}
 
+{% block modal_titled_by %}active_modal_title{% endblock %}
+
 {% block modal_body %}
     <div class="container-fluid">
         <div class="row">

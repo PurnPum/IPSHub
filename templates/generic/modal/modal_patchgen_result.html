@@ -10,6 +10,8 @@
 
 {% block label_title %}<img src="{{ game.image_mini_ref }}" aria-label="{{ game.title }}" alt="{{ game.title }}" class="bd-placeholder-img me-2" style="width: auto; height: 2rem;"/>{% if patchgen %}Successfully created patch {% endif %}{{ element.name }}{% endblock %}
 
+{% block modal_titled_by %}active_modal_title{% endblock %}
+
 {% block modal_body %}
     <div class="container-fluid">
         <div class="row">

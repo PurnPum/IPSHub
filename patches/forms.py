@@ -78,3 +78,6 @@ class DynamicPatchForm(forms.Form):
 
     def patchless(self):
         return self.save(None,commit=False)
+    
+class SearchForm(forms.Form):
+    query = forms.CharField(label='Search', max_length=100)

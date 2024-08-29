@@ -1,10 +1,9 @@
 {% extends "generic/main/main_element.html" %}
 
+{% block hs_layout %}patches-main-layout{% endblock %}
+
 {% block accordion_button_bs_target %}collapse-{{ data.patch.id }}{% endblock %}
 {% block accordion_button_bs_target_aria %}collapse-{{ data.patch.id }}{% endblock %}
-{% block accordion_body_id %}collapse-{{ data.patch.id }}{% endblock %}
-
-{% block hs_layout %}patches-main-layout{% endblock %}
 
 {% block image_src %}{{ data.game.image_ref }}{% endblock %}
 {% block image_alt %}{{ data.game.title }}{% endblock %}
@@ -16,31 +15,29 @@
 {% block data_list %}
 
 {% if sorting_by == 'Favorites' %}   
-    {% include 'patches/main_elements_sorting/favorites.html' with tag="strong" %}
-    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/creator.html' with tag="span" %}
+    {% include 'patches/main_elements_sorting/favorites.html' with tag="strong" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/creator.html' with tag="span" patch=data.patch %}
 {% elif sorting_by == 'Downloads' %}
-    {% include 'patches/main_elements_sorting/downloads.html' with tag="strong" %}
-    {% include 'patches/main_elements_sorting/creator.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" %}
+    {% include 'patches/main_elements_sorting/downloads.html' with tag="strong" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/creator.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" patch=data.patch%}
 {% elif sorting_by == 'Name' %}
-    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/creator.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" %}
+    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/creator.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" patch=data.patch %}
 {% elif sorting_by == 'Creation Date' %}
-    {% include 'patches/main_elements_sorting/created_on.html' with tag="strong" %}
-    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/creator.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" %}
+    {% include 'patches/main_elements_sorting/created_on.html' with tag="strong" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/creator.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" patch=data.patch %}
 {% elif sorting_by == 'Sub-patches' %}
-    {% include 'patches/main_elements_sorting/sub_patches.html' with tag="strong" %}
-    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/creator.html' with tag="span" %}
-    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" %}
+    {% include 'patches/main_elements_sorting/sub_patches.html' with tag="strong" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/downloads.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/creator.html' with tag="span" patch=data.patch %}
+    {% include 'patches/main_elements_sorting/favorites.html' with tag="span" patch=data.patch %}
 {% endif %}
-    {% include 'patches/main_elements_sorting/categories.html' with tag="span" %}
+    {% include 'patches/main_elements_sorting/categories.html' with tag="span" categories=data.categories %}
 {% endblock %}
 
-{% block data_bs_parent %}patches-main-layout{% endblock %}
-
-{% block accordion_body %}{% include 'patches/main_accordion_buttons.html' with patch=data.patch %}{% endblock %}
+{% block full_accordion_body %}{% include 'patches/main_accordion_body.html' %}{% endblock %}

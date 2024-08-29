@@ -37,8 +37,4 @@
         </div>
     </button>
 </div>
-<div id="{% block accordion_body_id %}{% endblock %}" class="accordion-collapse collapse" data-bs-parent="#{% block data_bs_parent %}{% endblock %}">
-    <div class="accordion-body p-3">
-        {% block accordion_body %}{% endblock %}
-    </div>
-</div>
+{% block full_accordion_body %}{% endblock %}

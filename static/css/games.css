@@ -10,6 +10,7 @@
     --custom-sorting-hover-color: rgb(0, 127, 64);
     --custom-disabled-color: grey;
     --custom-accordion-active-color: rgb(255, 218, 106);
+    --custom-darker-white: rgb(220, 220, 220);
   }
 
 .btn-primary {

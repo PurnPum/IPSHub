@@ -1,0 +1,5 @@
+{% extends "generic/accordion/accordion_body.html" %}
+
+{% block accordion_body_id %}collapse-{{ data.patch.id }}{% endblock %}
+{% block data_bs_parent %}patches-main-layout{% endblock %}
+{% block accordion_body %}{% include 'patches/main_accordion_buttons.html' with patch=data.patch %}{% endblock %}

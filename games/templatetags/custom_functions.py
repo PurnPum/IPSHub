@@ -1,10 +1,9 @@
-import json
 from django import template
 from django.urls import reverse
 
 from patches.models import Patch, PatchFav, PatchCommentLike
 from ..models import Game
-from ..views import get_category_hierarchy
+from ..utils import get_category_hierarchy
 from categories.models import Category
 from django.db.models import Count
 
@@ -109,3 +108,7 @@ def likespercomment(comment):
 @register.filter
 def dislikespercomment(comment):
     return PatchCommentLike.objects.filter(comment=comment,likeordislike=False).count()
+
+@register.filter
+def getgamefrompatch(patch):
+    return patch.get_base_game()

@@ -9,8 +9,9 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.cache import cache
 
-from games.views import get_category_hierarchy, main_filter as g_main_filter
-from patches.forms import DynamicPatchForm
+from games.utils import get_category_hierarchy, search_data
+from games.views import main_filter as g_main_filter
+from patches.forms import DynamicPatchForm, SearchForm
 from .models import Patch, PatchFav, PatchOption, POField, PatchData, DiffFile, PatchComment, PatchCommentLike, get_hash_code_from_patchDatas
 from categories.models import Category
 from games.models import Game
@@ -646,3 +647,9 @@ def update_likes_patch_comment(request,comment_id):
 
 def update_dislikes_patch_comment(request,comment_id):
     return render(request, 'generic/modal/components/modal_like_comment_button.html', {'element': get_object_or_404(PatchComment, id=comment_id), 'dislike':"True"})
+
+def search_patches(request):
+    return render(request, 'patches/search/modal_search.html', search_data(request,Patch))
+
+def search_categories(request):
+    return render(request, 'patches/main_search_categories.html', search_data(request,Category))

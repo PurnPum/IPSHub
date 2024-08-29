@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery
 from patches.models import Patch, PatchData, PatchOption
+from .utils import get_category_hierarchy, search_data
 from .models import Game
 from categories.models import Category
-#from patches import add_real_data_to_db
 from django.core.paginator import Paginator
 
 def paginate(request, qs, limit=3):
@@ -205,21 +205,5 @@ def load_modal(request):
         context={'element': 'any'}
     return render(request, html, context)
 
-def get_category_hierarchy(category):
-    category_hierarchy = {}
-    current_category = category
-    if current_category is None:
-        return category_hierarchy
-    category_hierarchy['element'] = current_category
-    category_hierarchy['children'] = []
-    while current_category.parent_category is not None:
-        parent_category = current_category.parent_category
-        child_category = {}
-        child_category['element'] = parent_category
-        child_category['children'] = []
-        child_category['children'].append(category_hierarchy)
-        category_hierarchy = child_category
-        current_category = parent_category
-        if current_category is None:
-            break
-    return category_hierarchy
+def search_games(request):
+    return render(request, 'games/main_search.html', search_data(request,Game))
