@@ -171,7 +171,7 @@
     }
 
     .accordion {
-        --bs-accordion-active-color: var(--custom-accordion-active-color);
+        --bs-accordion-active-color: var(--custom-accordion-active-color) !important;
     }
 
     .accordion-button {
