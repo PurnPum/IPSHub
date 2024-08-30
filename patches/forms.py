@@ -80,4 +80,10 @@ class DynamicPatchForm(forms.Form):
         return self.save(None,commit=False)
     
 class SearchForm(forms.Form):
-    query = forms.CharField(label='Search', max_length=100)
+    query = forms.CharField(label='Search', max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Search for something...',
+            }
+        )
+    )

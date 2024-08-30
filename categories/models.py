@@ -38,5 +38,7 @@ class Category(models.Model):
             children.extend(subcategory.get_all_children())
         return children
 
-        
-            
+    def get_main_parent(self):
+        if self.parent_category is None:
+            return self
+        return self.parent_category.get_main_parent()

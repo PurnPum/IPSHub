@@ -1,0 +1,19 @@
+<div class="row d-flex justify-content-center py-1 px-3">
+    <a href="{% block href %}{% endblock %}" class="btn {% block btn_type %}{% endblock %} border-{% block border_size %}{% endblock %} p-0 {% block extra_btn_classes %}{% endblock %}">
+        <div class="container-fluid p-0 custom-main-bg custom-color-border">
+            <div class="row p-0">
+                <div class="row row-cols-1">
+                    <div class="fw-bold h5 d-flex justify-content-center align-items-center">
+                        <div class="text-truncate custom-truncate text-center custom-lighter-color-font" title="{% block main_title %}{% endblock %}">{% block shown_title %}{% endblock %}</div>
+                    </div>
+                </div>
+                <ul class="row row-cols-1 list-unstyled mb-0">
+                    <li><img src="{% block image_src %}{% endblock %}" aria-label="{% block image_aria %}{% endblock %}" alt="{% block image_alt %}{% endblock %}" title="{% block image_title %}{% endblock %}" class="bd-placeholder-img img-fluid custom-img-default-size"/></li>
+                    {% block data_list %}{% endblock %}
+                </ul>
+                {% block data_categories %}{% endblock %}
+            </div>
+        </div>
+    </a>
+</div>
+

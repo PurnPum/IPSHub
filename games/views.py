@@ -66,10 +66,10 @@ def main_filter(request,extravars=None,html='games/games.html'):
     
     final_game_list = []
     for game in paginated_games:
-        patches_amount = game.categories.aggregate(Count('patchoption__patches'))['patchoption__patches__count']
-        categories_amount = game.categories.count()
+        patches_amount = game.get_patches().count()
+        categories_amount = game.get_categories().count()
         
-        last_patch = Patch.objects.filter(patch_options__category__base_game=game).order_by('-creation_date').first()
+        last_patch = game.get_latest_patch()
         category_with_most_patches = game.categories.annotate(num_patches=Count('patchoption__patches')).order_by('-num_patches').first()
         
         final_game_list.append({
@@ -206,4 +206,4 @@ def load_modal(request):
     return render(request, html, context)
 
 def search_games(request):
-    return render(request, 'games/search/modal_search.html', search_data(request,Game))
+    return render(request, 'games/search/search_query.html', search_data(request,Game,order_by='title'))

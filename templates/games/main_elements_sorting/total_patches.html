@@ -1,5 +1,7 @@
+{% load custom_functions %}
+
 <li class="col d-flex justify-content-center align-items-center">
     <i class="bi bi-bandaid-fill"></i>
     <{{ tag }} class="ms-2">Total Patches:</{{ tag }}>
-    <{{ tag }} class="ms-2">{{ data.patches_amount }}</{{ tag }}>
+    <{{ tag }} class="ms-2">{% if search %}{{ game|getpatchcountfromgame }}{% else %}{{ data.patches_amount }}{% endif %}</{{ tag }}>
 </li>

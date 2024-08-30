@@ -1,5 +1,13 @@
 {% extends "generic/accordion/accordion_body.html" %}
 
-{% block accordion_body_id %}collapse-{{ element.id }}{% endblock %}
+{% load custom_functions %}
+
+{% block accordion_body_id %}collapse-{{ element.id }}-search{% endblock %}
 {% block data_bs_parent %}search_results{% endblock %}
-{% block accordion_body %}{% include 'patches/main_accordion_buttons.html' with patch=element %}{% endblock %}
+{% block accordion_body %}
+{% with game=element|getgamefromcategory %}
+    {% with href_filter="/patches/?selectedGame="|concatstr:game.id|concatstr:"&selectedCategory="|concatstr:element.id hs_code_filter="on click put 'run' into localStorage['external_filtering'] put '"|concatstr:game.id|concatstr:"' into localStorage['game_id'] put '"|concatstr:element.id|concatstr:"' into localStorage['category_id'] put 'any' into localStorage['patch_id']" %}
+        {% include 'categories/main_accordion_buttons.html' with category=element %}
+    {% endwith %}
+{% endwith %}
+{% endblock %}

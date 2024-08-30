@@ -11,6 +11,8 @@ from django.core.cache import cache
 
 from games.utils import get_category_hierarchy, search_data
 from games.views import main_filter as g_main_filter
+from games.views import search_games
+from categories.views import search_categories
 from patches.forms import DynamicPatchForm, SearchForm
 from .models import Patch, PatchFav, PatchOption, POField, PatchData, DiffFile, PatchComment, PatchCommentLike, get_hash_code_from_patchDatas
 from categories.models import Category
@@ -453,10 +455,10 @@ def main_filter(request,htmlkey,sorting_order='descending',extravars=None,game_i
     sidebar_games = []
     
     for game in top_5_games:
-        game_patches = Patch.objects.filter(patch_options__category__base_game=game)
+        game_patches = game.get_patches()
         game_patches_amount = game_patches.count()
-        game_categories_amount = game.categories.count()
-        latest_patch = game_patches.order_by('-creation_date').first()
+        game_categories_amount = game.get_categories().count()
+        latest_patch = game_patches.latest('creation_date')
         try:
             latest_patch = latest_patch.creation_date
         except:
@@ -649,4 +651,16 @@ def update_dislikes_patch_comment(request,comment_id):
     return render(request, 'generic/modal/components/modal_like_comment_button.html', {'element': get_object_or_404(PatchComment, id=comment_id), 'dislike':"True"})
 
 def search_patches(request):
+    return render(request, 'patches/search/search_query.html', search_data(request,Patch))
+
+def search_modal(request):
     return render(request, 'patches/search/modal_search.html', search_data(request,Patch))
+
+def search_generic(request):
+    objectstring = request.GET.get('search_object')
+    funcs = {"Patch": search_patches,"Game": search_games,"Category": search_categories}
+    try:
+        return funcs[objectstring](request)
+    except Exception as e:
+        print(str(e))
+        return search_patches(request)

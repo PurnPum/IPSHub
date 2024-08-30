@@ -1,5 +1,7 @@
+{% load custom_functions %}
+
 <li class="col d-flex justify-content-center align-items-center">
     <i class="bi bi-bookmark-fill"></i>
     <{{ tag }} class="ms-2">Total Categories:</{{ tag }}>
-    <{{ tag }} class="ms-2">{{ data.categories_amount }}</{{ tag }}>
+    <{{ tag }} class="ms-2">{% if search %}{{ game|getcategorycountfromgame }}{% else %}{{ data.categories_amount }}{% endif %}</{{ tag }}>
 </li>

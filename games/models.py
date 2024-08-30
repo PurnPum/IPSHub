@@ -1,6 +1,9 @@
 from django.db import models
 import uuid
 
+from categories.models import Category
+from patches.models import Patch
+
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     image_ref = models.CharField(max_length=200)
@@ -18,3 +21,12 @@ class Game(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_patches(self):
+        return Patch.objects.filter(patch_options__category__base_game=self)
+    
+    def get_categories(self):
+        return Category.objects.filter(base_game=self)
+    
+    def get_latest_patch(self):
+        return self.get_patches().latest('creation_date')

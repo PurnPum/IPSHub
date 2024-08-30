@@ -87,6 +87,10 @@ def whichcategoryisparent(listcats,cat2):
     return result
 
 @register.filter
+def getmaincategoryparent(category):
+    return category.get_main_parent()
+
+@register.filter
 def hasuserlikedpatch(patch,user):
     return PatchFav.objects.filter(patch=patch,user=user).exists()
 
@@ -116,3 +120,15 @@ def getgamefrompatch(patch):
 @register.filter
 def getgamefromcategory(category):
     return category.base_game
+
+@register.filter
+def getpatchcountfromgame(game):
+    return game.get_patches().count()
+
+@register.filter
+def getcategorycountfromgame(game):
+    return game.get_categories().count()
+
+@register.filter
+def getlatestpatchfromgame(game):
+    return game.get_latest_patch()

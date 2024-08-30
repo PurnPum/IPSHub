@@ -25,6 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('accounts/modal_login/' , p_views.modal_login, name='modal_login'),
+    path('search/modal/' , p_views.search_modal, name='search_modal'),
+    path('search/' , p_views.search_generic, name='search_generic'),
     path('patches/<uuid:patch_id>/favorite/', p_views.favorite_patch, name='favorite_patch'),
     path('patches/', p_views.patches, name='patches'),
     path('patches/filter/', p_views.filter, name='patch_filter'),

@@ -7,4 +7,4 @@ def categories_list(request):
     return render(request, 'categories/categories_sidebar_layout.html')
 
 def search_categories(request):
-    return render(request, 'categories/search/modal_search.html', search_data(request,Category))
+    return render(request, 'categories/search/search_query.html', search_data(request,Category))

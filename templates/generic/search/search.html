@@ -1,0 +1,21 @@
+<form id="search_form" class="target-class p-0 d-flex justify-content-center"
+    hx-get="{% url 'search_generic' %}" hx-target="#search_results" hx-include="#search_object">
+    {{ form.query }}
+</form>
+<input type="hidden" id="search_object" name="search_object">
+<div class="row row-cols-sm-4 row-cols-1 d-flex justify-content-around mb-2">
+    <button type="button" class="btn btn-primary mb-2 fw-bold" 
+        _="on click 
+            set #search_object's value to 'Patch'
+            trigger submit on #search_form">Search Patches</button>
+    <button type="button" class="btn btn-primary mb-2 fw-bold" 
+        _="on click 
+            set #search_object's value to 'Category'
+            trigger submit on #search_form">Search Categories</button>
+    <button type="button" class="btn btn-primary mb-2 fw-bold" 
+        _="on click 
+            set #search_object's value to 'Game'
+            trigger submit on #search_form">Search Games</button>
+</div>
+
+<div id="search_results" class="custom-main-darker-bg custom-top-border">{% block search_query %}{% endblock %}</div>

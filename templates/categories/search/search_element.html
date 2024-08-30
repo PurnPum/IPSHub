@@ -1,4 +1,4 @@
-{% extends "generic/patchgen/patch_list/patch_list_element.html" %}
+{% extends "generic/search/search_element.html" %}
 
 {% load custom_functions %}
 
@@ -14,7 +14,7 @@
 {% block extra_btn_classes %}custom-search-btn{% endblock %}
 
 {% block data_list %}
-    {% include 'categories/main_elements_sorting/patches_amount.html' with tag="span" extra_first_element_classes="d-none d-xl-inline" category=element %}
-    {% include 'categories/main_elements_sorting/last_patch.html' with tag="span" extra_first_element_classes="d-none d-xl-inline" category=element %}
-    {% include 'categories/main_elements_sorting/sub_patches.html' with tag="span" category=element %}
+    {% include 'categories/main_elements_sorting/patches_amount.html' with tag="span" extra_first_element_classes="d-none d-sm-inline" extra_second_element_classes="custom-truncate" category=element %}
+    {% include 'categories/main_elements_sorting/last_patch.html' with tag="span" extra_first_element_classes="custom-truncate d-none d-sm-inline" extra_second_element_classes="custom-truncate" category=element %}
+    {% include 'categories/main_elements_sorting/parent.html' with tag="span" extra_first_element_classes="custom-truncate d-none d-sm-inline" extra_second_element_classes="custom-truncate" category=element %}
 {% endblock %}

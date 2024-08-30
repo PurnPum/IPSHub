@@ -1,0 +1,24 @@
+{% if query %}
+    <h4 class="fw-bold d-flex text-center justify-content-center align-items-center my-2">{% block searched_data %}{% endblock %} with "{{ query }}"</h4>
+    <div class="accordion {% block accordion_row_classes %}{% endblock %} d-flex ps-3 pe-3">
+        {% if elements %}
+            {% for element in elements %}
+                <div class="p-0 mb-1 accordion-item">
+                    <div class="accordion-header">
+                        <button type="button" class="accordion-button collapsed p-0" data-bs-toggle="collapse" data-bs-target="#{% block accordion_button_bs_target %}{% endblock %}" aria-expanded="true" aria-controls="{% block accordion_button_bs_target_aria %}{% endblock %}"
+                        _="on click 
+                            set item to the closest <div.accordion-item/>
+                            if item matches .w-100
+                                then remove .w-100 from item
+                                else add .w-100 to item">
+                            {% block main_element %}{% endblock %}
+                        </button>
+                    </div>
+                    {% block full_accordion_body %}{% endblock %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="p-0 mb-1 w-100"><h5 class="fw-bold d-flex text-center justify-content-center align-items-center my-2">Nothing found for query: "{{ query }}"</h5></div>
+        {% endif %}
+    </div>
+{% endif %}

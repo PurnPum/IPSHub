@@ -1,8 +1,10 @@
-    <li class="col d-flex justify-content-center align-items-center"
-        _="on load
-        set sw to the scrollWidth of the first <{{ tag }}/> in me
-        set cw to the clientWidth of the first <{{ tag }}/> in me
-        if sw > cw then hide the first <{{ tag }}/> in me">
-        <i class="bi bi-alarm-fill" title="Last Patch"></i> 
-        <{{ tag }} class="ms-2 text-truncate custom-truncate">Last patch: </{{ tag }}><{{ tag }} class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{{ data.last_patch }}</{{ tag }}>
-    </li>
+{% load custom_functions %}
+
+<li class="col d-flex justify-content-center align-items-center"
+    _="on load
+    set sw to the scrollWidth of the first <{{ tag }}/> in me
+    set cw to the clientWidth of the first <{{ tag }}/> in me
+    if sw > cw then hide the first <{{ tag }}/> in me">
+    <i class="bi bi-alarm-fill" title="Last Patch"></i> 
+    <{{ tag }} class="ms-2 text-truncate custom-truncate">Last patch: </{{ tag }}><{{ tag }} class="ms-2 text-truncate custom-truncate text-decoration-underline" title="{{ data.last_patch }}">{% if search %}{{ game|getlatestpatchfromgame }}{% else %}{{ data.last_patch }}{% endif %}</{{ tag }}>
+</li>

@@ -1,0 +1,20 @@
+{% extends "generic/search/search_element.html" %}
+
+{% load custom_functions %}
+
+{% block href %}#{% endblock %}
+{% block image_src %}{{ element.image_mini_ref }}{% endblock %}
+{% block image_alt %}{{ element.title }}{% endblock %}
+{% block image_title %}{{ element.title }}{% endblock %}
+{% block image_aria %}{{ element.title }}{% endblock %}
+{% block main_title %}{{ element.title }}{% endblock %}
+{% block shown_title %}{{ element.title }}{% endblock %}
+{% block border_size %}4{% endblock %}
+{% block btn_type %}btn-primary{% endblock %}
+{% block extra_btn_classes %}custom-search-btn{% endblock %}
+
+{% block data_list %}
+    {% include 'games/main_elements_sorting/total_patches.html' with tag="span" extra_first_element_classes="d-none d-sm-inline" game=element search="True" %}
+    {% include 'games/main_elements_sorting/last_patch.html' with tag="span" extra_first_element_classes="d-none d-sm-inline" game=element search="True" %}
+    {% include 'games/main_elements_sorting/total_categories.html' with tag="span" game=element search="True" %}
+{% endblock %}

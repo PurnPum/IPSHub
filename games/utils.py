@@ -1,4 +1,5 @@
 from patches.forms import SearchForm
+from django.core.exceptions import FieldError
 
 def get_category_hierarchy(category):
     category_hierarchy = {}
@@ -19,11 +20,13 @@ def get_category_hierarchy(category):
             break
     return category_hierarchy
 
-def search_data(request,object):
+def search_data(request,object,order_by='name'):
     form = SearchForm(request.GET or None)
     query = request.GET.get('query', '')
-    elements = object.objects.filter(name__icontains=query).order_by('name') if query else object.objects.none()
-    
+    try:
+        elements = object.objects.filter(name__icontains=query).order_by(order_by) if query else object.objects.none()
+    except FieldError:
+        elements = object.objects.filter(title__icontains=query).order_by(order_by) if query else object.objects.none()
     context = {
         'form': form,
         'query': query,

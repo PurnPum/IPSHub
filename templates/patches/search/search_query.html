@@ -1,0 +1,8 @@
+{% extends "generic/search/search_query.html" %}
+
+{% block searched_data %}Patches{% endblock %}
+{% block accordion_row_classes %}row row-cols-xxl-3 row-cols-lg-2 row-cols-1{% endblock %}
+{% block accordion_button_bs_target %}collapse-{{ element.id }}-search{% endblock %}
+{% block accordion_button_bs_target_aria %}collapse-{{ element.id }}-search{% endblock %}
+{% block main_element %}{% include 'patches/search/search_element.html' %}{% endblock %}
+{% block full_accordion_body %}{% include 'patches/search/search_accordion_body.html' %}{% endblock %}
