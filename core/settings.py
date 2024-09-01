@@ -59,8 +59,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'patches',
     'games',
-    'categories'
+    'categories',
+    'django_nose'
 ]
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,6 +75,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+]
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=patches,games,categories',
+    #'--cover-branches',
+    
 ]
 
 AUTHENTICATION_BACKENDS = [

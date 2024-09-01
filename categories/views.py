@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 
-from games.utils import search_data
+from core.utils import search_data
 from .models import Category
 
 def categories_list(request):

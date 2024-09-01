@@ -5,6 +5,7 @@ from games.models import Game
 from categories.models import Category
 from patches.models import Patch, PatchOption, POField, PatchData, DiffFile
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 def clean_db():
@@ -14,6 +15,13 @@ def clean_db():
     Category.objects.all().delete()
     POField.objects.all().delete()
     PatchData.objects.all().delete()
+    
+def add_users():
+    User = get_user_model()
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser('admin', 'admin@admin.com', '1910')
+    if not User.objects.filter(username="anonymous").exists():
+        User.objects.create_user('anonymous', 'anon@anon.com', 'anon')
 
 def add_real_games_to_db():
     games_data = [
@@ -547,7 +555,7 @@ def add_real_patches_to_db():
     patch4.downloads = random.randint(0, 1000)
     patch4.favorites = random.randint(0, 1000)
     patch4.creator = User.objects.get(username='admin')
-    patch4.creation_date = random_date_current_month()
+    patch4.creation_date = datetime.now()
     patch4.parent_patch = patch3
     patch4.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch4.save()

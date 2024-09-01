@@ -31,11 +31,18 @@ class Category(models.Model):
             current_category = current_category.parent_category
         return parents
         
-    def get_all_children(self):
+    def get_all_children(self, visited=None):
+        if visited is None:
+            visited = set()
+
+        if self in visited:
+            return []
         children = []
+        visited.add(self)
         for subcategory in self.subcategories.all():
-            children.append(subcategory)
-            children.extend(subcategory.get_all_children())
+            if subcategory not in visited:
+                children.append(subcategory)
+                children.extend(subcategory.get_all_children(visited=visited))
         return children
 
     def get_main_parent(self):

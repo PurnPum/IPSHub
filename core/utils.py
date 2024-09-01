@@ -1,6 +1,8 @@
 from patches.forms import SearchForm
 from django.core.exceptions import FieldError
 
+from core import add_real_data_to_db
+
 def get_category_hierarchy(category):
     category_hierarchy = {}
     current_category = category
@@ -33,3 +35,13 @@ def search_data(request,object,order_by='name'):
         'elements': elements,
     }
     return context
+
+def add_data_to_bd():
+    add_real_data_to_db.clean_db()
+    add_real_data_to_db.add_users()
+    add_real_data_to_db.add_real_games_to_db()
+    add_real_data_to_db.add_real_categories_to_db()
+    add_real_data_to_db.add_real_patch_options_to_db()
+    add_real_data_to_db.add_real_fields_to_db()
+    add_real_data_to_db.add_real_patches_to_db()
+    add_real_data_to_db.add_real_diff_files_to_db()

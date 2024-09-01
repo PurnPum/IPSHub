@@ -52,10 +52,17 @@ class Patch(models.Model):
             base_games.append(patch_option.category.base_game)
         return list(set(base_games))
     
-    def get_all_subpatches(self):
+    def get_all_subpatches(self, visited=None):
+        if visited is None:
+            visited = set()
+
+        if self in visited:
+            return []
         subpatches = [self]
+        visited.add(self)
         for subpatch in self.subpatches.all():
-            subpatches.extend(subpatch.get_all_subpatches())
+            if subpatch not in visited:
+                subpatches.extend(subpatch.get_all_subpatches(visited=visited))
         return subpatches
     
 

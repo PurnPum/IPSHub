@@ -9,7 +9,6 @@ class CategoryFactory(factory.django.DjangoModelFactory):
         model = Category
 
     base_game = factory.SubFactory(GameFactory)
-    parent_category = None
     description = factory.Faker('paragraph')
     image_ref = factory.Faker('url')
     name = factory.Faker('word')

@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.cache import cache
 
-from games.utils import get_category_hierarchy, search_data
+from core.utils import get_category_hierarchy, search_data
 from games.views import main_filter as g_main_filter
 from games.views import search_games
 from categories.views import search_categories
@@ -17,19 +17,9 @@ from patches.forms import DynamicPatchForm, SearchForm
 from .models import Patch, PatchFav, PatchOption, POField, PatchData, DiffFile, PatchComment, PatchCommentLike, get_hash_code_from_patchDatas
 from categories.models import Category
 from games.models import Game
-from . import add_real_data_to_db
 
 import os
 import subprocess
-
-def add_data_to_bd():
-    add_real_data_to_db.clean_db()
-    add_real_data_to_db.add_real_games_to_db()
-    add_real_data_to_db.add_real_categories_to_db()
-    add_real_data_to_db.add_real_patch_options_to_db()
-    add_real_data_to_db.add_real_fields_to_db()
-    add_real_data_to_db.add_real_patches_to_db()
-    add_real_data_to_db.add_real_diff_files_to_db()
 
 def paginate(request, qs, limit=4):
     paginated_qs = Paginator(qs, limit)

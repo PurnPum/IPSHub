@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery
 from patches.models import Patch, PatchData, PatchOption
-from .utils import get_category_hierarchy, search_data
+from core.utils import get_category_hierarchy, search_data
 from .models import Game
 from categories.models import Category
 from django.core.paginator import Paginator

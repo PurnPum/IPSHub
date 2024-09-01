@@ -23,7 +23,7 @@ class Game(models.Model):
         return self.title
     
     def get_patches(self):
-        return Patch.objects.filter(patch_options__category__base_game=self)
+        return Patch.objects.filter(patch_options__category__base_game=self).distinct()
     
     def get_categories(self):
         return Category.objects.filter(base_game=self)
