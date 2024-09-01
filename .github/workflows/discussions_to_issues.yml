@@ -1,0 +1,166 @@
+name: Create Issue from Discussion
+
+on:
+  discussion_comment:
+    types: [created]
+
+jobs:
+  create_issue:
+    if: github.event.comment.body startsWith '/approve'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse /approve command
+        id: parse_approve
+        run: |
+          echo "Comment: ${{ github.event.comment.body }}"
+          BASE_GAME=$(echo "${{ github.event.comment.body }}" | sed -n 's|.*Base Game: \([^ ]*\).*|\1|p' | tr '[:upper:]' '[:lower:]')
+          DEVELOPER=$(echo "${{ github.event.comment.body }}" | sed -n 's|.*Developer: \([^ ]*\).*|\1|p' | tr '[:upper:]' '[:lower:]')
+          CATEGORY=$(echo "${{ github.event.comment.body }}" | sed -n 's|.*Category: \([^ ]*\).*|\1|p')
+          DESCRIPTION=$(echo "${{ github.event.comment.body }}" | sed -n 's|.*Description: \([^ ]*\).*|\1|p')
+
+          # Check if all fields are present
+          if [[ -z "$BASE_GAME" || -z "$DEVELOPER" || -z "$CATEGORY" || -z "$DESCRIPTION" ]]; then
+            echo "Error: One or more fields are missing in the comment."
+            exit 1
+          fi
+
+          # Validate DEVELOPER field
+          if [[ "$DEVELOPER" != "team" && "$DEVELOPER" != "user" ]]; then
+            echo "Error: DEVELOPER field must be either 'team' or 'user'."
+            exit 1
+          fi
+
+          # Determine the base game label
+          BASE_GAME_LABEL=""
+          if [[ "$BASE_GAME" == *"pokemon yellow"* ]]; then
+            BASE_GAME_LABEL="base_game/pokemon-yellow"
+          elif [[ "$BASE_GAME" == *"pokemon crystal"* ]]; then
+            BASE_GAME_LABEL="base_game/pokemon-crystal"
+          else
+            echo "Error: The provided base game does not exist."
+            exit 1
+          fi
+
+          echo "BASE_GAME=$BASE_GAME" >> $GITHUB_ENV
+          echo "DEVELOPER=$DEVELOPER" >> $GITHUB_ENV
+          echo "CATEGORY=$CATEGORY" >> $GITHUB_ENV
+          echo "DESCRIPTION=$DESCRIPTION" >> $GITHUB_ENV
+          echo "BASE_GAME_LABEL=$BASE_GAME_LABEL" >> $GITHUB_ENV
+
+      - name: Add Comment and Exit if Base Game Not Recognized
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const userLogin = context.payload.comment.user.login;
+            const commentUrl = context.payload.comment.html_url;
+
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.discussion.number,
+              body: `@${userLogin} The provided base game does not exist. Please check your input and try again.`
+            });
+
+      - name: Create Issue
+        if: success()
+        id: create_issue
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const baseGame = process.env.BASE_GAME;
+            const developer = process.env.DEVELOPER;
+            const category = process.env.CATEGORY;
+            const description = process.env.DESCRIPTION;
+            const baseGameLabel = process.env.BASE_GAME_LABEL;
+            const discussionUrl = context.payload.comment.html_url;
+
+            // Set title format
+            const title = `[${baseGame}] (${category}) ${description}`;
+
+            // Set labels
+            let labels = [baseGameLabel];
+            if (developer === 'team') {
+              labels.push('To be developed by Team');
+            } else {
+              labels.push('To be developed by Suggester');
+            }
+
+            // Create issue
+            const newIssue = await github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: `This issue was created from a discussion closed with the /approve command.\n\nBase Game: ${baseGame}\nDeveloper: ${developer}\nCategory: ${category}\nDescription: ${description}\n\n[Original Discussion](${discussionUrl})`,
+              labels: labels
+            });
+
+            core.info(`Created issue #${newIssue.data.number} - ${title}`);
+            core.setOutput('issue_number', newIssue.data.number);
+
+      - name: Create Branch (if developer is team)
+        if: steps.parse_approve.outputs.DEVELOPER == 'team'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git clone --single-branch --branch main https://github.com/${{ github.repository }} repo
+          cd repo
+          git checkout -b feature/${{ steps.create_issue.outputs.issue_number }}
+          git push origin feature/${{ steps.create_issue.outputs.issue_number }}
+
+      - name: Add Branch Link Comment (if developer is team)
+        if: steps.parse_approve.outputs.DEVELOPER == 'team'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = core.getInput('issue_number');
+            const branchName = `feature/${issueNumber}`;
+            const discussionUrl = context.payload.comment.html_url;
+
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `A new branch [${branchName}](https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${branchName}) has been created for this issue.\n\n[Original Discussion](${discussionUrl})`
+            });
+
+      - name: Add Fork Instruction Comment (if developer is user)
+        if: steps.parse_approve.outputs.DEVELOPER == 'user'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = core.getInput('issue_number');
+            const userLogin = context.payload.comment.user.login;
+
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `@${userLogin}, please fork the repository at the 'main' branch and add a comment here with the link to your fork.`
+            });
+
+      - name: Close Discussion
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = core.getInput('issue_number');
+            const discussionNumber = context.payload.discussion.number;
+
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: discussionNumber,
+              body: `Issue created: #${issueNumber}. Closing this discussion.`
+            });
+
+            await github.discussions.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              discussion_number: discussionNumber,
+              state: 'closed'
+            });

@@ -1,0 +1,38 @@
+name: Enforce Discussion Template
+
+on:
+  discussion:
+    types: [created]
+
+jobs:
+  check_template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Template Use
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DISCUSSION_BODY="${{ github.event.discussion.body }}"
+          
+          # Check if all required fields are present in the discussion body
+          if ! grep -q "### Base Game" <<< "$DISCUSSION_BODY" ||
+             ! grep -q "### Does your suggestion fit an already existing category? If so, which one?" <<< "$DISCUSSION_BODY" ||
+             ! grep -q "### Do you plan on developing this suggestion?" <<< "$DISCUSSION_BODY" ||
+             ! grep -q "### What is your suggestion?" <<< "$DISCUSSION_BODY"; then
+            
+            # Get the discussion number and user who created the discussion
+            DISCUSSION_NUMBER="${{ github.event.discussion.number }}"
+            DISCUSSION_USER="${{ github.event.discussion.user.login }}"
+
+            # Post a comment informing the user to use the correct template
+            gh api -X POST /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/comments \
+              -f body="@${DISCUSSION_USER} Please use the provided template for suggestions. You can find the correct format [here](<link to discussion template>)."
+            
+            # Add the 'discussion/bad-format' label
+            gh api -X POST /repos/${{ github.repository }}/issues/${DISCUSSION_NUMBER}/labels \
+              -f labels='["discussion/bad-format"]'
+            
+            # Close the discussion
+            gh api -X PATCH /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER} \
+              -f state=closed
+          fi
