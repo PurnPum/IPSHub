@@ -13,26 +13,49 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DISCUSSION_BODY="${{ github.event.discussion.body }}"
-          
+
+          # Initialize flags for errors
+          ERROR=false
+
           # Check if all required fields are present in the discussion body
           if ! grep -q "### Base Game" <<< "$DISCUSSION_BODY" ||
-             ! grep -q "### Does your suggestion fit an already existing category? If so, which one?" <<< "$DISCUSSION_BODY" ||
-             ! grep -q "### Do you plan on developing this suggestion?" <<< "$DISCUSSION_BODY" ||
-             ! grep -q "### What is your suggestion?" <<< "$DISCUSSION_BODY"; then
+             ! grep -q "### Implementer" <<< "$DISCUSSION_BODY" ||
+             ! grep -q "### Suggestion Details" <<< "$DISCUSSION_BODY"; then
             
-            # Get the discussion number and user who created the discussion
+            echo "Required template sections are missing."
+            ERROR=true
+          fi
+
+          # Check for exactly one base game selected
+          BASE_GAME_CHECK=$(grep -o '\- \[x\]' <<< "$DISCUSSION_BODY" | wc -l)
+          if [ "$BASE_GAME_CHECK" -ne 1 ]; then
+            echo "Error: Exactly one base game must be selected. Found $BASE_GAME_CHECK selections."
+            ERROR=true
+          fi
+
+          # Check for exactly one implementer option selected
+          IMPLEMENTER_CHECK=$(grep -o '\- \[x\]' <<< "$DISCUSSION_BODY" | wc -l)
+          if [ "$IMPLEMENTER_CHECK" -ne 1 ]; then
+            echo "Error: Exactly one implementer option must be selected. Found $IMPLEMENTER_CHECK selections."
+            ERROR=true
+          fi
+
+          # If any error was found, post a comment, label, and close the discussion
+          if [ "$ERROR" = true ]; then
             DISCUSSION_NUMBER="${{ github.event.discussion.number }}"
             DISCUSSION_USER="${{ github.event.discussion.user.login }}"
 
             # Post a comment informing the user to use the correct template
             gh api -X POST /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/comments \
-              -f body="@${DISCUSSION_USER} Please use the provided template for suggestions. You can find the correct format [here](<link to discussion template>)."
-            
+              -f body="@${DISCUSSION_USER} Please use the provided template for suggestions. Ensure you have filled it out correctly. [See template here](https://github.com/PurnPum/IPSHub/blob/main/.github/DISCUSSION_TEMPLATE/patching%20suggestions.md)."
+
             # Add the 'discussion/bad-format' label
             gh api -X POST /repos/${{ github.repository }}/issues/${DISCUSSION_NUMBER}/labels \
               -f labels='["discussion/bad-format"]'
-            
+
             # Close the discussion
             gh api -X PATCH /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER} \
               -f state=closed
+
+            exit 1
           fi
