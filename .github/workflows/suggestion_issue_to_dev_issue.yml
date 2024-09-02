@@ -27,45 +27,14 @@ jobs:
         id: get_issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          import os
-          from github import Github
+        run: python python_scripts/get_og_issue_data.py
 
-          # Initialize GitHub client
-          g = Github(os.environ['GITHUB_TOKEN'])
-          repo = g.get_repo(os.environ['GITHUB_REPOSITORY'])
-          issue_number = os.environ['GITHUB_EVENT_ISSUE_NUMBER']
-          issue = repo.get_issue(int(issue_number))
-
-          # Output issue data
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
-            output_file.write(f'issue_data={issue.raw_data}\n')
 
       - name: Parse Issue Form Data
         id: parse_form
         env:
           ISSUE_DATA: ${{ steps.set_outputs.outputs.issue_data }}
-        run: |
-          import json
-          import re
-
-          # Load issue data from the previous step's output
-          issue_data = json.loads(os.environ['ISSUE_DATA'])
-          body = issue_data['body']
-          title = body['title']
-          user_login = body['user']['login']
-
-          # Extract data from the issue body
-          base_game = issue_data['base_game']
-          implementer = issue_data['implementer']
-          description = re.search(r"^(.*)(:[\s*])(.*)",title).group(3)
-
-          # Set outputs for the next steps
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
-            output_file.write(f'base_game={base_game}\n')
-            output_file.write(f'implementer={implementer}\n')
-            output_file.write(f'description={description}\n')
-            output_file.write(f'issue_author={user_login}\n')
+        run: python python_scripts/parse_issue_form_data.py
 
       - name: Create New Development Issue
         id: create_issue
@@ -75,57 +44,11 @@ jobs:
           IMPLEMENTER: ${{ steps.set_outputs.outputs.implementer }}
           DESCRIPTION: ${{ steps.set_outputs.outputs.description }}
           ISSUE_AUTHOR: ${{ steps.set_outputs.outputs.issue_author }}
-        run: |
-          import os
-          import json
-          import requests
-          
-          # Get data from past steps
-          base_game = os.environ['BASE_GAME']
-          implementer = os.environ['IMPLEMENTER']
-          description = os.environ['DESCRIPTION']
-          issue_author = os.environ['ISSUE_AUTHOR']
-
-          # Initialize GitHub API data
-          repo = os.environ['GITHUB_REPOSITORY']
-          token = os.environ['GITHUB_TOKEN']
-          headers = {
-            'Authorization': f'token {token}',
-            'Accept': 'application/vnd.github.v3+json'
-          }
-
-          # Prepare issue data
-          title = f"[PATCH DEVELOPMENT]: {base_game}: {description}"
-          body = f"**Original Suggestion:** #{os.environ['GITHUB_EVENT_ISSUE_NUMBER']}\n\n"
-          assignee = issue_author if implementer == 'I will develop it myself' else 'PurnPum'
-
-          # Create new issue
-          response = requests.post(
-            f"https://api.github.com/repos/{repo}/issues",
-            headers=headers,
-            json={
-              'title': title,
-              'body': body,
-              'labels': ['patch development'],
-              'assignees': [assignee]
-            }
-          )
-
-          # Output the new issue number
-          new_issue = response.json()
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
-            output_file.write(f'issue_number={new_issue['number']}\n')
+        run: python python_scripts/create_new_development_issue.py
 
       - name: Close Original Issue
-        run: |
-          curl -X PATCH \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} \
-            -d '{"state":"closed"}'
-
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments \
-            -d '{"body":"This issue has been approved and resolved. See the development progress at issue #${{ steps.create_issue.outputs.issue_number }}."}'
+        id: close_original_issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ steps.set_outputs.outputs.issue_number }}
+        run: python python_scripts/close_original_issue.py
