@@ -50,7 +50,7 @@ jobs:
               -f body="@${DISCUSSION_USER} Please use the provided template for suggestions. Ensure you have filled it out correctly. [See template here](https://github.com/PurnPum/IPSHub/blob/main/.github/DISCUSSION_TEMPLATE/patching%20suggestions.md)."
 
             # Add the 'discussion/bad-format' label
-            gh api -X POST /repos/${{ github.repository }}/issues/${DISCUSSION_NUMBER}/labels \
+            gh api -X POST /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/labels \
               -f labels='["discussion/bad-format"]'
 
             # Close the discussion
