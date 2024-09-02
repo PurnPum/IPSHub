@@ -30,8 +30,10 @@ body:
   - type: dropdown
     id: implementer
     attributes:
-      label: If this suggestion gets approved, do you plan on implementing it, or do you want to leave it on our features queue for us to develop it at some point?
+      label: Implementer
+      description: If this suggestion gets approved, do you plan on implementing it, or do you want to leave it on our features queue for us to develop it at some point?
       multiple: false
       options:
         - I will develop it myself
         - The team should develop it
+      default: 0
