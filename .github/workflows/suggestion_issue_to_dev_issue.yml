@@ -5,60 +5,96 @@ on:
     types: [created]
 
 jobs:
-  approve:
+  approve-patch-suggestion:
     runs-on: ubuntu-latest
-    if: ${{ github.event.comment.body == '/approve' && github.event.comment.user.id == 66346796 }}
+    if: >
+      startsWith(github.event.comment.body, '/approve') &&
+      github.event.comment.user.id == 66346796
+
     steps:
-      - name: Get Issue Details
-        id: issue
-        uses: actions-ecosystem/action-get-issue@v2
+      - name: Set up Git environment
+        uses: actions/checkout@v3
+
+      - name: Get Original Issue Data
+        id: get_issue
+        uses: octokit/request-action@v2
         with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          issue_number: ${{ github.event.issue.number }}
+          route: GET /repos/${{ github.repository }}/issues/${{ github.event.issue.number }}
+          mediaType: |
+            format=json
+            previews=doctor-strange
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Title Components
-        id: title_components
+      - name: Parse Issue Form Data
+        id: parse_form
         run: |
-          TITLE="${{ github.event.issue.title }}"
-          BASE_GAME=$(echo "$TITLE" | sed -E 's/\[(.*)\]: .*/\1/')
-          DESCRIPTION=$(echo "$TITLE" | sed -E 's/\[.*\]: (.*)/\1/')
-          echo "BASE_GAME=$BASE_GAME" >> $GITHUB_ENV
-          echo "DESCRIPTION=$DESCRIPTION" >> $GITHUB_ENV
-
-      - name: Extract Form Field Data
-        id: extract_form_data
-        run: |
-          SUGGESTION_BODY="${{ steps.issue.outputs.body }}"
-          BASE_GAME=$(echo "$SUGGESTION_BODY" | grep -oP '(?<=id="base_game">).*(?=<\/textarea>)')
-          IMPLEMENTER=$(echo "$SUGGESTION_BODY" | grep -oP '(?<=id="implementer">).*(?=<\/textarea>)')
-          echo "BASE_GAME=$BASE_GAME" >> $GITHUB_ENV
-          echo "IMPLEMENTER=$IMPLEMENTER" >> $GITHUB_ENV
-
-      - name: Create New Issue
-        id: new_issue
-        uses: peter-evans/create-issue@v4
+          echo "Parsing issue form data..."
+          body="${{ steps.get_issue.outputs.data }}"
+          
+          suggestion_body=$(echo "$body" | jq -r '.body' | sed -n '/### Suggestion Details/,/### Base Game/p' | sed '1d;$d')
+          base_game=$(echo "$body" | jq -r '.body' | sed -n '/### Base Game/,/### Implementer/p' | sed '1d;$d' | xargs)
+          implementer=$(echo "$body" | jq -r '.body' | sed -n '/### Implementer/,/<!--/p' | sed '1d;$d' | xargs)
+          original_title="${{ steps.get_issue.outputs.data }}" | jq -r '.title'
+          
+          # Extract description from original title
+          description=$(echo "$original_title" | sed -E 's/^\[[^]]+\]: (.+)$/\1/')
+          
+          # Remove any unwanted characters and trim spaces
+          base_game_clean=$(echo "$base_game" | xargs)
+          description_clean=$(echo "$description" | xargs)
+          
+          echo "::set-output name=suggestion_body::$suggestion_body"
+          echo "::set-output name=base_game::$base_game_clean"
+          echo "::set-output name=implementer::$implementer"
+          echo "::set-output name=description::$description_clean"
+          echo "::set-output name=issue_author::${{ steps.get_issue.outputs.data }}" | jq -r '.user.login'
+          
+      - name: Create New Development Issue
+        id: create_issue
+        uses: actions-ecosystem/action-create-issue@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "[PATCH DEVELOPMENT]: ${{ env.BASE_GAME }}: ${{ env.DESCRIPTION }}"
-          body: "This issue was automatically created based on an approved suggestion."
-          labels: "patch development"
-          assignees: ${{ steps.issue.outputs.assignee }}
+          title: "[PATCH DEVELOPMENT]: ${{ steps.parse_form.outputs.base_game }}: ${{ steps.parse_form.outputs.description }}"
+          body: |
+            **Original Suggestion:** #${{ github.event.issue.number }}
+            
+            **Suggestion Details:**
+            ${{ steps.parse_form.outputs.suggestion_body }}
+          labels: 'patch development'
+          assignees: ${{ steps.parse_form.outputs.implementer == 'I will develop it myself' && steps.parse_form.outputs.issue_author || 'PurnPum' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Add Comment and Branch
+      - name: Add Comment to Development Issue
         run: |
-          if [ "${{ env.IMPLEMENTER }}" == "I will develop it myself" ]; then
-            COMMENT="Please fork the main branch and start working on your patch. Post the link to your fork here once done."
+          issue_number=${{ steps.create_issue.outputs.issue_number }}
+          if [ "${{ steps.parse_form.outputs.implementer }}" == "I will develop it myself" ]; then
+            comment_body="This issue has been created based on your suggestion. Please fork the [main branch](https://github.com/${{ github.repository }}/tree/main) and start working on your patch. Once done, kindly post the link to your fork here for review."
           else
-            NEW_BRANCH="feature/${{ steps.new_issue.outputs.number }}"
-            git checkout -b $NEW_BRANCH
-            git push origin $NEW_BRANCH
-            COMMENT="A new branch [$NEW_BRANCH](https://github.com/${{ github.repository }}/tree/$NEW_BRANCH) has been created for this task."
+            branch_name="feature/${issue_number}"
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git checkout -b "$branch_name"
+            git push origin "$branch_name"
+            comment_body="A new branch [${branch_name}](https://github.com/${{ github.repository }}/tree/${branch_name}) has been created for development."
           fi
-          gh issue comment ${{ steps.new_issue.outputs.number }} --body "$COMMENT"
+          
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${issue_number}/comments \
+            -d "{\"body\": \"$comment_body\"}"
 
       - name: Close Original Issue
-        uses: peter-evans/close-issue@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          comment: "This suggestion has been approved and a new issue has been created for development. Closing this issue."
+        run: |
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} \
+            -d '{"state":"closed"}'
+
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments \
+            -d '{"body":"This issue has been approved and resolved. See the development progress at issue #${{ steps.create_issue.outputs.issue_number }}."}'
