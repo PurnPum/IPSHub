@@ -12,7 +12,7 @@ body:
       label: Suggestion Details
       description: Please provide a clear and concise description of your suggestion or idea.
       placeholder: Please provide a clear and concise description of your suggestion or idea.
-      value: ""
+      value: "Type your suggestion here..."
     validations:
       required: true
   - type: dropdown
