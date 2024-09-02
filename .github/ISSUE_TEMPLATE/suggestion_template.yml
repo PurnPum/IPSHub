@@ -1,6 +1,6 @@
 name: Patching Suggestion
-description: Suggest a new feature for patching a game.
-title: "[PATCHING SUGGESTION]: "
+description: Suggest a new feature for patching a game. Replace title with the name of the game (keep the brackets)
+title: "[<BASE GAME>]: "
 labels: ["patch suggestion"]
 projects: ["PurnPum/IPSHub"]
 assignees:
