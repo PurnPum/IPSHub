@@ -14,76 +14,109 @@ jobs:
     steps:
       - name: Set up Git environment
         uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5.2
+        with:
+          python-version: '3.11'
+          
+      - name: Install Dependencies
+        run: pip install requests PyGithub
 
       - name: Get Original Issue Data
         id: get_issue
-        uses: octokit/request-action@v2.3.1
-        with:
-          route: GET /repos/${{ github.repository }}/issues/${{ github.event.issue.number }}
-          mediaType: |
-            format=json
-            previews=doctor-strange
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          import os
+          from github import Github
+
+          # Initialize GitHub client
+          g = Github(os.environ['GITHUB_TOKEN'])
+          repo = g.get_repo(os.environ['GITHUB_REPOSITORY'])
+          issue_number = os.environ['GITHUB_EVENT_ISSUE_NUMBER']
+          issue = repo.get_issue(int(issue_number))
+
+          # Output issue data
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
+            output_file.write(f'issue_data={issue.raw_data}\n')
 
       - name: Parse Issue Form Data
         id: parse_form
+        env:
+          ISSUE_DATA: ${{ steps.set_outputs.outputs.issue_data }}
         run: |
-          echo "Parsing issue form data..."
-          body="${{ steps.get_issue.outputs.data }}"
-          
-          suggestion_body=$(echo "$body" | jq -r '.body' | sed -n '/### Suggestion Details/,/### Base Game/p' | sed '1d;$d')
-          base_game=$(echo "$body" | jq -r '.body' | sed -n '/### Base Game/,/### Implementer/p' | sed '1d;$d' | xargs)
-          implementer=$(echo "$body" | jq -r '.body' | sed -n '/### Implementer/,/<!--/p' | sed '1d;$d' | xargs)
-          original_title="${{ steps.get_issue.outputs.data }}" | jq -r '.title'
-          
-          # Extract description from original title
-          description=$(echo "$original_title" | sed -E 's/^\[[^]]+\]: (.+)$/\1/')
-          
-          # Remove any unwanted characters and trim spaces
-          base_game_clean=$(echo "$base_game" | xargs)
-          description_clean=$(echo "$description" | xargs)
-          
-          echo "::set-output name=suggestion_body::$suggestion_body"
-          echo "::set-output name=base_game::$base_game_clean"
-          echo "::set-output name=implementer::$implementer"
-          echo "::set-output name=description::$description_clean"
-          echo "::set-output name=issue_author::${{ steps.get_issue.outputs.data }}" | jq -r '.user.login'
-          
+          import json
+          import re
+
+          # Load issue data from the previous step's output
+          issue_data = json.loads(os.environ['ISSUE_DATA'])
+          body = issue_data['body']
+          title = body['title']
+          user_login = body['user']['login']
+
+          # Extract data from the issue body
+          base_game = issue_data['base_game']
+          implementer = issue_data['implementer']
+          description = re.search(r"^(.*)(:[\s*])(.*)",title).group(3)
+
+          # Set outputs for the next steps
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
+            output_file.write(f'base_game={base_game}\n')
+            output_file.write(f'implementer={implementer}\n')
+            output_file.write(f'description={description}\n')
+            output_file.write(f'issue_author={user_login}\n')
+
       - name: Create New Development Issue
         id: create_issue
-        uses: actions-ecosystem/action-create-issue@v1
-        with:
-          title: "[PATCH DEVELOPMENT]: ${{ steps.parse_form.outputs.base_game }}: ${{ steps.parse_form.outputs.description }}"
-          body: |
-            **Original Suggestion:** #${{ github.event.issue.number }}
-            
-            **Suggestion Details:**
-            ${{ steps.parse_form.outputs.suggestion_body }}
-          labels: 'patch development'
-          assignees: ${{ steps.parse_form.outputs.implementer == 'I will develop it myself' && steps.parse_form.outputs.issue_author || 'PurnPum' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_GAME: ${{ steps.set_outputs.outputs.base_game }}
+          IMPLEMENTER: ${{ steps.set_outputs.outputs.implementer }}
+          DESCRIPTION: ${{ steps.set_outputs.outputs.description }}
+          ISSUE_AUTHOR: ${{ steps.set_outputs.outputs.issue_author }}
 
       - name: Add Comment to Development Issue
         run: |
-          issue_number=${{ steps.create_issue.outputs.issue_number }}
-          if [ "${{ steps.parse_form.outputs.implementer }}" == "I will develop it myself" ]; then
-            comment_body="This issue has been created based on your suggestion. Please fork the [main branch](https://github.com/${{ github.repository }}/tree/main) and start working on your patch. Once done, kindly post the link to your fork here for review."
-          else
-            branch_name="feature/${issue_number}"
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git checkout -b "$branch_name"
-            git push origin "$branch_name"
-            comment_body="A new branch [${branch_name}](https://github.com/${{ github.repository }}/tree/${branch_name}) has been created for development."
-          fi
+          import os
+          import json
+          import requests
           
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${issue_number}/comments \
-            -d "{\"body\": \"$comment_body\"}"
+          # Get data from past steps
+          base_game = os.environ['BASE_GAME']
+          implementer = os.environ['IMPLEMENTER']
+          description = os.environ['DESCRIPTION']
+          issue_author = os.environ['ISSUE_AUTHOR']
+
+          # Initialize GitHub API data
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          headers = {
+            'Authorization': f'token {token}',
+            'Accept': 'application/vnd.github.v3+json'
+          }
+
+          # Prepare issue data
+          title = f"[PATCH DEVELOPMENT]: {base_game}: {description}"
+          body = f"**Original Suggestion:** #{os.environ['GITHUB_EVENT_ISSUE_NUMBER']}\n\n"
+          assignee = issue_author if implementer == 'I will develop it myself' else 'PurnPum'
+
+          # Create new issue
+          response = requests.post(
+            f"https://api.github.com/repos/{repo}/issues",
+            headers=headers,
+            json={
+              'title': title,
+              'body': body,
+              'labels': ['patch development'],
+              'assignees': [assignee]
+            }
+          )
+
+          # Output the new issue number
+          new_issue = response.json()
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
+            output_file.write(f'issue_number={new_issue['number']}\n')
 
       - name: Close Original Issue
         run: |
