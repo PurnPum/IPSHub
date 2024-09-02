@@ -1,0 +1,64 @@
+name: Patch Suggestion Approval
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.comment.body == '/approve' && github.event.comment.user.id == 66346796 }}
+    steps:
+      - name: Get Issue Details
+        id: issue
+        uses: actions-ecosystem/action-get-issue@v2
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          issue_number: ${{ github.event.issue.number }}
+
+      - name: Extract Title Components
+        id: title_components
+        run: |
+          TITLE="${{ github.event.issue.title }}"
+          BASE_GAME=$(echo "$TITLE" | sed -E 's/\[(.*)\]: .*/\1/')
+          DESCRIPTION=$(echo "$TITLE" | sed -E 's/\[.*\]: (.*)/\1/')
+          echo "BASE_GAME=$BASE_GAME" >> $GITHUB_ENV
+          echo "DESCRIPTION=$DESCRIPTION" >> $GITHUB_ENV
+
+      - name: Extract Form Field Data
+        id: extract_form_data
+        run: |
+          SUGGESTION_BODY="${{ steps.issue.outputs.body }}"
+          BASE_GAME=$(echo "$SUGGESTION_BODY" | grep -oP '(?<=id="base_game">).*(?=<\/textarea>)')
+          IMPLEMENTER=$(echo "$SUGGESTION_BODY" | grep -oP '(?<=id="implementer">).*(?=<\/textarea>)')
+          echo "BASE_GAME=$BASE_GAME" >> $GITHUB_ENV
+          echo "IMPLEMENTER=$IMPLEMENTER" >> $GITHUB_ENV
+
+      - name: Create New Issue
+        id: new_issue
+        uses: peter-evans/create-issue@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "[PATCH DEVELOPMENT]: ${{ env.BASE_GAME }}: ${{ env.DESCRIPTION }}"
+          body: "This issue was automatically created based on an approved suggestion."
+          labels: "patch development"
+          assignees: ${{ steps.issue.outputs.assignee }}
+
+      - name: Add Comment and Branch
+        run: |
+          if [ "${{ env.IMPLEMENTER }}" == "I will develop it myself" ]; then
+            COMMENT="Please fork the main branch and start working on your patch. Post the link to your fork here once done."
+          else
+            NEW_BRANCH="feature/${{ steps.new_issue.outputs.number }}"
+            git checkout -b $NEW_BRANCH
+            git push origin $NEW_BRANCH
+            COMMENT="A new branch [$NEW_BRANCH](https://github.com/${{ github.repository }}/tree/$NEW_BRANCH) has been created for this task."
+          fi
+          gh issue comment ${{ steps.new_issue.outputs.number }} --body "$COMMENT"
+
+      - name: Close Original Issue
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment: "This suggestion has been approved and a new issue has been created for development. Closing this issue."
