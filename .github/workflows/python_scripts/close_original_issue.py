@@ -3,7 +3,7 @@ import os
 
 GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
 REPOSITORY = os.environ['GITHUB_REPOSITORY']
-ISSUE_NUMBER = os.environ['GITHUB_EVENT_ISSUE_NUMBER']
+ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_NUMBER']
 NEW_ISSUE_NUMBER = os.environ['ISSUE_NUMBER']
 GITHUB_API_URL = f"https://api.github.com/repos/{REPOSITORY}/issues/{ISSUE_NUMBER}"
 

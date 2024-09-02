@@ -18,7 +18,7 @@ headers = {
 
 # Prepare issue data
 title = f"[PATCH DEVELOPMENT]: {base_game}: {description}"
-body = f"**Original Suggestion:** #{os.environ['GITHUB_EVENT_ISSUE_NUMBER']}\n\n"
+body = f"**Original Suggestion:** #{os.environ['ORIGINAL_ISSUE_NUMBER']}\n\n"
 assignee = issue_author if implementer == 'I will develop it myself' else 'PurnPum'
 
 # Create new issue
