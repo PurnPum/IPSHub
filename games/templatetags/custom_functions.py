@@ -2,8 +2,8 @@ from django import template
 from django.urls import reverse
 
 from patches.models import Patch, PatchFav, PatchCommentLike
-from ..models import Game
-from ..utils import get_category_hierarchy
+from games.models import Game
+from core.utils import get_category_hierarchy
 from categories.models import Category
 from django.db.models import Count
 

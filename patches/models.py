@@ -4,11 +4,13 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import User
 from django.forms import ValidationError
+from core.utils import normalize_string
 
 class Patch(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4, unique=True)
     parent_patch = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subpatches')
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
+    normalized_name = models.CharField(max_length=200)
     downloads = models.IntegerField(default=0)
     favorites = models.IntegerField(default=0)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -21,6 +23,7 @@ class Patch(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
+        self.normalized_name = normalize_string(self.name)
         if self.pk is None:
             super(Patch, self).save(*args, **kwargs)
         else:

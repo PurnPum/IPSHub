@@ -1,5 +1,4 @@
 import json
-from .models import Patch, PatchOption, POField, PatchData
 
 from django import forms
 from .models import POField, PatchData

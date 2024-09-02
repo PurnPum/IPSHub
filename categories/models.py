@@ -1,4 +1,5 @@
 from django.db import models
+from core.utils import normalize_string
 import uuid
 
 from django.forms import ValidationError
@@ -10,6 +11,11 @@ class Category(models.Model):
     description = models.TextField(blank=True)
     image_ref = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
+    normalized_name = models.CharField(max_length=200)
+
+    def save(self, *args, **kwargs):
+        self.normalized_name = normalize_string(self.name)
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
