@@ -19,7 +19,7 @@ body:
     id: base_game
     attributes:
       label: Base Game
-	    multiple: false
+      multiple: false
       description: Select, from the list below, the game this patching suggestion is intended to work with
       options:
         - "Pokémon: Yellow Edition"
