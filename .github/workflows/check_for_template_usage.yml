@@ -44,16 +44,22 @@ jobs:
           if [ "$ERROR" = true ]; then
             DISCUSSION_NUMBER="${{ github.event.discussion.number }}"
             DISCUSSION_USER="${{ github.event.discussion.user.login }}"
+            
+            echo "${DISCUSSION_NUMBER}"
+            echo "${DISCUSSION_USER}"
 
             # Post a comment informing the user to use the correct template
+            echo "/repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/comments"
             gh api -X POST /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/comments \
               -f body="@${DISCUSSION_USER} Please use the provided template for suggestions. Ensure you have filled it out correctly. [See template here](https://github.com/PurnPum/IPSHub/blob/main/.github/DISCUSSION_TEMPLATE/patching%20suggestions.md)."
 
             # Add the 'discussion/bad-format' label
+            echo "/repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/labels"
             gh api -X POST /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER}/labels \
               -f labels='["discussion/bad-format"]'
 
             # Close the discussion
+            echo "/repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER} \"
             gh api -X PATCH /repos/${{ github.repository }}/discussions/${DISCUSSION_NUMBER} \
               -f state=closed
 
