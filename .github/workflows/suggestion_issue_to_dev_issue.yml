@@ -27,14 +27,14 @@ jobs:
         id: get_issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python python_scripts/get_og_issue_data.py
+        run: python .github/workflows/python_scripts/get_og_issue_data.py
 
 
       - name: Parse Issue Form Data
         id: parse_form
         env:
           ISSUE_DATA: ${{ steps.set_outputs.outputs.issue_data }}
-        run: python python_scripts/parse_issue_form_data.py
+        run: python .github/workflows/python_scripts/parse_issue_form_data.py
 
       - name: Create New Development Issue
         id: create_issue
@@ -44,11 +44,11 @@ jobs:
           IMPLEMENTER: ${{ steps.set_outputs.outputs.implementer }}
           DESCRIPTION: ${{ steps.set_outputs.outputs.description }}
           ISSUE_AUTHOR: ${{ steps.set_outputs.outputs.issue_author }}
-        run: python python_scripts/create_new_development_issue.py
+        run: python .github/workflows/python_scripts/create_new_development_issue.py
 
       - name: Close Original Issue
         id: close_original_issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ steps.set_outputs.outputs.issue_number }}
-        run: python python_scripts/close_original_issue.py
+        run: python .github/workflows/python_scripts/close_original_issue.py
