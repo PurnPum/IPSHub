@@ -12,7 +12,6 @@ GITHUB_API_URL_ISSUES = f"https://api.github.com/repos/{REPOSITORY}/issues/"
 
 headers = {
   "Authorization": f"token {GITHUB_TOKEN}",
-  "Accept": "application/vnd.github.v3+json"
 }
 
 def close_issue():
