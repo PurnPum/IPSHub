@@ -8,7 +8,7 @@ REPOSITORY = os.environ['GITHUB_REPOSITORY']
 ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_NUMBER']
 ISSUE_AUTHOR = os.environ['ISSUE_AUTHOR']
 GITHUB_API_URL_ISSUENUM = f"https://api.github.com/repos/{REPOSITORY}/issues/{ISSUE_NUMBER}"
-GITHUB_API_URL_ISSUES = f"https://api.github.com/repos/{REPOSITORY}/issues/"
+GITHUB_API_URL_ISSUES = f"https://api.github.com/repos/{REPOSITORY}/issues"
 
 headers = {
   "Authorization": f"token {GITHUB_TOKEN}",
@@ -81,7 +81,6 @@ def create_issue(base_game, implementer, description):
     sys.exit(1)
     
 if __name__ == '__main__':
-  print(REPOSITORY)
   data = parse_issue_form_data()
   number = create_issue(data['base_game'], data['implementer'], data['description'])
   close_issue()
