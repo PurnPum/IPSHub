@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
           
       - name: Install Dependencies
-        run: pip install requests PyGithub
+        run: pip install requests
 
       - name: Create New Development Issue and Close the Original Issue
         id: create_new_issue_close_original_issue
@@ -33,8 +33,10 @@ jobs:
           ORIGINAL_ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: python .github/workflows/python_scripts/create_new_development_issue.py
 
-      - name: Invoke the Workflow that links a branch to the issue
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Create and link branch to newly created patch development issue
-          inputs: '{ "issue_id": "${{ env.issue_id }}" }'
+      - name: Create and link branch to Issue
+        id: create_link_branch
+        env:
+          ISSUE_ID: ${{ env.issue_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/workflows/python_scripts/create_link_branch.py
+        
