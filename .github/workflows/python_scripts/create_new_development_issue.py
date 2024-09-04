@@ -8,7 +8,7 @@ def close_issue():
     "state": "closed"
   }
     
-  response = requests.patch(GITHUB_API_URL_ISSUENUM, headers=headers, json=data)
+  response = requests.patch(GITHUB_API_URL_ISSUENUM, headers=headersGitHub, json=data)
     
   if response.status_code == 200:
     print(f"Issue #{ISSUE_NUMBER} closed successfully.")
@@ -25,7 +25,7 @@ def post_comment(new_issue_num,user_developed=True):
     "body": f"This issue has been approved and resolved. See the development progress at issue #{new_issue_num}."
   }
 
-  response = requests.post(comment_url, headers=headers, json=comment_data)
+  response = requests.post(comment_url, headers=headersGitHub, json=comment_data)
 
   if response.status_code == 201:
     print(f"Comment posted successfully on issue #{ISSUE_NUMBER}.")
@@ -56,7 +56,7 @@ def create_issue(base_game, implementer, description):
 
   response = requests.post(
     GITHUB_API_URL_ISSUES,
-    headers=headers,
+    headers=headersIPSHub,
     json={
       'title': title,
       'body': body,
@@ -78,6 +78,7 @@ def create_issue(base_game, implementer, description):
 
 if __name__ == '__main__':
   GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
+  IPSHUB_TOKEN = os.environ['IPSHUB_TOKEN']
   REPOSITORY = os.environ['GITHUB_REPOSITORY']
   ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_NUMBER']
   ISSUE_AUTHOR = os.environ['ISSUE_AUTHOR']
@@ -86,8 +87,11 @@ if __name__ == '__main__':
   GITHUB_API_URL_REFS = f"https://api.github.com/repos/{REPOSITORY}/git/refs"
   BASE_GAME_LABELS = {"Pokémon: Yellow Edition": "pokeyellow", "Pokémon: Crystal Edition": 'pokecrystal'}
 
-  headers = {
+  headersGitHub = {
     "Authorization": f"token {GITHUB_TOKEN}",
+  }
+  headersIPSHub = {
+    "Authorization": f"token {IPSHUB_TOKEN}",
   }
   data = parse_issue_form_data()
   number = create_issue(data['base_game'], data['implementer'], data['description'])

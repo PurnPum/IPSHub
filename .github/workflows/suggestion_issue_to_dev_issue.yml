@@ -28,7 +28,8 @@ jobs:
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
-          GITHUB_TOKEN: ${{ secrets.IPSHUB_TOKEN }}
+          IPSHUB_TOKEN: ${{ secrets.IPSHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           ORIGINAL_ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: python .github/workflows/python_scripts/create_new_development_issue.py
