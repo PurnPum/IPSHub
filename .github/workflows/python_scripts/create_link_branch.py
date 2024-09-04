@@ -5,6 +5,7 @@ def create_branch():
     
   branchName = f"patchdev/{int(ISSUE_ID):04d}"
   payload = {
+    "Authorization": f"token {GITHUB_TOKEN}",
     "name": branchName,
     "branch": "main",
     "after_create": "checkout-locally",
