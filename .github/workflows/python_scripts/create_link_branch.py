@@ -23,7 +23,7 @@ def create_branch():
     
 def get_github_cookie():
     response = requests.get("https://github.com", headers=headers)
-    return response.cookies
+    return response.cookies['_gh_sess']
     
 if __name__ == '__main__':
   ISSUE_ID = os.environ['ISSUE_ID']
