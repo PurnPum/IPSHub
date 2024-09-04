@@ -5,7 +5,7 @@ on:
     types: [opened]
 
 jobs:
-  approve-patch-suggestion:
+  validate-patch-implementation:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.pull_request.labels.*.id, 7415953493) &&

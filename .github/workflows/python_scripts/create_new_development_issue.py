@@ -66,37 +66,11 @@ def create_issue(base_game, implementer, description):
 
   try:
     new_issue = response.json()
-    create_branch(new_issue['number'])
     post_comment(new_issue['number'],user_developed = implementer == 'I will develop it myself')
     # TODO Add team/user label
   except:
     print(f"Failed to create issue. Response: {response.content}")
     sys.exit(1)
-    
-def create_branch(new_issue_num):
-
-  response = requests.get(
-    GITHUB_API_URL_REFS + '/heads/main',
-    headers=headers
-  )
-  if response.status_code != 200:
-    print(f"Failed to get the sha of the current 'main' branch. Response: {response.content}")
-    sys.exit(1)
-  BASE_BRANCH_SHA = response.json()['object']['sha']
-  
-  payload = {
-    "ref": f"refs/heads/feature/{new_issue_num}",
-    "sha": BASE_BRANCH_SHA
-  }
-
-  response = requests.post(GITHUB_API_URL_REFS, json=payload, headers=headers)
-
-  if response.status_code == 201:
-    print(f"Branch 'feature/{new_issue_num}' created successfully!")
-  else:
-    print(f"Failed to create branch. Status code: {response.status_code}")
-    print(response.json())
-
 
 if __name__ == '__main__':
   GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
