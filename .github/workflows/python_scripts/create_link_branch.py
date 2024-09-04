@@ -5,7 +5,7 @@ def create_branch():
     
   branchName = f"patchdev/{int(ISSUE_ID):04d}"
   payload = {
-    "Authorization": f"token {GITHUB_TOKEN}",
+    "authenticity_token": f"token {GITHUB_TOKEN}",
     "name": branchName,
     "branch": "main",
     "after_create": "checkout-locally",
@@ -18,7 +18,7 @@ def create_branch():
     print(f"Branch {branchName} created successfully!")
   else:
     print(f"Failed to create branch {branchName}. Status code: {response.status_code}")
-    print(response)
+    print(response.text)
     sys.exit(1)
     
 if __name__ == '__main__':
