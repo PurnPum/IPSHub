@@ -1,0 +1,40 @@
+name: Validate patch implementation
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  approve-patch-suggestion:
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.pull_request.labels.*.id, 7415953493) &&
+      startsWith(join(github.event.pull_request.labels.*.name, ','), 'base_game/')
+
+    steps:
+      - name: Set up Git environment
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+        
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate patch directory structure
+        id: validate_patch_structure
+        env:
+          CHECKOUT_DIRECTORY: ${{ github.workspace }}
+          LABELS: $ {{ github.event.pull_request.labels.*.name }}
+        run: |
+            cd $CHECKOUT_DIRECTORY/static/diffs/
+            echo $LABELS
+            base_game_label=$(echo "${{ github.event.pull_request.labels.*.name }}" | grep -o 'base_game/[^ ]*' | head -n 1)
+            echo $base_game_label
+            game_name=$(echo "$base_game_label" | cut -d'/' -f2)
+            echo $game_name
+            python .github/workflows/python_scripts/validate_diffs.py -r $game_name

@@ -14,8 +14,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description="""Compares the directories of the original game, where the original directory is the cloned repository of the unmodified game,
         and the new directory, where all the desired modifications of the game have been implemented on top of the original directory structure.
-        It then will generate a patch file for each file that is different from the original. These patch files will be created in a third directory,
-        which by default will be the current directory.
+        It then will generate a patch file for each file that is different from the original. These patch files will be created in a new folder called diffs, which will be placed in the current directory.
         Make sure that the directory with the modified game has the same folder structure as the original. If you have compiled the game at least once in the directory with your
         modifications, use the flag -c or --compiled.
         Any new files created in the new directory will be directly copied to the patch directory, and any files from the original directory that are deleted the new directory
@@ -27,7 +26,6 @@ def parse_arguments():
     parser.add_argument('-m', '--modified_dir', required=True, help='Path to the directory with the modified game')
     parser.add_argument('-c', '--compiled', action='store_true', help='Indicate that the directory with the modified game has been compiled at least once')
     parser.add_argument('-e', '--extensions', default=','.join(SUPPORTED_EXTENSIONS), help=f"Comma-separated list of file extensions to consider. Default: {', '.join(SUPPORTED_EXTENSIONS)}")
-    parser.add_argument('-p', '--patch_dir', default=os.path.join(os.getcwd(),'diffs'), help="Path for the directory to store patch files (default:" + os.path.join(os.getcwd(),'diffs') + ")")
     parser.add_argument('-v', '--verbose', action='store_true', help='Make the script output more verbose (default: not verbose)')
     
     args = parser.parse_args()
@@ -42,18 +40,14 @@ def parse_arguments():
         
     if not os.path.isabs(args.modified_dir):
         args.modified_dir = os.path.join(os.getcwd(), args.modified_dir)
-        
-    if args.patch_dir:
-        if not os.path.isabs(args.patch_dir):
-            args.patch_dir = os.path.join(os.getcwd(), args.patch_dir)
 
-    return args.repository_name, args.modified_dir, args.compiled, extensions, args.patch_dir, args.verbose
+    return args.repository_name, args.modified_dir, args.compiled, extensions, args.verbose
 
-def compare_and_generate_patches(repo_name, modified_dir, compiled, extensions, patch_dir, verbose):
+def compare_and_generate_patches(repo_name, modified_dir, compiled, extensions, verbose):
+    patch_dir = os.path.join(os.getcwd(),'diffs')
+    patch_dir.mkdir(parents=True, exist_ok=True)
     original_dir = Path(clone_game_repo(repo_name, verbose))
     modified_dir = Path(modified_dir)
-    patch_dir = Path(patch_dir)
-    patch_dir.mkdir(parents=True, exist_ok=True)
     if compiled:
         compile_cloned_game(original_dir)
     
@@ -198,19 +192,19 @@ def clean_before_fatal_exit():
         
 if __name__ == "__main__":
     if '-h' in sys.argv or '--help' in sys.argv:
-        print("Usage: python generate_diffs.py -r <repository_name> -m <modified_dir> [-e <extensions>] [-p <patch_dir>] [-v] [-c]")
+        print("Usage: python generate_diffs.py -r <repository_name> -m <modified_dir> [-e <extensions>] [-v] [-c]")
         print("Example Usage: python generate_diffs.py -r pokeyellow -m ./pokeyellow -c -v")
         print("Options:")
         print("  -r, --repository_name   Name of the repository of the original game")
         print("  -m, --modified_dir      Path to the directory with the modified game")
         print("  -c, --compiled          Indicate that the directory with the modified game has been compiled at least once. If you select this flag, make sure that your system still has all the dependencies needed to compile the project, but since you did compile it to need to mark this flag, you probably do.")
         print("  -e, --extensions        Comma-separated list of file extensions to consider (default: Everything within the Supported Extensions)")
-        print("  -p, --patch_dir         Path for the directory to store patch files (default:" + os.path.join(os.getcwd(),'diffs') + ")")
         print("  -v, --verbose           Make the script output more verbose")
+        print("Will generate all the patches in a directory structure located in ./diffs")
         print("Supported Extensions:" + ", ".join(SUPPORTED_EXTENSIONS))
         print("Supported Repositories:")
         for name, url in SUPPORTED_REPOSITORIES.items():
             print(f"  {name}: {url}")
     else:
-        repository_name, modified_dir, compiled, extensions, patch_dir, verbose = parse_arguments()
-        compare_and_generate_patches(repository_name, modified_dir, compiled, extensions, patch_dir, verbose)
+        repository_name, modified_dir, compiled, extensions, verbose = parse_arguments()
+        compare_and_generate_patches(repository_name, modified_dir, compiled, extensions, verbose)
