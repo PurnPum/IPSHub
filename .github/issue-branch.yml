@@ -1,2 +1,2 @@
 mode: immediate
-branchName: 'patchdev/${{ inputs.issue_id }}'
+branchName: 'patchdev/${{ github.event.issue.number }}'
