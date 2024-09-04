@@ -17,7 +17,7 @@ def create_branch():
     print(f"Branch {branchName} created successfully!")
   else:
     print(f"Failed to create branch {branchName}. Status code: {response.status_code}")
-    print(response.json())
+    print(response)
     sys.exit(1)
     
 if __name__ == '__main__':
