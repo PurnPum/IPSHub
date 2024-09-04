@@ -2,7 +2,6 @@ import requests
 import sys, os
 
 def create_branch():
-    
   branchName = f"patchdev/{int(ISSUE_ID):04d}"
   payload = {
     "authenticity_token": f"token {GITHUB_TOKEN}",
@@ -10,6 +9,7 @@ def create_branch():
     "branch": "main",
     "after_create": "checkout-locally",
     "skip_error_flash": "true",
+    "Cookie": get_github_cookie()
   }
 
   response = requests.post(GITHUB_API_URL_LINK_BRANCH, json=payload, headers=headers)
@@ -20,6 +20,10 @@ def create_branch():
     print(f"Failed to create branch {branchName}. Status code: {response.status_code}")
     print(response.text)
     sys.exit(1)
+    
+def get_github_cookie():
+    response = requests.get("https://github.com", headers=headers)
+    return response.cookies
     
 if __name__ == '__main__':
   ISSUE_ID = os.environ['ISSUE_ID']
