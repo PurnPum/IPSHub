@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Create Issue Branch
         uses: robvanderleek/create-issue-branch@main
-        branchName: 'patchdev/${issue.number%4}'
+        with:
+          branchName: 'patchdev/${{ github.event.issue.number }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

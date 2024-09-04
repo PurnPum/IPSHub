@@ -1,5 +1,5 @@
 name: Patching Suggestion
-description: Suggest a new feature for patching a game. Replace the title content that is in between < and > symbols.
+description: Suggest a new feature for patching a game. Replace the title content that is in between < and > symbols. Make sure to add the patching/suggestion and the correct base_game/xxx labels!.
 title: "[PATCH SUGGESTION] <BASE GAME>: <Brief suggestion description>"
 labels: ["patch suggestion"]
 projects: ["PurnPum/IPSHub"]
