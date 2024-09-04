@@ -3,17 +3,6 @@ import re
 import sys
 import requests
 
-GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
-REPOSITORY = os.environ['GITHUB_REPOSITORY']
-ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_NUMBER']
-ISSUE_AUTHOR = os.environ['ISSUE_AUTHOR']
-GITHUB_API_URL_ISSUENUM = f"https://api.github.com/repos/{REPOSITORY}/issues/{ISSUE_NUMBER}"
-GITHUB_API_URL_ISSUES = f"https://api.github.com/repos/{REPOSITORY}/issues"
-
-headers = {
-  "Authorization": f"token {GITHUB_TOKEN}",
-}
-
 def close_issue():
   data = {
     "state": "closed"
@@ -28,8 +17,10 @@ def close_issue():
     sys.exit(1)
   return response
 
-def post_comment(new_issue_num):
+def post_comment(new_issue_num,user_developed=True):
   comment_url = f"{GITHUB_API_URL_ISSUENUM}/comments"
+  if user_developed:
+    pass # TODO extra_comment
   comment_data = {
     "body": f"This issue has been approved and resolved. See the development progress at issue #{new_issue_num}."
   }
@@ -68,21 +59,58 @@ def create_issue(base_game, implementer, description):
     json={
       'title': title,
       'body': body,
-      'labels': ['patch development'],
+      'labels': ['patching/development'],
       'assignees': [assignee]
     }
   )
 
   try:
     new_issue = response.json()
-    return new_issue['number']
+    create_branch(new_issue['number'])
+    post_comment(new_issue['number'],user_developed = implementer == 'I will develop it myself')
+    # TODO Add team/user label
   except:
     print(f"Failed to create issue. Response: {response.content}")
     sys.exit(1)
     
+def create_branch(new_issue_num):
+
+  response = requests.get(
+    GITHUB_API_URL_REFS + '/heads/main',
+    headers=headers
+  )
+  if response.status_code != 200:
+    print(f"Failed to get the sha of the current 'main' branch. Response: {response.content}")
+    sys.exit(1)
+  BASE_BRANCH_SHA = response.json()['object']['sha']
+  
+  payload = {
+    "ref": f"refs/heads/feature/{new_issue_num}",
+    "sha": BASE_BRANCH_SHA
+  }
+
+  response = requests.post(GITHUB_API_URL_REFS, json=payload, headers=headers)
+
+  if response.status_code == 201:
+    print(f"Branch 'feature/{new_issue_num}' created successfully!")
+  else:
+    print(f"Failed to create branch. Status code: {response.status_code}")
+    print(response.json())
+
+
 if __name__ == '__main__':
+  GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
+  REPOSITORY = os.environ['GITHUB_REPOSITORY']
+  ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_NUMBER']
+  ISSUE_AUTHOR = os.environ['ISSUE_AUTHOR']
+  GITHUB_API_URL_ISSUENUM = f"https://api.github.com/repos/{REPOSITORY}/issues/{ISSUE_NUMBER}"
+  GITHUB_API_URL_ISSUES = f"https://api.github.com/repos/{REPOSITORY}/issues"
+  GITHUB_API_URL_REFS = f"https://api.github.com/repos/{REPOSITORY}/git/refs"
+
+  headers = {
+    "Authorization": f"token {GITHUB_TOKEN}",
+  }
   data = parse_issue_form_data()
   number = create_issue(data['base_game'], data['implementer'], data['description'])
   close_issue()
-  post_comment(number)
   
