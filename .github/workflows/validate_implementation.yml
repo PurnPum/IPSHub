@@ -14,16 +14,13 @@ jobs:
     steps:
       - name: Set up Git environment
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
         
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-        
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
       - name: Validate patch directory structure
         id: validate_patch_structure
