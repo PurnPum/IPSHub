@@ -68,6 +68,8 @@ def create_issue(base_game, implementer, description):
     new_issue = response.json()
     post_comment(new_issue['number'],user_developed = implementer == 'I will develop it myself')
     # TODO Add team/user label
+    with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+      env_file.write(f'issue_id={new_issue['number']}\n')
   except:
     print(f"Failed to create issue. Response: {response.content}")
     sys.exit(1)

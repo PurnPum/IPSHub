@@ -1,18 +1,20 @@
 name: Create and link branch to newly created patch development issue
 
 on:
-  issues:
-    types: [ opened ]
+  workflow_dispatch:
+    inputs:
+      issue_id:
+        required: True
+        type: number
 
 jobs:
   create_issue_branch_job:
     runs-on: ubuntu-latest
-    if: contains(github.event.issue.labels.*.id, 7409398640)
-    
+    if: ${{ inputs.issue_id }}
     steps:
       - name: Create Issue Branch
         uses: robvanderleek/create-issue-branch@main
         with:
-          branchName: 'patchdev/${{ github.event.issue.number }}'
+          branchName: 'patchdev/${{ inputs.issue_id }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
