@@ -52,6 +52,7 @@ def create_issue(base_game, implementer, description):
   title = f"[PATCH DEVELOPMENT]: {base_game}: {description}"
   body = f"**Original Suggestion:** #{ISSUE_NUMBER}\n\n"
   assignee = ISSUE_AUTHOR if implementer == 'I will develop it myself' else 'PurnPum'
+  base_game_label = BASE_GAME_LABELS[base_game]
 
   response = requests.post(
     GITHUB_API_URL_ISSUES,
@@ -59,7 +60,7 @@ def create_issue(base_game, implementer, description):
     json={
       'title': title,
       'body': body,
-      'labels': ['patching/development'],
+      'labels': ['patching/development', f"base_game/{base_game_label}"],
       'assignees': [assignee]
     }
   )
@@ -83,6 +84,7 @@ if __name__ == '__main__':
   GITHUB_API_URL_ISSUENUM = f"https://api.github.com/repos/{REPOSITORY}/issues/{ISSUE_NUMBER}"
   GITHUB_API_URL_ISSUES = f"https://api.github.com/repos/{REPOSITORY}/issues"
   GITHUB_API_URL_REFS = f"https://api.github.com/repos/{REPOSITORY}/git/refs"
+  BASE_GAME_LABELS = {"Pokémon: Yellow Edition": "pokeyellow", "Pokémon: Crystal Edition": 'pokecrystal'}
 
   headers = {
     "Authorization": f"token {GITHUB_TOKEN}",
