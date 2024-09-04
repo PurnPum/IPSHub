@@ -3,7 +3,7 @@ import sys, os
 
 def create_branch():
     
-  branchName = f"patchdev/{ISSUE_ID:04d}"
+  branchName = f"patchdev/{int(ISSUE_ID):04d}"
   payload = {
     "name": branchName,
     "branch": "main",
