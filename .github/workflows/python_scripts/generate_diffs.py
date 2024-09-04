@@ -6,12 +6,11 @@ import subprocess
 from pathlib import Path
 from urllib.parse import urlparse
 
-# Define the list of supported extensions
 SUPPORTED_EXTENSIONS = ['asm']
 SUPPORTED_REPOSITORIES = {'pokeyellow': "https://github.com/pret/pokeyellow.git", 'pokecrystal': "https://github.com/pret/pokecrystal.git"}
+TEMP_DIR = Path('/tmp/temp_clone')
 
 def parse_arguments():
-    """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description="""Compares the directories of the original game, where the original directory is the cloned repository of the unmodified game,
         and the new directory, where all the desired modifications of the game have been implemented on top of the original directory structure.
@@ -33,7 +32,6 @@ def parse_arguments():
     
     args = parser.parse_args()
 
-    # Process extensions argument
     if args.extensions:
         extensions = args.extensions.split(',')
         for ext in extensions:
@@ -52,7 +50,7 @@ def parse_arguments():
     return args.repository_name, args.modified_dir, args.compiled, extensions, args.patch_dir, args.verbose
 
 def compare_and_generate_patches(repo_name, modified_dir, compiled, extensions, patch_dir, verbose):
-    original_dir = Path(clone_game_repo(repo_name))
+    original_dir = Path(clone_game_repo(repo_name, verbose))
     modified_dir = Path(modified_dir)
     patch_dir = Path(patch_dir)
     patch_dir.mkdir(parents=True, exist_ok=True)
@@ -89,14 +87,14 @@ def compare_and_generate_patches(repo_name, modified_dir, compiled, extensions, 
                     print("New file exists:", new_file)
                 if not files_are_identical(original_file, new_file):
                     print("Found modified file:", new_file)
-                    patch_file = patch_dir / relative_path.with_suffix('.patch')
+                    patch_file = patch_dir / relative_path.with_name(relative_path.name + '.patch')
                     patch_file.parent.mkdir(parents=True, exist_ok=True)
                     if verbose:
                         print("Generating patch file:", patch_file)
                     generate_patch(original_file, new_file, patch_file)
             else:
                 print("New file does not exist:", new_file)
-                delete_file = patch_dir / relative_path.with_suffix('.delete')
+                delete_file = patch_dir / relative_path.with_name(relative_path.name + '.delete')
                 delete_file.parent.mkdir(parents=True, exist_ok=True)
                 delete_file.touch()
                 print("Created empty .delete file:", delete_file)
@@ -128,9 +126,8 @@ def compare_and_generate_patches(repo_name, modified_dir, compiled, extensions, 
                 copy_to_patch_dir.write_bytes(new_file.read_bytes())
                 print("Copied new file to patch directory:", copy_to_patch_dir)
     
-    if original_dir.as_posix().startswith('/tmp/temp_clone/'):
-        print("Process finished, cleaning up temporary files located in", original_dir)
-        shutil.rmtree(original_dir)
+    print("Process finished successfully, cleaning up temporary files located in", TEMP_DIR)
+    shutil.rmtree(TEMP_DIR)
 
 def files_are_identical(file1, file2):
     if verbose:
@@ -150,10 +147,10 @@ def generate_patch(original_file, new_file, patch_file):
     except subprocess.CalledProcessError as e:
         # The diff binary has 3 possible return codes: 0 if the files are identical, 1 if they are different, and 2 if an error occurred.
         if e.returncode == 2:
-            print("An error occurred while generating the patch.")
+            print(f"An error occurred while generating the patch {patch_file} from the differences between {original_file} and {new_file}")
             print("Output:", e.stderr)
             print("Return Code:", e.returncode)
-            sys.exit(1)
+            clean_before_fatal_exit()
         elif e.returncode == 1:
             print("Successfully generated patch file:", patch_file)
         else: # e.returncode == 0
@@ -162,16 +159,15 @@ def generate_patch(original_file, new_file, patch_file):
             if patch_file.exists():
                 patch_file.unlink()
 
-def clone_game_repo(repo_name):
+def clone_game_repo(repo_name,verbose=False):
     github_url = SUPPORTED_REPOSITORIES[repo_name]
     print("Cloning repository:", github_url)
     # Before running this process, move the current directory to /tmp, create a dir called 'temp_clone', and clone the repo in there.
-    temp_clone_dir = Path('/tmp/temp_clone')
-    if not temp_clone_dir.exists():
-        temp_clone_dir.mkdir()
+    if not TEMP_DIR.exists():
+        TEMP_DIR.mkdir()
     if verbose:
-        print("Temporary clone directory:", temp_clone_dir)
-    os.chdir(temp_clone_dir)
+        print("Temporary clone directory:", TEMP_DIR)
+    os.chdir(TEMP_DIR)
     if verbose:
         print("Current working directory:", os.getcwd())
     try:
@@ -180,9 +176,9 @@ def clone_game_repo(repo_name):
         print("An error occurred while cloning the repository.")
         print("Output:", e.stderr)
         print("Return Code:", e.returncode)
-        sys.exit(1)
+        clean_before_fatal_exit()
     print("Repository cloned successfully.")
-    return os.path.join(temp_clone_dir, repo_name)
+    return os.path.join(TEMP_DIR, repo_name)
 
 def compile_cloned_game(dir):
     os.chdir(dir)
@@ -192,9 +188,14 @@ def compile_cloned_game(dir):
         print("An error occurred while compiling the game.")
         print("Output:", e.stderr)
         print("Return Code:", e.returncode)
-        sys.exit(1)
+        clean_before_fatal_exit()
     print("Compilation finished successfully.")
 
+def clean_before_fatal_exit():
+    print("Process finished with a fatal error, cleaning up temporary files located in", TEMP_DIR)
+    shutil.rmtree(TEMP_DIR)
+    sys.exit(1)
+        
 if __name__ == "__main__":
     if '-h' in sys.argv or '--help' in sys.argv:
         print("Usage: python generate_diffs.py -r <repository_name> -m <modified_dir> [-e <extensions>] [-p <patch_dir>] [-v] [-c]")
