@@ -62,7 +62,10 @@
    - Please note that there should be __two__ **diffs** directories, one inside the other, such as /static/diffs/diffs/[your changes]
 
 7. **Push these changes to your fork, then create a Pull Request with these changes. Use proper labels**
-   - Make sure the following labels are added: patching/pull-request, patching/user-developed, base_game/[game]
+   - Make sure the following labels are added:
+     - __patching/pull-request__
+     - __patching/user-developed__
+     - __base_game/[game]__
      - The game in the base_game/ label is the same as the ones in the __Supported Repositories__ section of point 4 (for example, base_game/pokeyellow)
    - The validation workflow will run to check if your changes still allow the ROM to compile, when that check passes, we will begin the manual evaluation of the PR.
 8. **Make any changes that we may require**
