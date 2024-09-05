@@ -27,9 +27,5 @@ jobs:
           LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
         run: |
             cd $CHECKOUT_DIRECTORY/static/diffs/
-            echo $LABELS
-            base_game_label=$(echo "${{ github.event.pull_request.labels.*.name }}" | grep -o 'base_game/[^ ]*' | head -n 1)
-            echo $base_game_label
-            game_name=$(echo "$base_game_label" | cut -d'/' -f2)
-            echo $game_name
+            game_name=$(echo $LABELS | grep -oP '(?<=base_game/)[^,]+')
             python $CHECKOUT_DIRECTORY/.github/workflows/python_scripts/validate_diffs.py -r $game_name
