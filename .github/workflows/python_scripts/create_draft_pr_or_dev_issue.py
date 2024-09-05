@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 import sys
 import base64
-import requests
+import requests # type: ignore
 
 def post_comment(comment_url, comment_data):
   response = requests.post(comment_url, headers=headers, json=comment_data)
