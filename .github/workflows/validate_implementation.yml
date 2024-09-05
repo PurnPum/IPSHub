@@ -24,7 +24,7 @@ jobs:
         id: validate_patch_structure
         env:
           CHECKOUT_DIRECTORY: ${{ github.workspace }}
-          LABELS: $ {{ github.event.pull_request.labels.*.name }}
+          LABELS: ${{ github.event.pull_request.labels.*.name }}
         run: |
             cd $CHECKOUT_DIRECTORY/static/diffs/
             echo $LABELS
@@ -32,4 +32,4 @@ jobs:
             echo $base_game_label
             game_name=$(echo "$base_game_label" | cut -d'/' -f2)
             echo $game_name
-            python .github/workflows/python_scripts/validate_diffs.py -r $game_name
+            python $CHECKOUT_DIRECTORY/.github/workflows/python_scripts/validate_diffs.py -r $game_name
