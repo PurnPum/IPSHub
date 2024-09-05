@@ -23,13 +23,12 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
-      - name: Create New Development Issue and Close the Original Issue
-        id: create_new_issue_close_original_issue
+      - name: Create Draft Pull Request or Development Issue
+        id: create_draft_pr_or_dev_issue
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
-          IPSHUB_TOKEN: ${{ secrets.IPSHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           ORIGINAL_ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: python .github/workflows/python_scripts/create_new_development_issue.py
+        run: python .github/workflows/python_scripts/create_draft_pr_or_dev_issue.py
