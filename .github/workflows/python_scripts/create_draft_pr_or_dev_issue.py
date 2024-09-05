@@ -57,7 +57,7 @@ def create_draft_pr(base_game):
       GITHUB_API_PULLS,
       headers=headers,
       json={
-        'issue': ISSUE_NUMBER,
+        'issue': int(ISSUE_NUMBER),
         'draft': True,
         'labels': ['patching/pull-request', f"base_game/{base_game_label}", 'patching/team-developed'],
         'assignees': [ISSUE_AUTHOR],
@@ -113,7 +113,7 @@ def create_branch(issue_id):
 if __name__ == '__main__':
   GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
   REPOSITORY = os.environ['GITHUB_REPOSITORY']
-  ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_NUMBER']
+  ISSUE_NUMBER = os.environ['ORIGINAL_ISSUE_URL'].split('/')[-1]
   ISSUE_AUTHOR = os.environ['ISSUE_AUTHOR']
   BASE_BRANCH = 'patch_implementations'
   GITHUB_API = f"https://api.github.com/repos/{REPOSITORY}"

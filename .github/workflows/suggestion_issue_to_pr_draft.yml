@@ -30,5 +30,5 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
-          ORIGINAL_ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ORIGINAL_ISSUE_URL: ${{ github.event.comment.issue_url }}
         run: python .github/workflows/python_scripts/create_draft_pr_or_dev_issue.py
