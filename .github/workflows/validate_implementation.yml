@@ -19,6 +19,21 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          
+      - name: Ensure wget and tar are installed
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget tar
+          
+      - name: Install RGBDS 0.7.0
+        run: |
+            wget https://github.com/gbdev/rgbds/releases/download/v0.7.0/rgbds-0.7.0-linux-x86_64.tar.xz
+            mkdir rgbds
+            tar xf rgbds-0.7.0-linux-x86_64.tar.xz -C rgbds
+            cd rgbds
+            sudo ./install.sh
+            cd ..
+            rm rgbds-0.7.0-linux-x86_64.tar.xz  # Clean up the tar file
 
       - name: Validate patch directory structure
         id: validate_patch_structure
