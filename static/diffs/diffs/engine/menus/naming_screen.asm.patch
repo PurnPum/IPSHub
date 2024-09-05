@@ -1,0 +1,20 @@
+119c119
+< 	db "NICKNAME?@"
+---
+> 	db "NOMBRE?@"
+131c131
+< 	db "YOUR NAME?@"
+---
+> 	db "TU NOMBRE?@"
+144c144
+< 	db "RIVAL'S NAME?@"
+---
+> 	db "NOMBRE RIVAL?@"
+157c157
+< 	db "MOTHER'S NAME?@"
+---
+> 	db "NOMBRE MADRE?@"
+181c181
+< 	db "BOX NAME?@"
+---
+> 	db "NOMBRE CAJA?@"
