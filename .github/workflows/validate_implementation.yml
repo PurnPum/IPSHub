@@ -2,7 +2,8 @@ name: Validate patch implementation
 
 on:
   pull_request:
-    types: [opened]
+    paths:
+      - 'static/diffs/diffs/**'
 
 jobs:
   validate-patch-implementation:

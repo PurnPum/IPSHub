@@ -1,2 +1,0 @@
-mode: immediate
-branchName: 'patchdev/${issue.number}'
