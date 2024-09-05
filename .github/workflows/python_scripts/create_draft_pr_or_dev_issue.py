@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import re
 import sys
 import base64
@@ -30,7 +31,16 @@ def parse_issue_form_data():
 def create_issue(base_game, description):
   new_branch = create_branch(ISSUE_NUMBER)
   title = f"[PATCH DEVELOPMENT]: {base_game}: {description}"
-  body = f"**Original Suggestion:** #{ISSUE_NUMBER}\n\n**Created branch:** [{new_branch}](https://github.com/{REPOSITORY}/tree/{new_branch})"
+
+  md_file_path = Path(os.environ["CHECKOUT_DIRECTORY"]) / "patch_development.md"
+  with open(md_file_path, 'r') as file:
+    md_content = file.read()
+    body = (
+      f"**Original Suggestion:** #{ISSUE_NUMBER}\n\n"
+      f"**Created branch:** [{new_branch}](https://github.com/{REPOSITORY}/tree/{new_branch})\n\n"
+      f"---\n\n"
+      f"{md_content}"  # Append the content of the .md file
+    )
   base_game_label = BASE_GAME_LABELS[base_game]
   try:
     response = requests.post(

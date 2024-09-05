@@ -26,6 +26,7 @@ jobs:
       - name: Create Draft Pull Request or Development Issue
         id: create_draft_pr_or_dev_issue
         env:
+          CHECKOUT_DIRECTORY: ${{ github.workspace }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
