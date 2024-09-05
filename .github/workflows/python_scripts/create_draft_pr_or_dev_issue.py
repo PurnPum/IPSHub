@@ -3,18 +3,13 @@ import re
 import sys
 import requests
 
-def post_comment_old_issue(new_issue_num):
-  comment_url = f"{GITHUB_API_ISSUENUM}/comments"
-  comment_data = {
-    "body": f"This suggestion has been approved. The development process has been moved to issue #{new_issue_num}."
-  }
-
+def post_comment(comment_url, comment_data):
   response = requests.post(comment_url, headers=headers, json=comment_data)
 
   if response.status_code == 201:
-    print(f"Comment posted successfully on issue #{ISSUE_NUMBER}.")
+    print(f"Comment posted successfully.")
   else:
-    print(f"Failed to post comment on issue #{ISSUE_NUMBER}. Response: {response.content}")
+    print(f"Failed to post comment. Response: {response.content}")
     sys.exit(1)
 
 def parse_issue_form_data():
@@ -32,9 +27,9 @@ def parse_issue_form_data():
   return {'base_game': base_game, 'implementer': implementer, 'description': description}
 
 def create_issue(base_game, description):
-
+  new_branch = create_branch(ISSUE_NUMBER)
   title = f"[PATCH DEVELOPMENT]: {base_game}: {description}"
-  body = f"**Original Suggestion:** #{ISSUE_NUMBER}\n\n"
+  body = f"**Original Suggestion:** #{ISSUE_NUMBER}\n\n**Created branch:** [{new_branch}](https://github.com/{REPOSITORY}/tree/{new_branch})"
   base_game_label = BASE_GAME_LABELS[base_game]
   try:
     response = requests.post(
@@ -70,6 +65,8 @@ def create_draft_pr(base_game):
         'head': new_branch,
       }
     )
+    new_pr = response.json()
+    return new_pr['number']
   except:
     print(f"Failed to create PR. Response: {response.content}")
     sys.exit(1)
@@ -134,8 +131,17 @@ if __name__ == '__main__':
   data = parse_issue_form_data()
   if data['implementer'] == 'I will develop it myself':
     new_issue_id = create_issue(data['base_game'], data['description'])
-    post_comment_old_issue(new_issue_id)
+    comment_url = f"{GITHUB_API_ISSUENUM}/comments"
+    comment_data = {
+      "body": f"This suggestion has been approved. The development process has been moved to issue #{new_issue_id}."
+    }
+    post_comment(comment_url, comment_data)
     close_issue()
   else:
-    create_draft_pr(data['base_game'])
+    new_issue_id = create_draft_pr(data['base_game'])
+    comment_url = f"{GITHUB_API_ISSUES}/{new_issue_id}/comments"
+    comment_data = {
+      "body": f"This suggestion has been approved. The development process has been moved to the following pull request: #{new_issue_id}."
+    }
+    post_comment(comment_url, comment_data)
   
