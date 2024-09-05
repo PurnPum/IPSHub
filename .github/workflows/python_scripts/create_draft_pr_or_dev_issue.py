@@ -50,7 +50,7 @@ def create_issue(base_game, description):
     print(f"Failed to create issue. Response: {response.content}")
     sys.exit(1)
 
-def create_draft_pr(base_game):
+def create_draft_pr(base_game,description):
   base_game_label = BASE_GAME_LABELS[base_game]
   new_branch = create_branch(ISSUE_NUMBER, is_draft_pr=True)
   try:
@@ -60,13 +60,22 @@ def create_draft_pr(base_game):
       json={
         'issue': int(ISSUE_NUMBER),
         'draft': True,
-        'labels': ['patching/pull-request', f"base_game/{base_game_label}", 'patching/team-developed'],
         'assignees': [ISSUE_AUTHOR],
         'base': 'patch_implementations',
         'head': new_branch,
       }
     )
     new_pr = response.json()
+    new_pr_number = new_pr['number']
+    
+    response = requests.patch(
+      f"{GITHUB_API_ISSUES}/{new_pr_number}",
+      headers=headers,
+      json={
+        'title': f"[PATCH DEVELOPMENT]: {base_game}: {description}",
+        'labels': ['patching/development','patching/pull-request', f"base_game/{base_game_label}", 'patching/team-developed'],
+      }
+    )
     return new_pr['number']
   except:
     print(f"Failed to create PR. Response: {response.content}")
@@ -210,10 +219,10 @@ if __name__ == '__main__':
     post_comment(comment_url, comment_data)
     close_issue()
   else:
-    new_issue_id = create_draft_pr(data['base_game'])
+    new_issue_id = create_draft_pr(data['base_game'], data['description'])
     comment_url = f"{GITHUB_API_ISSUES}/{new_issue_id}/comments"
     comment_data = {
-      "body": f"This suggestion has been approved. The development process has been moved to the following pull request: #{new_issue_id}."
+      "body": f"This suggestion has been approved. The issue has been transformed into a draft Pull Request."
     }
     post_comment(comment_url, comment_data)
   
