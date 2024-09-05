@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.pull_request.labels.*.id, 7415953493) &&
-      startsWith(join(github.event.pull_request.labels.*.name, ','), 'base_game/')
+      contains(github.event.pull_request.labels.*.name, 'base_game/')
 
     steps:
       - name: Set up Git environment
