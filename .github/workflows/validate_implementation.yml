@@ -24,7 +24,7 @@ jobs:
         id: validate_patch_structure
         env:
           CHECKOUT_DIRECTORY: ${{ github.workspace }}
-          LABELS: ${{ github.event.pull_request.labels.*.name }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
         run: |
             cd $CHECKOUT_DIRECTORY/static/diffs/
             echo $LABELS
