@@ -31,7 +31,7 @@ jobs:
         run: docker build -t ipshub .
 
       - name: Run Django application in Docker
-        run: docker run -d -p 8000:8000 ipshub
+        run: docker run -d -p 8000:8000 --name ipshub_container ipshub
 
       - name: Wait for Django to be ready
         run: |
@@ -42,9 +42,9 @@ jobs:
 
       - name: Run Django tests
         run: |
-          docker exec ipshub python manage.py test || docker logs ipshub
+          docker exec ipshub_container python manage.py test || docker logs ipshub_container
 
       - name: Tear down
         run: |
-          docker stop ipshub
-          docker rm ipshub
+          docker stop ipshub_container
+          docker rm ipshub_container
