@@ -1,6 +1,10 @@
 name: Run Django Tests in a Docker Container
 
 on:
+  push:
+    branches:
+      - develop
+
   pull_request:
     branches:
       - main
