@@ -1,0 +1,39 @@
+name: Patching Suggestion
+description: Suggest a new feature for patching a game. Replace the title content that is in between < and > symbols. Make sure to add the correct base_game/xxx label!.
+title: "[PATCH SUGGESTION] <BASE GAME>: <Brief suggestion description>"
+labels: ["patching/suggestion"]
+projects: ["PurnPum/IPSHub"]
+assignees:
+  - PurnPum
+body:
+  - type: textarea
+    id: suggestion-body
+    attributes:
+      label: Suggestion Details
+      description: Please provide a clear and concise description of your suggestion or idea.
+      placeholder: Please provide a clear and concise description of your suggestion or idea.
+      value: "Type your suggestion here..."
+    validations:
+      required: true
+  - type: dropdown
+    id: base_game
+    attributes:
+      label: Base Game
+      multiple: false
+      description: Select, from the list below, the game this patching suggestion is intended to work with
+      options:
+        - "Pokémon: Yellow Edition"
+        - "Pokémon: Crystal Edition"
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: implementer
+    attributes:
+      label: Implementer
+      description: If this suggestion gets approved, do you plan on implementing it, or do you want to leave it on our features queue for us to develop it at some point?
+      multiple: false
+      options:
+        - I will develop it myself
+        - The team should develop it
+      default: 0

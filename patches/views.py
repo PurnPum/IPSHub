@@ -641,10 +641,14 @@ def update_dislikes_patch_comment(request,comment_id):
     return render(request, 'generic/modal/components/modal_like_comment_button.html', {'element': get_object_or_404(PatchComment, id=comment_id), 'dislike':"True"})
 
 def search_patches(request):
-    return render(request, 'patches/search/search_query.html', search_data(request,Patch))
+    context = search_data(request,Patch)
+    context.update({'form':SearchForm(request.GET or None)})
+    return render(request, 'patches/search/search_query.html', context)
 
 def search_modal(request):
-    return render(request, 'patches/search/modal_search.html', search_data(request,Patch))
+    context = search_data(request,Patch)
+    context.update({'form':SearchForm(request.GET or None)})
+    return render(request, 'patches/search/modal_search.html', context)
 
 def search_generic(request):
     objectstring = request.GET.get('search_object')

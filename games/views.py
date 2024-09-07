@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery
+from patches.forms import SearchForm
 from patches.models import Patch, PatchData, PatchOption
 from core.utils import get_category_hierarchy, search_data
-from .models import Game
+from games.models import Game
 from categories.models import Category
 from django.core.paginator import Paginator
 
@@ -206,4 +207,6 @@ def load_modal(request):
     return render(request, html, context)
 
 def search_games(request):
-    return render(request, 'games/search/search_query.html', search_data(request,Game,order_by='title'))
+    context = search_data(request,Game,order_by='title')
+    context.update({'form':SearchForm(request.GET or None)})
+    return render(request, 'games/search/search_query.html', context)

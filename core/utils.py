@@ -1,5 +1,5 @@
-from patches.forms import SearchForm
-from django.core.exceptions import FieldError
+import re
+import unicodedata
 
 from core import add_real_data_to_db
 
@@ -22,15 +22,20 @@ def get_category_hierarchy(category):
             break
     return category_hierarchy
 
+def normalize_query(query):
+    normalized = unicodedata.normalize('NFKD', query)
+    return ''.join(c for c in normalized if unicodedata.category(c) != 'Mn')
+
+def normalize_string(s):
+    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('utf-8')
+    s = re.sub(r'[^\w\s]', '', s).lower()
+    return s
+
 def search_data(request,object,order_by='name'):
-    form = SearchForm(request.GET or None)
     query = request.GET.get('query', '')
-    try:
-        elements = object.objects.filter(name__icontains=query).order_by(order_by) if query else object.objects.none()
-    except FieldError:
-        elements = object.objects.filter(title__icontains=query).order_by(order_by) if query else object.objects.none()
+    normalized_query = normalize_query(query)
+    elements = object.objects.filter(normalized_name__icontains=normalized_query).order_by(order_by) if normalized_query else object.objects.none()
     context = {
-        'form': form,
         'query': query,
         'elements': elements,
     }

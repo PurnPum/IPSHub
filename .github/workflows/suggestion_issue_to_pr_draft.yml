@@ -1,0 +1,35 @@
+name: Patch Suggestion Approval
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  approve-patch-suggestion:
+    runs-on: ubuntu-latest
+    if: >
+      startsWith(github.event.comment.body, '/approve') &&
+      github.event.comment.user.id == 66346796
+
+    steps:
+      - name: Set up Git environment
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Create Draft Pull Request or Development Issue
+        id: create_draft_pr_or_dev_issue
+        env:
+          CHECKOUT_DIRECTORY: ${{ github.workspace }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ORIGINAL_ISSUE_URL: ${{ github.event.comment.issue_url }}
+        run: python .github/workflows/python_scripts/create_draft_pr_or_dev_issue.py

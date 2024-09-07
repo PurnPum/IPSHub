@@ -1,0 +1,46 @@
+name: Validate patch implementation
+
+on:
+  pull_request:
+    paths:
+      - 'static/diffs/diffs/**'
+
+jobs:
+  validate-patch-implementation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Git environment
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Ensure wget and tar are installed
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget tar
+          
+      - name: Install RGBDS 0.7.0
+        run: |
+            wget https://github.com/gbdev/rgbds/releases/download/v0.7.0/rgbds-0.7.0-linux-x86_64.tar.xz
+            mkdir rgbds
+            tar xf rgbds-0.7.0-linux-x86_64.tar.xz -C rgbds
+            cd rgbds
+            sudo ./install.sh
+            cd ..
+            rm rgbds-0.7.0-linux-x86_64.tar.xz  # Clean up the tar file
+
+      - name: Validate patch directory structure
+        id: validate_patch_structure
+        env:
+          CHECKOUT_DIRECTORY: ${{ github.workspace }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+            cd $CHECKOUT_DIRECTORY/static/diffs/
+            game_name=$(echo $LABELS | grep -oP '(?<=base_game/)[^,]+')
+            python $CHECKOUT_DIRECTORY/.github/workflows/python_scripts/validate_diffs.py -r $game_name
