@@ -38,7 +38,7 @@ jobs:
 
       - name: Run Django tests
         run: |
-          docker exec ipshub python manage.py test
+          docker exec ipshub python manage.py test || docker logs ipshub
 
       - name: Tear down
         run: |
