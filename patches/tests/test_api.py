@@ -9,7 +9,7 @@ class APITest(TestCase):
     
     def setUp(self):
         add_data_to_bd()
-        print("Finished setting up the bd!")
+        print("Finished setting up the db!")
         
     def test_patches_main(self):
         url = reverse('patches')
@@ -17,6 +17,7 @@ class APITest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'text/html; charset=utf-8')
+        
         self.assertIn('<div id="active_modal" class="modal fade" tabindex="-1" aria-labelledby="active_modal_title" aria-hidden="true">', response.content.decode('utf-8'))
 
     def test_games_main(self):
@@ -38,7 +39,7 @@ class APITest(TestCase):
     def test_patchgen_game(self):
         url = reverse('patch_generator')
         game = Game.objects.order_by('?').first().id
-        response = self.client.get(url+"?selectedGame="+str(game))
+        response = self.client.get(f"{url}?selectedGame={game}")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'text/html; charset=utf-8')
