@@ -51,6 +51,6 @@ RUN python manage.py makemigrations --noinput
 
 RUN python manage.py shell -c "from django.contrib.auth.models import User; User.objects.get_or_create(username='anonymous', defaults={'email': 'anonymous@example.com'})"
 
-RUN python manage.py shell -c "from patches.views import add_data_to_bd; add_data_to_bd()"
+RUN python manage.py shell -c "from core.add_real_data_to_db import add_data_to_bd; add_data_to_bd()"
 
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi", "-k", "gevent", "--worker-connections", "1000"]
