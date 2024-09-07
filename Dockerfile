@@ -53,4 +53,6 @@ RUN python manage.py shell -c "from django.contrib.auth.models import User; User
 
 RUN python manage.py shell -c "from core.add_real_data_to_db import add_data_to_bd; add_data_to_bd()"
 
+RUN python manage.py shell -c "import collections; collections.Callable = collections.abc.Callable"
+
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi", "-k", "gevent", "--worker-connections", "1000"]
