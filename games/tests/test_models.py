@@ -1,6 +1,6 @@
 from django.test import TestCase
 from games.models import Game
-from core.utils import add_data_to_bd
+from core.add_real_data_to_db import add_data_to_bd
 
 class GameTestCase(TestCase):
 

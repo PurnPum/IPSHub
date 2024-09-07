@@ -3,7 +3,7 @@ from django.test import TestCase
 from patches.models import Patch, PatchOption
 from django.forms import ValidationError
 from categories.models import Category
-from core.utils import add_data_to_bd
+from core.add_real_data_to_db import add_data_to_bd
 
 class PatchTestCase(TestCase):
     

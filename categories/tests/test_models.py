@@ -1,7 +1,7 @@
 from django.forms import ValidationError
 from django.test import TestCase
 from categories.models import Category
-from core.utils import add_data_to_bd
+from core.add_real_data_to_db import add_data_to_bd
 
 class CategoryTestCase(TestCase):
 

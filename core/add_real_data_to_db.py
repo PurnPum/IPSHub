@@ -8,6 +8,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
+def add_data_to_bd():
+    clean_db()
+    add_users()
+    add_real_games_to_db()
+    add_real_categories_to_db()
+    add_real_patch_options_to_db()
+    add_real_fields_to_db()
+    add_real_patches_to_db()
+    add_real_diff_files_to_db()
+
 def clean_db():
     Game.objects.all().delete()
     Patch.objects.all().delete()
