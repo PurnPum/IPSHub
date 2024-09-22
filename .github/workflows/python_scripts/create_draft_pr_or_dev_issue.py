@@ -230,9 +230,10 @@ if __name__ == '__main__':
     close_issue()
   else:
     new_issue_id = create_draft_pr(data['base_game'], data['description'])
+    new_branch = f"patchdev/{int(new_issue_id):04d}"
     comment_url = f"{GITHUB_API_ISSUES}/{new_issue_id}/comments"
     comment_data = {
-      "body": f"This suggestion has been approved. The issue has been transformed into a draft Pull Request."
+      "body": f"This suggestion has been approved. The issue has been transformed into a draft Pull Request and a new branch has been created ({new_branch})."
     }
     post_comment(comment_url, comment_data)
   
