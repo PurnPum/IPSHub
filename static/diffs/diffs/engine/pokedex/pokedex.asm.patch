@@ -1,0 +1,8 @@
+1131c1131
+< 	db "SEEN", -1
+---
+> 	db "VISTOS", -1
+1133c1133
+< 	db "OWN", -1
+---
+> 	db "OBTENIDOS", -1
