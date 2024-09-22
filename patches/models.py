@@ -37,6 +37,10 @@ class Patch(models.Model):
             raise ValidationError('The parent patch cannot be itself.',code='self_parent')
         if len(self.get_games()) > 1:
             raise ValidationError('The patch options assigned to this patch must all be for the same game.',code='multiple_game_patch')
+        if self.patch_hash is not None:
+            existing_patches = Patch.objects.filter(patch_hash=self.patch_hash).exclude(id=self.id)
+            if existing_patches.exists():
+                raise ValidationError('A patch with this hash already exists.',code='duplicated_hash')
         existing_patches = Patch.objects.filter(name=self.name).exclude(id=self.id)
         if existing_patches.exists():
             raise ValidationError('A patch with this name already exists.',code='duplicated_name')
