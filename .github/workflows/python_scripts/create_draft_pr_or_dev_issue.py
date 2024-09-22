@@ -233,7 +233,7 @@ if __name__ == '__main__':
     new_branch = f"patchdev/{int(new_issue_id):04d}"
     comment_url = f"{GITHUB_API_ISSUES}/{new_issue_id}/comments"
     comment_data = {
-      "body": f"This suggestion has been approved. The issue has been transformed into a draft Pull Request and a new branch has been created ({new_branch})."
+      "body": f"This suggestion has been approved. The issue has been transformed into a draft Pull Request and a new branch has been created ([{new_branch}](https://github.com/{REPOSITORY}/tree/{new_branch}))."
     }
     post_comment(comment_url, comment_data)
   
