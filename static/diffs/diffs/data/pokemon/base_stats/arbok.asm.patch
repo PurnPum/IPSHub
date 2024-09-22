@@ -1,0 +1,8 @@
+3c3
+< 	db  60,  85,  69,  80,  65,  79
+---
+> 	db  70,  105,  89,  80,  65,  79
+6c6
+< 	db POISON, POISON ; type
+---
+> 	db POISON, DARK ; type
