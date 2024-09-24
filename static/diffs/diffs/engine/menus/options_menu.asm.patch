@@ -1,0 +1,76 @@
+78c78
+< 	db "TEXT SPEED<LF>"
+---
+> 	db "VELOCIDADE TEXTO<LF>"
+80c80
+< 	db "BATTLE SCENE<LF>"
+---
+> 	db "LIORTA ANIMADA<LF>"
+82c82
+< 	db "BATTLE STYLE<LF>"
+---
+> 	db "ESTILO DE LIORTA<LF>"
+84c84
+< 	db "SOUND<LF>"
+---
+> 	db "SON<LF>"
+86c86
+< 	db "PRINT<LF>"
+---
+> 	db "IMPRENTAR<LF>"
+88c88
+< 	db "MENU ACCOUNT<LF>"
+---
+> 	db "AXUDAS NO MENU<LF>"
+90,92c90,92
+< 	db "FRAME<LF>"
+< 	db "        :TYPE<LF>"
+< 	db "CANCEL@"
+---
+> 	db "CADRO<LF>"
+> 	db "        :TIPO<LF>"
+> 	db "CANCELAR@"
+166,168c166,168
+< .Fast: db "FAST@"
+< .Mid:  db "MID @"
+< .Slow: db "SLOW@"
+---
+> .Fast: db "VELOZ@"
+> .Mid:  db "MEDIO@"
+> .Slow: db "LENTO@"
+230,231c230,231
+< .On:  db "ON @"
+< .Off: db "OFF@"
+---
+> .On:  db "SI @"
+> .Off: db "NON@"
+268,269c268,269
+< .Shift: db "SHIFT@"
+< .Set:   db "SET  @"
+---
+> .Shift: db "TROCAR@"
+> .Set:   db "MANTER@"
+313,314c313,314
+< .Mono:   db "MONO  @"
+< .Stereo: db "STEREO@"
+---
+> .Mono:   db "MONO   @"
+> .Stereo: db "ESTEREO@"
+375,376c375,376
+< .Lightest: db "LIGHTEST@"
+< .Lighter:  db "LIGHTER @"
+---
+> .Lightest: db "MAX LUZ @"
+> .Lighter:  db "MAIS LUZ@"
+378,379c378,379
+< .Darker:   db "DARKER  @"
+< .Darkest:  db "DARKEST @"
+---
+> .Darker:   db "MENOSLUZ@"
+> .Darkest:  db "MIN LUZ @"
+453,454c453,454
+< .Off: db "OFF@"
+< .On:  db "ON @"
+---
+> .Off: db "NON@"
+> .On:  db "SI @"
