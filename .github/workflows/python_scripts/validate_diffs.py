@@ -17,6 +17,7 @@ def parse_arguments():
     
     parser.add_argument('-r', '--repository_name', required=True, help='Name of the repository of the original game, use --help to see the list of supported games')
     parser.add_argument('-p', '--patch_dir', default=os.path.join(os.getcwd(),'diffs'), help="Path to the root directory that contains the patch structure (default:" + os.path.join(os.getcwd(),'diffs') + ")")
+    parser.add_argument('-k', '--keep_dir', action='store_true', help='Keep the directory with the compiled modified game (default: do not keep)')
     parser.add_argument('-v', '--verbose', action='store_true', help='Make the script output more verbose (default: not verbose)')
     
     args = parser.parse_args()
@@ -25,9 +26,9 @@ def parse_arguments():
         if not os.path.isabs(args.patch_dir):
             args.patch_dir = os.path.join(os.getcwd(), args.patch_dir)
 
-    return args.repository_name, args.patch_dir, args.verbose
+    return args.repository_name, args.patch_dir, args.keep_dir, args.verbose
 
-def build_modified_structure(repo_name, patch_dir, verbose):
+def build_modified_structure(repo_name, patch_dir, keep_dir, verbose):
     cloned_dir = Path(clone_game_repo(repo_name, verbose))
     for dirpath, _, filenames in os.walk(patch_dir):
         print("Scanning directory:", dirpath)
@@ -66,7 +67,7 @@ def build_modified_structure(repo_name, patch_dir, verbose):
     print("Patching process completed, proceeding to attempt to compile the game")
     compile_cloned_game(cloned_dir)
 
-    if cloned_dir.as_posix().startswith('/tmp/temp_clone/'):
+    if not keep_dir and cloned_dir.as_posix().startswith('/tmp/temp_clone/'):
         print("Process finished, cleaning up temporary files located in", cloned_dir)
         shutil.rmtree(cloned_dir)
         
@@ -107,15 +108,16 @@ def clean_before_fatal_exit():
 
 if __name__ == "__main__":
     if '-h' in sys.argv or '--help' in sys.argv:
-        print("Usage: python validate_diffs.py -r <repository_name> -p <patch_dir> [-v]")
+        print("Usage: python validate_diffs.py -r <repository_name> -p <patch_dir> [-v] [-k]")
         print("Example Usage: python validate_diffs.py -r pokeyellow -p ./pokeyellow -v")
         print("Options:")
         print("  -r, --repository_name   Name of the repository of the original game")
         print("  -p, --patch_dir         Path for the directory where the patch files are stored (default:" + os.path.join(os.getcwd(),'diffs') + ")")
+        print("  -k, --keep_dir          Keep the directory with the compiled modified game")
         print("  -v, --verbose           Make the script output more verbose")
         print("Supported Repositories:")
         for name, url in SUPPORTED_REPOSITORIES.items():
             print(f"  {name}: {url}")
     else:
-        repository_name, patch_dir, verbose = parse_arguments()
-        build_modified_structure(repository_name, patch_dir, verbose)
+        repository_name, patch_dir, keep_dir, verbose = parse_arguments()
+        build_modified_structure(repository_name, patch_dir, keep_dir, verbose)
