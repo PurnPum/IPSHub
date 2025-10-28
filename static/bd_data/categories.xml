@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+    <!-- Base Categories -->
+    <category>
+        <image_ref>/static/images/nuzlocke.jpg</image_ref>
+        <name>Nuzlocke Yellow</name>
+        <description>The nuzlocke consists on a series of self-imposed challenges designed to make the game more difficult. The two main rules are:
+
+1. Only the first Pokémon per route shall be captured
+2. Any pokemon that faints is considered dead and unusable.
+
+These rules and many other subsets of rules will be implemented within this category.</description>
+        <base_game>Pokémon Yellow</base_game>
+
+        <!-- Children of Nuzlocke Yellow -->
+        <category>
+            <image_ref>/static/images/egglocke.png</image_ref>
+            <name>Egglocke Yellow</name>
+            <description>This category of nuzlocke swaps any caught encounter with a random egg.</description>
+            <base_game>Pokémon Yellow</base_game>
+
+            <!-- Child of Egglocke Yellow -->
+            <category>
+                <image_ref>/static/images/egglocke.png</image_ref>
+                <name>Special Egglocke Yellow</name>
+                <description>This category of nuzlocke swaps any caught encounter with a random egg.</description>
+                <base_game>Pokémon Yellow</base_game>
+            </category>
+        </category>
+
+        <category>
+            <image_ref>/static/images/wedlocke.svg</image_ref>
+            <name>Wedlocke Yellow</name>
+            <description>This category of nuzlocke links 2 encounters and if one dies so does the other.</description>
+            <base_game>Pokémon Yellow</base_game>
+
+            <!-- Child of Wedlocke Yellow -->
+            <category>
+                <image_ref>/static/images/wedlocke.svg</image_ref>
+                <name>Super Wedlocke Yellow</name>
+                <description>This category of wedlocke creates an entire family tree instead of just pairs.</description>
+                <base_game>Pokémon Yellow</base_game>
+            </category>
+        </category>
+    </category>
+
+    <category>
+        <image_ref>/static/images/nuzlocke.jpg</image_ref>
+        <name>Nuzlocke Crystal</name>
+        <description>The nuzlocke consists on a series of self-imposed challenges designed to make the game more difficult. The two main rules are:
+
+1. Only the first Pokémon per route shall be captured
+2. Any pokemon that faints is considered dead and unusable.
+
+These rules and many other subsets of rules will be implemented within this category.</description>
+        <base_game>Pokémon Crystal</base_game>
+
+        <!-- Child of Nuzlocke Crystal -->
+        <category>
+            <image_ref>/static/images/egglocke.png</image_ref>
+            <name>Egglocke Crystal</name>
+            <description>This category of nuzlocke swaps any caught encounter with a random egg.</description>
+            <base_game>Pokémon Crystal</base_game>
+        </category>
+    </category>
+
+    <!-- Randomizer Chains -->
+    <category>
+        <image_ref>/static/images/dice.svg</image_ref>
+        <name>Randomizer Crystal Clear</name>
+        <description>General category for randomizers.</description>
+        <base_game>Pokémon Crystal Clear</base_game>
+
+        <category>
+            <image_ref>/static/images/dice.svg</image_ref>
+            <name>Warp Randomizer Crystal Clear</name>
+            <description>Randomizes all warps to random locations, while maintaining logic to be able to complete the game.</description>
+            <base_game>Pokémon Crystal Clear</base_game>
+        </category>
+
+        <category>
+            <image_ref>/static/images/dice.svg</image_ref>
+            <name>Item Randomizer Crystal Clear</name>
+            <description>Randomizes all items, while maintaining logic to be able to complete the game.</description>
+            <base_game>Pokémon Crystal Clear</base_game>
+
+            <category>
+                <image_ref>/static/images/dice.svg</image_ref>
+                <name>Full Item Randomizer Crystal Clear</name>
+                <description>Randomizes all items, including key items, badges and such, while maintaining logic to be able to complete the game.</description>
+                <base_game>Pokémon Crystal Clear</base_game>
+            </category>
+        </category>
+    </category>
+
+    <category>
+        <image_ref>/static/images/dice.svg</image_ref>
+        <name>Randomizer NO-BS Yellow</name>
+        <description>General category for randomizers.</description>
+        <base_game>Pokémon NO-BS Yellow</base_game>
+
+        <category>
+            <image_ref>/static/images/dice.svg</image_ref>
+            <name>Warp Randomizer NO-BS Yellow</name>
+            <description>Randomizes all warps to random locations, while maintaining logic to be able to complete the game.</description>
+            <base_game>Pokémon NO-BS Yellow</base_game>
+        </category>
+
+        <category>
+            <image_ref>/static/images/dice.svg</image_ref>
+            <name>Item Randomizer NO-BS Yellow</name>
+            <description>Randomizes all items, while maintaining logic to be able to complete the game.</description>
+            <base_game>Pokémon NO-BS Yellow</base_game>
+
+            <category>
+                <image_ref>/static/images/dice.svg</image_ref>
+                <name>Full Item Randomizer NO-BS Yellow</name>
+                <description>Randomizes all items, including key items, badges and such, while maintaining logic to be able to complete the game.</description>
+                <base_game>Pokémon NO-BS Yellow</base_game>
+            </category>
+        </category>
+    </category>
+
+    <category>
+        <image_ref>/static/images/dice.svg</image_ref>
+        <name>Randomizer Crystal</name>
+        <description>General category for randomizers.</description>
+        <base_game>Pokémon Crystal</base_game>
+    </category>
+
+    <category>
+        <image_ref>/static/images/dice.svg</image_ref>
+        <name>Randomizer Yellow</name>
+        <description>General category for randomizers.</description>
+        <base_game>Pokémon Yellow</base_game>
+    </category>
+
+    <!-- Other Chains -->
+    <category>
+        <image_ref>/static/images/other.webp</image_ref>
+        <name>Other</name>
+        <description>Other.</description>
+        <base_game>Pokémon Crystal</base_game>
+
+        <category>
+            <image_ref>/static/images/other.webp</image_ref>
+            <name>Translated crystal text to Spanish</name>
+            <description>Translates part of the game into Spanish.</description>
+            <base_game>Pokémon Crystal</base_game>
+        </category>
+
+        <category>
+            <image_ref>/static/images/other.webp</image_ref>
+            <name>Translated crystal text to Galician</name>
+            <description>Translates part of the game into Galician.</description>
+            <base_game>Pokémon Crystal</base_game>
+        </category>
+    </category>
+
+    <category>
+        <image_ref>/static/images/other.webp</image_ref>
+        <name>Other</name>
+        <description>Other.</description>
+        <base_game>Pokémon Yellow</base_game>
+
+        <category>
+            <image_ref>/static/images/other.webp</image_ref>
+            <name>Translated yellow text to Spanish</name>
+            <description>Translates part of the game into Spanish.</description>
+            <base_game>Pokémon Yellow</base_game>
+        </category>
+    </category>
+</categories>

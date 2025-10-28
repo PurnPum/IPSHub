@@ -45,6 +45,8 @@ DIFF_ROOT = BASE_DIR / 'static/diffs'
 
 CLONE_DIR = BASE_DIR / 'static/clones'
 
+BD_DATA_DIR = BASE_DIR / 'static/bd_data'
+
 # Application definition
 
 INSTALLED_APPS = [

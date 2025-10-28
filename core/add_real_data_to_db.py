@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta, date
 import json
+import os
 import random
+import xmltodict
 from games.models import Game
 from categories.models import Category
 from patches.models import Patch, PatchOption, POField, PatchData, DiffFile
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.conf import settings
 
 def add_data_to_bd():
     clean_db()
@@ -34,64 +37,10 @@ def add_users():
         User.objects.create_user('anonymous', 'anon@anon.com', 'anon')
 
 def add_real_games_to_db():
-    games_data = [
-        {
-            'image_mini_ref': '/static/images/pokemon_crystal_mini.png',
-            'image_ref': '/static/images/pokemon_crystal_front.png',
-            'title': 'Pokémon Crystal',
-            'developer': 'Game Freak',
-            'best_emulator': 'BGB',
-            'best_emulator_url': 'https://bgb.bircd.org/',
-            'type': 'Vanilla Game',
-            'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
-            'release_date': date(2000,9,28),
-            'repository': 'https://github.com/pret/pokecrystal.git',
-            'patch_file_name': 'pokecrystal.gbc',
-            'patch_sha': 'f4cd194bdee0d04ca4eac29e09b8e4e9d818c133'
-        },
-        {
-            'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
-            'image_ref': '/static/images/pokemon_yellow_front.webp',
-            'title': 'Pokémon Yellow',
-            'developer': 'Game Freak',
-            'best_emulator': 'BGB',
-            'best_emulator_url': 'https://bgb.bircd.org/',
-            'type': 'Vanilla Game',
-            'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
-            'release_date': date(1995,9,28),
-            'repository': 'https://github.com/pret/pokeyellow.git',
-            'patch_file_name': 'pokeyellow.gbc',
-            'patch_sha': 'cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1'
-        },
-        {
-            'image_mini_ref': '/static/images/pokemon_crystal_mini.png',
-            'image_ref': '/static/images/pokemon_crystal_front.png',
-            'title': 'Pokémon Crystal Clear',
-            'developer': 'ShockSlayer',
-            'best_emulator': 'Gambatte',
-            'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
-            'type': 'ROM Hack',
-            'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version',
-            'release_date': date(2022,3,16),
-            'repository': 'https://github.com/pret/pokecrystal.git',
-            'patch_file_name': 'pokecrystal.gbc',
-            'patch_sha': 'f4cd194bdee0d04ca4eac29e09b8e4e9d818c133'
-        },
-        {
-            'image_mini_ref': '/static/images/pokemon_yellow_mini.png',
-            'image_ref': '/static/images/pokemon_yellow_front.webp',
-            'title': 'Pokémon NO-BS Yellow',
-            'developer': 'Game Freak',
-            'best_emulator': 'Gambatte',
-            'best_emulator_url': 'https://github.com/pokemon-speedrunning/gambatte-speedrun',
-            'type': 'ROM Hack',
-            'extra_info': 'https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version',
-            'release_date': date(2021,6,21),
-            'repository': 'https://github.com/pret/pokeyellow.git',
-            'patch_file_name': 'pokeyellow.gbc',
-            'patch_sha': 'cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1'
-        }
-    ]
+    with open(os.path.join(settings.BD_DATA_DIR, 'games.xml'), 'r', encoding='utf-8') as game_file:
+        games_xml = game_file.read()
+    games_dict = xmltodict.parse(games_xml)
+    games_data = games_dict['games']['game']
     
     for game_data in games_data:
         game = Game()
@@ -99,190 +48,35 @@ def add_real_games_to_db():
             setattr(game, key, value)
         game.save()
     
+
+    
 def add_real_categories_to_db():
+    with open(os.path.join(settings.BD_DATA_DIR, 'categories.xml'), 'r', encoding='utf-8') as category_file:
+        categories_xml = category_file.read()
+    categories_dict = xmltodict.parse(categories_xml)
+    categories_data = categories_dict['categories']['category']
+    
+    for category_data in categories_data:
+        _add_category_recursively(category_data)
+
+def _add_category_recursively(category_data, parent=None):
     category = Category()
-    category.image_ref = '/static/images/nuzlocke.jpg'
-    category.name = 'Nuzlocke Yellow'
-    category.description = """The nuzlocke consists on a series of self-imposed challenges designed to make the game more difficult. The two main rules are:
-
-1. Only the first Pokémon per route shall be captured
-2. Any pokemon that faints is considered dead and unusable.
-
-These rules and many other subsets of rules will be implemented within this category."""
-    category.base_game = Game.objects.get(title='Pokémon Yellow')
+    for key, value in category_data.items():
+        if key == 'base_game':
+            try:
+                value = Game.objects.get(title=value)
+            except Game.DoesNotExist:
+                print(f"Base game '{value}' does not exist. Skipping category '{category_data.get('name', 'Unnamed')}'.")
+                value = None
+        elif key == 'category':
+            if isinstance(value, list):
+                for subcategory_data in value:
+                    _add_category_recursively(subcategory_data, parent=category)
+            else:
+                _add_category_recursively(value, parent=category)
+        setattr(category, key, value)
+    category.parent_category = parent
     category.save()
-    
-    category2 = Category()
-    category2.image_ref = '/static/images/nuzlocke.jpg'
-    category2.name = 'Nuzlocke Crystal'
-    category2.description = """The nuzlocke consists on a series of self-imposed challenges designed to make the game more difficult. The two main rules are:
-
-1. Only the first Pokémon per route shall be captured
-2. Any pokemon that faints is considered dead and unusable.
-
-These rules and many other subsets of rules will be implemented within this category."""
-    category2.base_game = Game.objects.get(title='Pokémon Crystal')
-    category2.save()
-    
-    category3 = Category()
-    category3.image_ref = '/static/images/egglocke.png'
-    category3.name = 'Egglocke Crystal'
-    category3.description = 'This category of nuzlocke swaps any caught encounter with a random egg.'
-    category3.parent_category = category2
-    category3.base_game = Game.objects.get(title='Pokémon Crystal')
-    category3.save()
-    
-    category4 = Category()
-    category4.image_ref = '/static/images/egglocke.png'
-    category4.name = 'Egglocke Yellow'
-    category4.description = 'This category of nuzlocke swaps any caught encounter with a random egg.'
-    category4.parent_category = category
-    category4.base_game = Game.objects.get(title='Pokémon Yellow')
-    category4.save()
-    
-    category5 = Category()
-    category5.image_ref = '/static/images/dice.svg'
-    category5.name = 'Randomizer Crystal Clear'
-    category5.description = 'General category for randomizers.'
-    category5.parent_category = None
-    category5.base_game = Game.objects.get(title='Pokémon Crystal Clear')
-    category5.save()
-    
-    category6 = Category()
-    category6.image_ref = '/static/images/dice.svg'
-    category6.name = 'Warp Randomizer Crystal Clear'
-    category6.description = 'Randomizes all warps to random locations, while maintaining logic to be able to complete the game.'
-    category6.parent_category = category5
-    category6.base_game = Game.objects.get(title='Pokémon Crystal Clear')
-    category6.save()
-    
-    category7 = Category()
-    category7.image_ref = '/static/images/dice.svg'
-    category7.name = 'Item Randomizer Crystal Clear'
-    category7.description = 'Randomizes all items, while maintaining logic to be able to complete the game.'
-    category7.parent_category = category5
-    category7.base_game = Game.objects.get(title='Pokémon Crystal Clear')
-    category7.save()
-    
-    category8 = Category()
-    category8.image_ref = '/static/images/dice.svg'
-    category8.name = 'Full Item Randomizer Crystal Clear'
-    category8.description = 'Randomizes all items, including key items, badges and such, while maintaining logic to be able to complete the game.'
-    category8.parent_category = category7
-    category8.base_game = Game.objects.get(title='Pokémon Crystal Clear')
-    category8.save()
-    
-    category9 = Category()
-    category9.image_ref = '/static/images/dice.svg'
-    category9.name = 'Randomizer NO-BS Yellow'
-    category9.description = 'General category for randomizers.'
-    category9.parent_category = None
-    category9.base_game = Game.objects.get(title='Pokémon NO-BS Yellow')
-    category9.save()
-    
-    category10 = Category()
-    category10.image_ref = '/static/images/dice.svg'
-    category10.name = 'Warp Randomizer NO-BS Yellow'
-    category10.description = 'Randomizes all warps to random locations, while maintaining logic to be able to complete the game.'
-    category10.parent_category = category9
-    category10.base_game = Game.objects.get(title='Pokémon NO-BS Yellow')
-    category10.save()
-    
-    category11 = Category()
-    category11.image_ref = '/static/images/dice.svg'
-    category11.name = 'Item Randomizer NO-BS Yellow'
-    category11.description = 'Randomizes all items, while maintaining logic to be able to complete the game.'
-    category11.parent_category = category9
-    category11.base_game = Game.objects.get(title='Pokémon NO-BS Yellow')
-    category11.save()
-    
-    category12 = Category()
-    category12.image_ref = '/static/images/dice.svg'
-    category12.name = 'Full Item Randomizer NO-BS Yellow'
-    category12.description = 'Randomizes all items, including key items, badges and such, while maintaining logic to be able to complete the game.'
-    category12.parent_category = category11
-    category12.base_game = Game.objects.get(title='Pokémon NO-BS Yellow')
-    category12.save()
-    
-    category13 = Category()
-    category13.image_ref = '/static/images/dice.svg'
-    category13.name = 'Randomizer Crystal'
-    category13.description = 'General category for randomizers.'
-    category13.parent_category = None
-    category13.base_game = Game.objects.get(title='Pokémon Crystal')
-    category13.save()
-    
-    category14 = Category()
-    category14.image_ref = '/static/images/dice.svg'
-    category14.name = 'Randomizer Yellow'
-    category14.description = 'General category for randomizers.'
-    category14.parent_category = None
-    category14.base_game = Game.objects.get(title='Pokémon Yellow')
-    category14.save()
-    
-    category15 = Category()
-    category15.image_ref = '/static/images/wedlocke.svg'
-    category15.name = 'Wedlocke Yellow'
-    category15.description = 'This category of nuzlocke links 2 encounters and if one dies so does the other.'
-    category15.parent_category = category
-    category15.base_game = Game.objects.get(title='Pokémon Yellow')
-    category15.save()
-    
-    category16 = Category()
-    category16.image_ref = '/static/images/egglocke.png'
-    category16.name = 'Special Egglocke Yellow'
-    category16.description = 'This category of nuzlocke swaps any caught encounter with a random egg.'
-    category16.parent_category = category4
-    category16.base_game = Game.objects.get(title='Pokémon Yellow')
-    category16.save()
-    
-    category16 = Category()
-    category16.image_ref = '/static/images/wedlocke.svg'
-    category16.name = 'Super Wedlocke Yellow'
-    category16.description = 'This category of wedlocke creates an entire family tree instead of just pairs.'
-    category16.parent_category = category15
-    category16.base_game = Game.objects.get(title='Pokémon Yellow')
-    category16.save()
-
-    category20 = Category()
-    category20.image_ref = '/static/images/other.webp'
-    category20.name = 'Other'
-    category20.description = 'Other.'
-    category20.parent_category = None
-    category20.base_game = Game.objects.get(title='Pokémon Crystal')
-    category20.save()
-    
-    category21 = Category()
-    category21.image_ref = '/static/images/other.webp'
-    category21.name = 'Other'
-    category21.description = 'Other.'
-    category21.parent_category = None
-    category21.base_game = Game.objects.get(title='Pokémon Yellow')
-    category21.save()
-    
-    category17 = Category()
-    category17.image_ref = '/static/images/other.webp'
-    category17.name = 'Translated yellow text to Spanish'
-    category17.description = 'Translates part of the game into Spanish.'
-    category17.parent_category = category21
-    category17.base_game = Game.objects.get(title='Pokémon Yellow')
-    category17.save()
-    
-    category18 = Category()
-    category18.image_ref = '/static/images/other.webp'
-    category18.name = 'Translated crystal text to Spanish'
-    category18.description = 'Translates part of the game into Spanish.'
-    category18.parent_category = category20
-    category18.base_game = Game.objects.get(title='Pokémon Crystal')
-    category18.save()
-    
-    category19 = Category()
-    category19.image_ref = '/static/images/other.webp'
-    category19.name = 'Translated crystal text to Galician'
-    category19.description = 'Translates part of the game into Galician.'
-    category19.parent_category = category20
-    category19.base_game = Game.objects.get(title='Pokémon Crystal')
-    category19.save()
     
 def add_real_patch_options_to_db():
     pOption = PatchOption()

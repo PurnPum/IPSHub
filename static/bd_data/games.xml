@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<games>
+    <game>
+        <image_mini_ref>/static/images/pokemon_crystal_mini.png</image_mini_ref>
+        <image_ref>/static/images/pokemon_crystal_front.png</image_ref>
+        <title>Pokémon Crystal</title>
+        <developer>Game Freak</developer>
+        <best_emulator>BGB</best_emulator>
+        <best_emulator_url>https://bgb.bircd.org/</best_emulator_url>
+        <type>Vanilla Game</type>
+        <extra_info>https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version</extra_info>
+        <release_date>2000-09-28</release_date>
+        <repository>https://github.com/pret/pokecrystal.git</repository>
+        <patch_file_name>pokecrystal.gbc</patch_file_name>
+        <patch_sha>f4cd194bdee0d04ca4eac29e09b8e4e9d818c133</patch_sha>
+    </game>
+    <game>
+        <image_mini_ref>/static/images/pokemon_yellow_mini.png</image_mini_ref>
+        <image_ref>/static/images/pokemon_yellow_front.webp</image_ref>
+        <title>Pokémon Yellow</title>
+        <developer>Game Freak</developer>
+        <best_emulator>BGB</best_emulator>
+        <best_emulator_url>https://bgb.bircd.org/</best_emulator_url>
+        <type>Vanilla Game</type>
+        <extra_info>https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version</extra_info>
+        <release_date>1995-09-28</release_date>
+        <repository>https://github.com/pret/pokeyellow.git</repository>
+        <patch_file_name>pokeyellow.gbc</patch_file_name>
+        <patch_sha>cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1</patch_sha>
+    </game>
+    <game>
+        <image_mini_ref>/static/images/pokemon_crystal_mini.png</image_mini_ref>
+        <image_ref>/static/images/pokemon_crystal_front.png</image_ref>
+        <title>Pokémon Crystal Clear</title>
+        <developer>ShockSlayer</developer>
+        <best_emulator>Gambatte</best_emulator>
+        <best_emulator_url>https://github.com/pokemon-speedrunning/gambatte-speedrun</best_emulator_url>
+        <type>ROM Hack</type>
+        <extra_info>https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Crystal_Version</extra_info>
+        <release_date>2022-03-16</release_date>
+        <repository>https://github.com/pret/pokecrystal.git</repository>
+        <patch_file_name>pokecrystal.gbc</patch_file_name>
+        <patch_sha>f4cd194bdee0d04ca4eac29e09b8e4e9d818c133</patch_sha>
+    </game>
+    <game>
+        <image_mini_ref>/static/images/pokemon_yellow_mini.png</image_mini_ref>
+        <image_ref>/static/images/pokemon_yellow_front.webp</image_ref>
+        <title>Pokémon NO-BS Yellow</title>
+        <developer>Game Freak</developer>
+        <best_emulator>Gambatte</best_emulator>
+        <best_emulator_url>https://github.com/pokemon-speedrunning/gambatte-speedrun</best_emulator_url>
+        <type>ROM Hack</type>
+        <extra_info>https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Yellow_Version</extra_info>
+        <release_date>2021-06-21</release_date>
+        <repository>https://github.com/pret/pokeyellow.git</repository>
+        <patch_file_name>pokeyellow.gbc</patch_file_name>
+        <patch_sha>cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1</patch_sha>
+    </game>
+</games>
