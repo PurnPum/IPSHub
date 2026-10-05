@@ -1,7 +1,7 @@
 import datetime, json, time
 from django.db import IntegrityError, transaction
 from django.forms import ValidationError
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, OuterRef, Subquery, Q
 from django.core.paginator import Paginator
@@ -243,18 +243,17 @@ def generate_patch_object(request,patch_options,forms):
 def generate_real_patch(request, patch, game):
     progress_ck = f'progress_{request.user.id}'
     current_task_ck = f'current_task_{request.user.id}'
-    # Define paths
+
     repo_url = game.repository
     repo_dir = settings.CLONE_DIR
     output_diff = os.path.join(settings.PATCH_ROOT, f'{patch.id}.xdelta')
      
-    # Cleanup
+
     try:
         clean_up_dir(repo_dir)
     except Exception as e:
         print(str(e))
      
-    # Define the path to the shell script
     clone_repo_script = os.path.join(settings.BASE_DIR, 'static/code/clone_repository.sh')
     make_script = os.path.join(settings.BASE_DIR, 'static/code/make.sh')
     apply_diff_script = os.path.join(settings.BASE_DIR, 'static/code/apply_diff.sh')
@@ -273,7 +272,6 @@ def generate_real_patch(request, patch, game):
     original_files = ','.join([str(settings.CLONE_DIR / df.original_file) for df in diff_files])
     filenames = ','.join([str(settings.DIFF_ROOT / df.filename) for df in diff_files])
 
-    # Run the shell script with the necessary arguments
     current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     
     data = [{'args':[clone_repo_script, repo_url, repo_dir],'progress': 25, 'current_task': "Cloning repository of the game...", 'error_msg': "Internal error while cloning the original game's repository"},
@@ -292,7 +290,6 @@ def generate_real_patch(request, patch, game):
             if error_message is not None:
                 return error_message
 
-    # Save the diff file path to the Patch model
     patch.download_link = output_diff
     patch.save()
     
@@ -558,7 +555,7 @@ def load_modal(request):
             'latest_comments': paginated_comments,
         }
     else:
-        context={'element': 'any'}
+        return HttpResponseBadRequest()
 
     return render(request, html, context)
 

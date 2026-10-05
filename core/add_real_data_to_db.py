@@ -243,12 +243,28 @@ These rules and many other subsets of rules will be implemented within this cate
     category16.parent_category = category15
     category16.base_game = Game.objects.get(title='Pokémon Yellow')
     category16.save()
+
+    category20 = Category()
+    category20.image_ref = '/static/images/other.webp'
+    category20.name = 'Other'
+    category20.description = 'Other.'
+    category20.parent_category = None
+    category20.base_game = Game.objects.get(title='Pokémon Crystal')
+    category20.save()
+    
+    category21 = Category()
+    category21.image_ref = '/static/images/other.webp'
+    category21.name = 'Other'
+    category21.description = 'Other.'
+    category21.parent_category = None
+    category21.base_game = Game.objects.get(title='Pokémon Yellow')
+    category21.save()
     
     category17 = Category()
     category17.image_ref = '/static/images/other.webp'
     category17.name = 'Translated yellow text to Spanish'
     category17.description = 'Translates part of the game into Spanish.'
-    category17.parent_category = None
+    category17.parent_category = category21
     category17.base_game = Game.objects.get(title='Pokémon Yellow')
     category17.save()
     
@@ -256,9 +272,17 @@ These rules and many other subsets of rules will be implemented within this cate
     category18.image_ref = '/static/images/other.webp'
     category18.name = 'Translated crystal text to Spanish'
     category18.description = 'Translates part of the game into Spanish.'
-    category18.parent_category = None
+    category18.parent_category = category20
     category18.base_game = Game.objects.get(title='Pokémon Crystal')
     category18.save()
+    
+    category19 = Category()
+    category19.image_ref = '/static/images/other.webp'
+    category19.name = 'Translated crystal text to Galician'
+    category19.description = 'Translates part of the game into Galician.'
+    category19.parent_category = category20
+    category19.base_game = Game.objects.get(title='Pokémon Crystal')
+    category19.save()
     
 def add_real_patch_options_to_db():
     pOption = PatchOption()
@@ -344,6 +368,12 @@ def add_real_patch_options_to_db():
     pOption13.name = 'Translated crystal text to Spanish'
     pOption13.description = 'Translates the text to Spanish.'
     pOption13.save()
+    
+    pOption14 = PatchOption()
+    pOption14.category = Category.objects.get(name='Translated crystal text to Galician', base_game__title='Pokémon Crystal')
+    pOption14.name = 'Translated crystal text to Galician'
+    pOption14.description = 'Translates the text to Galician.'
+    pOption14.save()
     
 def add_real_fields_to_db():
     
@@ -507,6 +537,16 @@ def add_real_fields_to_db():
     field15.patch_option = PatchOption.objects.get(name='Translated crystal text to Spanish')
     field15.save()
     
+    field16 = POField()
+    field16.name = 'Translate crystal main menu to Galician'
+    field16.description = 'Translates the Continue/New Game/Options menu'
+    field16.field_type = 'Boolean'
+    field16.initial_data = json.dumps({'data': ["True", "False"]})
+    field16.parent_field = None
+    field16.default_data = json.dumps({'data': "False"})
+    field16.patch_option = PatchOption.objects.get(name='Translated crystal text to Galician')
+    field16.save()
+    
 def random_date_current_month():
     today = datetime.today()
     start_date = today.replace(day=1)
@@ -640,6 +680,20 @@ def add_real_diff_files_to_db():
     dfile2.trigger_value = 'True'
     dfile2.field = POField.objects.get(name='Translate crystal main menu')
     dfile2.save()
+    
+    dfile3 = DiffFile()
+    dfile3.filename = 'galician/engine/menus/main_menu.asm.patch'
+    dfile3.original_file = 'engine/menus/main_menu.asm'
+    dfile3.trigger_value = 'True'
+    dfile3.field = POField.objects.get(name='Translate crystal main menu to Galician')
+    dfile3.save()
+    
+    dfile4 = DiffFile()
+    dfile4.filename = 'galician/engine/menus/options_menu.asm.patch'
+    dfile4.original_file = 'engine/menus/options_menu.asm'
+    dfile4.trigger_value = 'True'
+    dfile4.field = POField.objects.get(name='Translate crystal main menu to Galician')
+    dfile4.save()
     
 def add_real_patch_data_to_db(patch):
     for po in patch.patch_options.all():

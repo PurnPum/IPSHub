@@ -44,7 +44,7 @@ def parse_arguments():
     return args.repository_name, args.modified_dir, args.compiled, extensions, args.verbose
 
 def compare_and_generate_patches(repo_name, modified_dir, compiled, extensions, verbose):
-    patch_dir = os.path.join(os.getcwd(),'diffs')
+    patch_dir = Path(os.path.join(os.getcwd(),'diffs'))
     patch_dir.mkdir(parents=True, exist_ok=True)
     original_dir = Path(clone_game_repo(repo_name, verbose))
     modified_dir = Path(modified_dir)

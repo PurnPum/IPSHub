@@ -1,0 +1,14 @@
+68,73c68,73
+< 	db "CONTINUE@"
+< 	db "NEW GAME@"
+< 	db "OPTION@"
+< 	db "MYSTERY GIFT@"
+< 	db "MOBILE@"
+< 	db "MOBILE STUDIUM@"
+---
+> 	db "CONTINUAR@"
+> 	db "NOVA PARTIDA@"
+> 	db "OPCIONS@"
+> 	db "AGASALLO@"
+> 	db "MOBIL@"
+> 	db "MOBIL ESTADIO@"
