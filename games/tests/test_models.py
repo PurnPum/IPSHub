@@ -1,12 +1,13 @@
 from django.test import TestCase
 from games.models import Game
 from core.add_real_data_to_db import add_data_to_bd
+from core.utils import normalize_string
 
 class GameTestCase(TestCase):
 
     def setUp(self):
         add_data_to_bd()
-        self.test_game = Game.objects.get(title='Pokémon Yellow')
+        self.test_game = Game.objects.get(normalized_name=normalize_string('Pokémon Yellow'))
 
     def test_game_creation(self):
         self.assertEqual(Game.objects.count(), 4)

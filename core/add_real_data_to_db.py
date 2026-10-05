@@ -3,6 +3,7 @@ import json
 import os
 import random
 import xmltodict
+from core.utils import normalize_string
 from games.models import Game
 from categories.models import Category
 from patches.models import Patch, PatchOption, POField, PatchData, DiffFile
@@ -51,6 +52,9 @@ def add_real_games_to_db():
 
     
 def add_real_categories_to_db():
+    print("Existing games in the db:")
+    for game in Game.objects.all():
+        print(game.title)
     with open(os.path.join(settings.BD_DATA_DIR, 'categories.xml'), 'r', encoding='utf-8') as category_file:
         categories_xml = category_file.read()
     categories_dict = xmltodict.parse(categories_xml)
@@ -64,107 +68,111 @@ def _add_category_recursively(category_data, parent=None):
     for key, value in category_data.items():
         if key == 'base_game':
             try:
-                value = Game.objects.get(title=value)
+                value = Game.objects.get(normalized_name=normalize_string(value))
+                print("Got base game:", value.title)
             except Game.DoesNotExist:
-                print(f"Base game '{value}' does not exist. Skipping category '{category_data.get('name', 'Unnamed')}'.")
-                value = None
+                print(f"Base game '{value}' (",{normalize_string(value)},") does not exist. Skipping category ",{category_data.get('name', 'Unnamed')})
+                value = Game.objects.first()
         elif key == 'category':
             if isinstance(value, list):
+                print(f"Found subcategories list of length {len(value)} for category: {category_data.get('name', 'Unnamed')}")
                 for subcategory_data in value:
+                    print(f"Adding subcategory: {subcategory_data.get('name', 'Unnamed')} under parent category: {category_data.get('name', 'Unnamed')}")
                     _add_category_recursively(subcategory_data, parent=category)
             else:
                 _add_category_recursively(value, parent=category)
         setattr(category, key, value)
     category.parent_category = parent
+    print(f"Adding category with all this data: {category.get_data_as_dict()}")
     category.save()
     
 def add_real_patch_options_to_db():
     pOption = PatchOption()
-    pOption.category = Category.objects.get(name='Nuzlocke Yellow', base_game__title='Pokémon Yellow')
+    pOption.category = Category.objects.get(name='Nuzlocke Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption.name = 'Pokémon death Yellow'
     pOption.description = 'Prevents a pokemon that has fainted from ever reviving.'
     pOption.save()
     
     pOption2 = PatchOption()
-    pOption2.category = Category.objects.get(name='Nuzlocke Crystal', base_game__title='Pokémon Crystal')
+    pOption2.category = Category.objects.get(name='Nuzlocke Crystal', base_game__normalized_name=normalize_string('Pokémon Crystal'))
     pOption2.name = 'Pokémon death Crystal'
     pOption2.description = 'Prevents a pokemon that has fainted from ever reviving.'
     pOption2.save()
     
     pOption3 = PatchOption()
-    pOption3.category = Category.objects.get(name='Egglocke Yellow', base_game__title='Pokémon Yellow')
+    pOption3.category = Category.objects.get(name='Egglocke Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption3.name = 'Swap encounter with egg Yellow'
     pOption3.description = 'Swaps the caught encounter with a random egg from the active box.'
     pOption3.save()
     
     pOption4 = PatchOption()
-    pOption4.category = Category.objects.get(name='Egglocke Crystal', base_game__title='Pokémon Crystal')
+    pOption4.category = Category.objects.get(name='Egglocke Crystal', base_game__normalized_name=normalize_string('Pokémon Crystal'))
     pOption4.name = 'Swap encounter with egg Crystal'
     pOption4.description = 'Swaps the caught encounter with a random egg from the active box.'
     pOption4.save()
     
     pOption5 = PatchOption()
-    pOption5.category = Category.objects.get(name='Randomizer Yellow', base_game__title='Pokémon Yellow')
+    pOption5.category = Category.objects.get(name='Randomizer Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption5.name = 'Wild encounter randomizer Yellow'
     pOption5.description = 'Randomizes the encounters of wild pokemons.'
     pOption5.save()
     
     pOption6 = PatchOption()
-    pOption6.category = Category.objects.get(name='Randomizer Crystal', base_game__title='Pokémon Crystal')
+    pOption6.category = Category.objects.get(name='Randomizer Crystal', base_game__normalized_name=normalize_string('Pokémon Crystal'))
     pOption6.name = 'Wild encounter randomizer Crystal'
     pOption6.description = 'Randomizes the encounters of wild pokemons.'
     pOption6.save()
     
     pOption7 = PatchOption()
-    pOption7.category = Category.objects.get(name='Randomizer NO-BS Yellow', base_game__title='Pokémon NO-BS Yellow')
+    pOption7.category = Category.objects.get(name='Randomizer NO-BS Yellow', base_game__normalized_name=normalize_string('Pokémon NO-BS Yellow'))
     pOption7.name = 'Wild encounter randomizer NO-BS Yellow'
     pOption7.description = 'Randomizes the encounters of wild pokemons.'
     pOption7.save()
     
     pOption8 = PatchOption()
-    pOption8.category = Category.objects.get(name='Randomizer Crystal Clear', base_game__title='Pokémon Crystal Clear')
+    pOption8.category = Category.objects.get(name='Randomizer Crystal Clear', base_game__normalized_name=normalize_string('Pokémon Crystal Clear'))
     pOption8.name = 'Wild encounter randomizer Crystal Clear'
     pOption8.description = 'Randomizes the encounters of wild pokemons.'
     pOption8.save()
     
     pOption9 = PatchOption()
-    pOption9.category = Category.objects.get(name='Wedlocke Yellow', base_game__title='Pokémon Yellow')
+    pOption9.category = Category.objects.get(name='Wedlocke Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption9.name = 'Kill the partner of the fainted Pokemon'
     pOption9.description = 'Once a pokemon dies, also kill the partner they had been linked with.'
     pOption9.save()
     
     pOption10 = PatchOption()
-    pOption10.category = Category.objects.get(name='Wedlocke Yellow', base_game__title='Pokémon Yellow')
+    pOption10.category = Category.objects.get(name='Wedlocke Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption10.name = 'Link the latest caught pokemon'
     pOption10.description = 'After capturing a Pokemon, link it with a partner of a different gender that does not have a partner.'
     pOption10.save()
     
     pOption11 = PatchOption()
-    pOption11.category = Category.objects.get(name='Super Wedlocke Yellow', base_game__title='Pokémon Yellow')
+    pOption11.category = Category.objects.get(name='Super Wedlocke Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption11.name = 'Add the latest caught pokemon to the family tree'
     pOption11.description = 'After capturing a Pokemon, add it to the family tree depending on who helped catch it.'
     pOption11.save()
     
     pOption11 = PatchOption()
-    pOption11.category = Category.objects.get(name='Special Egglocke Yellow', base_game__title='Pokémon Yellow')
+    pOption11.category = Category.objects.get(name='Special Egglocke Yellow', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption11.name = 'Special egglocke'
     pOption11.description = 'This is a special egglocke template.'
     pOption11.save()
     
     pOption12 = PatchOption()
-    pOption12.category = Category.objects.get(name='Translated yellow text to Spanish', base_game__title='Pokémon Yellow')
+    pOption12.category = Category.objects.get(name='Translated yellow text to Spanish', base_game__normalized_name=normalize_string('Pokémon Yellow'))
     pOption12.name = 'Translated yellow text to Spanish'
     pOption12.description = 'Translates the text to Spanish.'
     pOption12.save()
     
     pOption13 = PatchOption()
-    pOption13.category = Category.objects.get(name='Translated crystal text to Spanish', base_game__title='Pokémon Crystal')
+    pOption13.category = Category.objects.get(name='Translated crystal text to Spanish', base_game__normalized_name=normalize_string('Pokémon Crystal'))
     pOption13.name = 'Translated crystal text to Spanish'
     pOption13.description = 'Translates the text to Spanish.'
     pOption13.save()
     
     pOption14 = PatchOption()
-    pOption14.category = Category.objects.get(name='Translated crystal text to Galician', base_game__title='Pokémon Crystal')
+    pOption14.category = Category.objects.get(name='Translated crystal text to Galician', base_game__normalized_name=normalize_string('Pokémon Crystal'))
     pOption14.name = 'Translated crystal text to Galician'
     pOption14.description = 'Translates the text to Galician.'
     pOption14.save()
@@ -365,7 +373,7 @@ def add_real_patches_to_db():
     patch.creation_date = random_date_current_month()
     patch.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch.save()
-    patch.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Crystal', category__base_game__title='Pokémon Crystal'))
+    patch.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Crystal', category__base_game__normalized_name=normalize_string('Pokémon Crystal')))
     add_real_patch_data_to_db(patch)
     patch.save()
     
@@ -378,7 +386,7 @@ def add_real_patches_to_db():
     patch2.parent_patch = patch
     patch2.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch2.save()
-    patch2.patch_options.set(PatchOption.objects.filter(category__name='Egglocke Crystal', category__base_game__title='Pokémon Crystal'))
+    patch2.patch_options.set(PatchOption.objects.filter(category__name='Egglocke Crystal', category__base_game__normalized_name=normalize_string('Pokémon Crystal')))
     add_real_patch_data_to_db(patch2)
     patch2.save()
     
@@ -390,7 +398,7 @@ def add_real_patches_to_db():
     patch3.creation_date = random_date_current_month()
     patch3.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch3.save()
-    patch3.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Yellow', category__base_game__title='Pokémon Yellow'))
+    patch3.patch_options.set(PatchOption.objects.filter(category__name='Nuzlocke Yellow', category__base_game__normalized_name=normalize_string('Pokémon Yellow')))
     add_real_patch_data_to_db(patch3)
     patch3.save()
     
@@ -403,7 +411,7 @@ def add_real_patches_to_db():
     patch4.parent_patch = patch3
     patch4.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch4.save()
-    patch4.patch_options.set(PatchOption.objects.filter(category__name='Egglocke Yellow', category__base_game__title='Pokémon Yellow'))
+    patch4.patch_options.set(PatchOption.objects.filter(category__name='Egglocke Yellow', category__base_game__normalized_name=normalize_string('Pokémon Yellow')))
     add_real_patch_data_to_db(patch4)
     patch4.save()
     
@@ -415,7 +423,7 @@ def add_real_patches_to_db():
     patch5.creation_date = random_date_current_month()
     patch5.download_link = 'static/patches/PokemonCrystal/patch.ips'
     patch5.save()
-    patch5.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal', category__base_game__title='Pokémon Crystal'))
+    patch5.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal', category__base_game__normalized_name=normalize_string('Pokémon Crystal')))
     add_real_patch_data_to_db(patch5)
     patch5.save()
     
@@ -427,7 +435,7 @@ def add_real_patches_to_db():
     patch6.creation_date = random_date_current_month()
     patch6.download_link = 'static/patches/PokemonCrystalClear/patch.ips'
     patch6.save()
-    patch6.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal Clear', category__base_game__title='Pokémon Crystal Clear'))
+    patch6.patch_options.set(PatchOption.objects.filter(category__name='Randomizer Crystal Clear', category__base_game__normalized_name=normalize_string('Pokémon Crystal Clear')))
     add_real_patch_data_to_db(patch6)
     patch6.save()
     
@@ -439,7 +447,7 @@ def add_real_patches_to_db():
     patch7.creation_date = random_date_current_month()
     patch7.download_link = 'static/patches/PokemonNOBSYellow/patch.ips'
     patch7.save()
-    patch7.patch_options.set(PatchOption.objects.filter(category__name='Randomizer NO-BS Yellow', category__base_game__title='Pokémon NO-BS Yellow'))
+    patch7.patch_options.set(PatchOption.objects.filter(category__name='Randomizer NO-BS Yellow', category__base_game__normalized_name=normalize_string('Pokémon NO-BS Yellow')))
     add_real_patch_data_to_db(patch7)
     patch7.save()
     
@@ -453,8 +461,8 @@ def add_real_patches_to_db():
     patch8.download_link = 'static/patches/PokemonYellow/patch.ips'
     patch8.save()
     pos = PatchOption.objects.filter(
-        Q(category__name='Randomizer Yellow', category__base_game__title='Pokémon Yellow') |
-        Q(category__name='Nuzlocke Yellow', category__base_game__title='Pokémon Yellow')
+        Q(category__name='Randomizer Yellow', category__base_game__normalized_name=normalize_string('Pokémon Yellow')) |
+        Q(category__name='Nuzlocke Yellow', category__base_game__normalized_name=normalize_string('Pokémon Yellow'))
     )
     patch8.patch_options.set(pos)
     add_real_patch_data_to_db(patch8)

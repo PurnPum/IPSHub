@@ -9,7 +9,6 @@ class Category(models.Model):
     base_game = models.ForeignKey('games.Game', on_delete=models.CASCADE, null=False, blank=False, related_name='categories')
     parent_category = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='subcategories')
     description = models.TextField(blank=True)
-    image_ref = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     normalized_name = models.CharField(max_length=200)
 
@@ -55,3 +54,13 @@ class Category(models.Model):
         if self.parent_category is None:
             return self
         return self.parent_category.get_main_parent()
+    
+    def get_data_as_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'description': self.description,
+            'base_game': self.base_game.title,
+            'parent_category': str(self.parent_category.id) if self.parent_category else None,
+            'normalized_name': self.normalized_name
+        }
